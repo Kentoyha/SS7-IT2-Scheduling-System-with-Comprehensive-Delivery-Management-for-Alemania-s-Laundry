@@ -1,26 +1,6 @@
 <?php
-include 'db.php';
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = htmlspecialchars($_POST['username']);
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $contact = htmlspecialchars($_POST['contact']);
-    $email = htmlspecialchars($_POST['email']);
-    $account_level = $_POST['account_level'];
+include 'db_connect.php';
 
-    $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-        $error = "Username already exists.";
-    } else {
-        $stmt = $conn->prepare("INSERT INTO users (username, password, contact, email, account_level) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssss", $username, $password, $contact, $email, $account_level);
-        $stmt->execute();
-        $success = "Registration successful!";
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,19 +10,57 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Register</title>
 </head>
 <body>
-    <h1>Register</h1>
-    <?php if (isset($error)) { echo "<p style='color:red;'>$error</p>"; } ?>
-    <?php if (isset($success)) { echo "<p style='color:green;'>$success</p>"; } ?>
-    <form action="" method="POST">
+    <h1>User Registration </h1>
+
+    <form method="POST">
         <input type="text" name="username" placeholder="Username" required>
         <input type="password" name="password" placeholder="Password" required>
         <input type="number" name="contact" placeholder="Contact number" required>
         <input type="email" name="email" placeholder="Email Address" required>
-        <select name="account_level" required>
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
+        <select name="account_level">
+            <option value="1">Admin</option>
+            <option value="2">User</option>
         </select>
-        <input type="submit" value="Register">
-    </form>
+        <input type="submit" name="submit" value="Register">
+        </form>
+        
+        <?php
+        
+        if(isset($_POST['submit'])){
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+            $contact = $_POST['contact'];
+            $email = $_POST['email'];
+            $account_level = $_POST['account_level'];
+
+            if($account_level == 1){
+                $query = "INSERT INTO Admin(Username, Password, Contact_info, Email) VALUES ('$username', '$password', '$contact', '$email')";
+                if (mysqli_query($conn, $query)) {
+                    echo "<script>
+                            alert('Admin registered successfully.');
+                            window.location.href='login.php';
+                          </script>";
+                    exit();
+                } else {
+                    echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
+                }
+            } else {
+                $query = "INSERT INTO User(Username, Password, Contact_info, Email) VALUES ('$username', '$password', '$contact', '$email')";
+                if (mysqli_query($conn, $query)) {
+                    echo "<script>
+                            alert('User registered successfully.');
+                            window.location.href='login.php';
+                          </script>";
+                    exit();
+                } else {
+                    echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
+                }
+            }
+            
+        }
+        ?>
+
+    
+
 </body>
 </html>
