@@ -8,10 +8,12 @@ include 'db_connect.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>User Registration </h1>
-
+    <header>
+        <h1>ACCOUNT REGISTRATION</h1>
+    </header>
     <form method="POST">
         <input type="text" name="username" placeholder="Username" required>
         <input type="password" name="password" placeholder="Password" required>
@@ -22,8 +24,8 @@ include 'db_connect.php';
             <option value="2">User</option>
         </select>
         <input type="submit" name="submit" value="Register">
-        </form>
-        
+    </form>
+
         <?php
         
         if(isset($_POST['submit'])){

@@ -1,59 +1,56 @@
 <?php
 include 'db_connect.php';
-session_start();
 
-if(isset($_POST['username']) && isset($_POST['password'])) {
-    $username = htmlspecialchars($_POST['username']);
+session_start(); // Start the session
+
+if (isset($_POST['submit'])) {
+    $username = $_POST['username'];
     $password = $_POST['password'];
-    $account_level = $_POST['account_level'];
-    if($account_level == 1){
-        $stmt = $conn->prepare("SELECT * FROM Admin WHERE username = ?");
-        $_SESSION['username'] = $user['username'];
-        $_SESSION['account_level'] = $user['account_level'];
-        echo "<script>
-                        alert('Welcome Admin.');
-                          window.location.href='dashboard.php';
-                          </script>";
-                          exit();
-    } 
-    else{
-        $stmt = $conn->prepare("SELECT * FROM User WHERE username = ?");
-        $_SESSION['username'] = $user['username'];
-        $_SESSION['account_level'] = $user['account_level'];
-        echo "<script>
-                        alert('Welcome User.');
-                          window.location.href='dashboard1.php';
-                          </script>";
-                          exit();
-    }
-         
+
+    // Check in the Admin table
+    $query = "SELECT * FROM Admin WHERE Username = '$username' AND Password = '$password'";
+    $result = mysqli_query($conn, $query) or die(mysqli_error($conn)); // Debugging
+
+    if (mysqli_num_rows($result) == 1) {
+        $row = mysqli_fetch_assoc($result);
+        $_SESSION['username'] = $row['Username'];
+        $_SESSION['account_level'] = 1; // Admin account level
+        header("Location: dashboard.php"); // Redirect to admin dashboard
+        exit();
     } else {
-        $error = "Invalid username or password.";
+        // Check in the User table
+        $query = "SELECT * FROM User WHERE Username = '$username' AND Password = '$password'";
+        $result = mysqli_query($conn, $query) or die(mysqli_error($conn)); // Debugging
+
+        if (mysqli_num_rows($result) == 1) {
+            $row = mysqli_fetch_assoc($result);
+            $_SESSION['username'] = $row['Username'];
+            $_SESSION['account_level'] = 2; // User account level
+            header("Location: dashboard1.php"); // Redirect to user dashboard
+            exit();
+        } else {
+            echo "<script>alert('Invalid username or password.');</script>";
+        }
     }
-    
-       
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log in page</title>
+    <title>Login</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Log in</h1>
-    <form  method="POST">
-        
+    <header>
+        <h1>LOG IN </h1>
+    </header>
+    <form method="POST">
         <input type="text" name="username" placeholder="Username" required>
         <input type="password" name="password" placeholder="Password" required>
-        <select name="account_level" >
-            <option value="1">Admin</option>
-            <option value="2">User</option>
-        </select>
-        <input type="submit" value="Log in">
-
-
-
+        <input type="submit" name="submit" value="Login">
     </form>
 </body>
 </html>
