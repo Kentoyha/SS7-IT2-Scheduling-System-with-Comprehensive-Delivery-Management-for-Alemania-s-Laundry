@@ -1,7 +1,15 @@
 <?php 
 include 'Menu.php';
 
-session_start();
+session_start(); // Start the session
+
+// Check if the user is logged in and has the correct account level
+if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 1) {
+    header("Location: login.php"); // Redirect to login page if not logged in or not an admin
+    exit();
+}
+
+// If the user is logged in and is an admin, display the dashboard
 
 ?>
 
@@ -10,7 +18,7 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delivery Management</title>
+    <title>Delivery</title>
     <style>
         * {
             margin: 0;
@@ -102,13 +110,44 @@ session_start();
 
     </style>
 </head>
+<head>
+<body>
+    <link rel="stylesheet" href="style2.css">
+    <header>
+        <h1>Delivery</h1>
+    </header>
+    <div class="container">
+        <div class="order-form">
+            <h2>Place a New Order</h2>
+            <form action="Deliveirs.php" method="POST">
+                <label for="staff_name">Staff Name</label>
+                <input type="text" id="staff_name" name="staff_name" required>
+
+                <label for="delivery_date">Delivery Date</label>
+                <input type="date" id="delivery_date" name="delivery_date" required>
+
+                <label for="status">Status</label>
+                <select id="status" name="status" required>
+                    <option value="Pending">Pending</option>
+                    <option value="Completed">Completed</option>
+                    <option value="In Progress">In Progress</option>
+                </select>
+
+                <button type="submit" name="submit_order">Submit Order</button>
+            </form>
+        </div>
+    <style>
+        .order-form {
+            /* Add your CSS rules here */
+        }
+    </style>
+</head>
 <body>
     <div class="container">
         <h2>Delivery Schedule</h2>
        <center> <table> </center>
             <tr>
-                <th>Delivery ID</th>
-                <th>Customer Name</th>
+                <th>Staff name</th>
                 <th>Status</th>
                 <th>Delivery Date</th>
             </tr>
@@ -123,11 +162,9 @@ session_start();
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     echo "<tr>
-                            <td>{$row['delivery_id']}</td>
-                            <td>{$row['customer_name']}</td>
-                            <td>{$row['address']}</td>
-                            <td>{$row['delivery_date']}</td>
-                            <td>{$row['status']}</td>
+                            <td>{$row['Staff_name']}</td>
+                            <td>{$row['Status']}</td>
+                            <td>{$row['Delivery_Date']}</td>
                           </tr>";
                 }
             } else {

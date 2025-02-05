@@ -1,7 +1,15 @@
-<?php 
+  <?php 
 include 'Menu.php';
 
-session_start();
+session_start(); // Start the session
+
+// Check if the user is logged in and has the correct account level
+if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 1) {
+    header("Location: login.php"); // Redirect to login page if not logged in or not an admin
+    exit();
+}
+
+// If the user is logged in and is an admin, display the dashboard
 
 ?>
 
@@ -103,15 +111,68 @@ session_start();
 
     </style>
 </head>
+
 <body>
+    <link rel="stylesheet" href="style2.css">
+    <header>
+        <h1>Schedules</h1>
+    </header>
+    <div class="order-form">
+        <form action="Schedules.php" method="POST">
+            <label for="schedule_date">Schedule Date</label>
+            <input type="date" id="schedule_date" name="schedule_date" required>
+
+            <label for="time_slot">Time Slot</label>
+            <select id="time_slot" name="time_slot" required>
+                <option value="morning">Morning</option>
+                <option value="afternoon">Afternoon</option>
+                <option value="evening">Evening</option>
+            </select>
+            
+
+            <label for="status">Status</label>
+            <select id="status" name="status" required>
+                <option value="Pending">Pending</option>
+                <option value="Completed">Completed</option>
+                <option value="In Progress">In Progress</option>
+            </select>
+
+            <button type="submit" name="submit_order">Schedule</button>
+          
+        </form>
+    </div>
+</body>
+</html>
+</html>
     <div class="container">
-        <h2>Delivery Schedule</h2>
         <table>
             <tr>
-                <th>Schedule ID</th>
                 <th>Schedule Date</th>
                 <th>Time Slot</th>
             </tr>
+            <?php 
+session_start(); // Start the session
+
+// Check if the user is logged in and has the correct account level
+if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 1) {
+    header("Location: login.php"); // Redirect to login page if not logged in or not an admin
+    exit();
+}
+
+// Handle form submission
+if (isset($_POST['submit_order'])) {
+    $conn = new mysqli("localhost", "root", "", "laundry_db");
+    $status = $_POST['status'];
+
+    $sql = "INSERT INTO Deliveries (Delivery_staff_firstname, Delivery_Date, Status) VALUES ('$staff_name', '$delivery_date', '$status')";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "<script>alert('New order has been placed successfully!');</script>";
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
+}
+?>
             <?php
             $conn = new mysqli("localhost", "root", "", "laundry_db");
             if ($conn->connect_error) {
@@ -122,11 +183,9 @@ session_start();
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     echo "<tr>
-                            <td>{$row['customer_name']}</td>
-                            <td>{$row['address']}</td>
-                            <td>{$row['date']}</td>
-                            <td>{$row['time']}</td>
-                            <td>{$row['status']}</td>
+                            <td>{$row['Schedule date']}</td>
+                            <td>{$row['Time Slot']}</td>
+                            
                           </tr>";
                 }
             } else {

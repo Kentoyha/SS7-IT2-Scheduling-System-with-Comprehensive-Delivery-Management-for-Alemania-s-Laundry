@@ -2,7 +2,7 @@
     <ul>
         <li><a href="dashboard.php">Home</a></li>
         <li><a href="Laundry_Orders.php">Laundry</a></li>
-        <li><a href="Deliviers.php">Delivery</a></li>
+        <li><a href="Deliveirs.php">Delivery</a></li>
         <li><a href="Schedules.php">Schedules</a></li>
         <li> <a href="Reciept.php">Reciept</a></li>
     </ul>

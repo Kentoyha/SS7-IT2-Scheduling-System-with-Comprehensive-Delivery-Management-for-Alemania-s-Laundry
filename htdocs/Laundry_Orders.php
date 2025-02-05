@@ -1,9 +1,17 @@
 <?php 
 include 'Menu.php';
+include 'db_connect.php';
 
-session_start();
+session_start(); // Start the session
 
+// Check if the user is logged in and has the correct account level
+if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 1) {
+    header("Location: login.php"); // Redirect to login page if not logged in or not an admin
+    exit();
+}
 ?>
+
+
 
 
 <!DOCTYPE html>
@@ -140,18 +148,19 @@ session_start();
         <h1>Laundry Orders</h1>
     </header>
 
-    <!-- Order Form -->
+   
     <div class="order-form">
         <h2>Place a New Order</h2>
-        <form action="order_page.php" method="POST">
-            <label for="order_id">Order ID</label>
-            <input type="text" id="order_id" name="order_id" required>
+        <form action="Laundry_Orders.php" method="POST">
 
             <label for="laundry_amount">Laundry Amount</label>
-            <input type="text" id="laundry_amount" name="laundry_amount" required>
-
-            <label for="order_date">Order Date</label>
-            <input type="date" id="order_date" name="order_date" required>
+            <select name="laundry_amount">
+                <option value="none">-----Laundry Kilograms------</option>
+                <option value="30">30kg</option>
+                <option value="40">40kg</option>
+                <option value="50">50kg</option>
+                <option value="60">60kg</option>
+            </select>
 
             <label for="status">Status</label>
             <select id="status" name="status" required>
@@ -160,34 +169,30 @@ session_start();
                 <option value="In Progress">In Progress</option>
             </select>
 
-            <button type="submit" name="submit_order">Submit Order</button>
+            <button type="submit" name="submit_order" link>Submit Order</button>
+       
         </form>
     </div>
 
     <div class="container">
         <table>
             <tr>
-                <th>Order ID</th>
                 <th>Laundry Amount</th>
                 <th>Order Date</th>
                 <th>Status</th>
             </tr>
             <?php
-            $conn = new mysqli("localhost", "root", "", "laundry_db");
-
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-            }
+            
 
             if (isset($_POST['submit_order'])) {
-                $order_id = $_POST['order_id'];
+                
                 $laundry_amount = $_POST['laundry_amount'];
-                $order_date = $_POST['order_date'];
                 $status = $_POST['status'];
+                $order_date = date('Y-m-d'); // Set the current date
 
-                // Insert the order into the database
-                $sql = "INSERT INTO laundry_orders (order_id, laundry_amount, order_date, status)
-                        VALUES ('$order_id', '$laundry_amount', '$order_date', '$status')";
+                
+                $sql = "INSERT INTO Laundry_Orders (Laundry_amount, Order_date, status)
+                        VALUES ( '$laundry_amount', '$order_date', '$status')";
 
                 if ($conn->query($sql) === TRUE) {
                     echo "<p>New order has been placed successfully!</p>";
@@ -196,17 +201,17 @@ session_start();
                 }
             }
 
-            // Fetch and display existing orders
-            $sql = "SELECT * FROM laundry_orders";
+            
+            $sql = "SELECT * FROM Laundry_Orders";
             $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     echo "<tr>
-                            <td>{$row['order_id']}</td>
-                            <td>{$row['laundry_amount']}</td>
-                            <td>{$row['order_date']}</td>
-                            <td>{$row['status']}</td>
+                            <td>{$row['Order_id']}</td>
+                            <td>{$row['Laundry_amount']}</td>
+                            <td>{$row['Order_date']}</td>
+                            <td>{$row['Status']}</td>
                           </tr>";
                 }
             } else {
@@ -219,4 +224,3 @@ session_start();
     </div>
 </body>
 </html>
-

@@ -1,4 +1,5 @@
 <?php
+include 'Menu2.php'; // Include the men
 session_start(); // Start the session
 
 // Check if the user is logged in and has the correct account level
@@ -7,10 +8,11 @@ if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 2) {
     exit();
 }
 
-// If the user is logged in and is a regular user, display the dashboard
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
+<link rel="stylesheet" href="Style3.css">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,3 +24,4 @@ if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 2) {
     <a href="logout.php">Logout</a>
 </body>
 </html>
+

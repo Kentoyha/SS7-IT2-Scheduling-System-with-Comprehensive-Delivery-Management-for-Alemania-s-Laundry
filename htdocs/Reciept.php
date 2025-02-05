@@ -1,7 +1,15 @@
 <?php 
 include 'Menu.php';
 
-session_start();
+session_start(); // Start the session
+
+// Check if the user is logged in and has the correct account level
+if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 1) {
+    header("Location: login.php"); // Redirect to login page if not logged in or not an admin
+    exit();
+}
+
+// If the user is logged in and is an admin, display the dashboard
 
 ?>
 
@@ -108,7 +116,7 @@ session_start();
         <h2>Reciept</h2>
         <table>
             <tr>
-                <th>Reciept ID</th>
+                <th>Order Details</th>
                 <th>Date</th>
                 <th>Time</th>
             </tr>
@@ -122,7 +130,7 @@ session_start();
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     echo "<tr>
-                            
+                            <td>{$row['id']}</td>
                             
                             <td>{$row['date']}</td>
                             <td>{$row['time']}</td>
