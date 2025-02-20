@@ -1,157 +1,166 @@
-<?php 
+<?php
+include("db_connect.php");
+include("menu.php");
+
+
+
 session_start();
-include 'Menu2.php';
-include 'db_connect.php';
+
+
+
+if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 2) {
+    header("Location: login.php"); // Redirect to login page if not logged in or not a user
+  
+   
+}
+
+
+    
+  
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+
 <head>
-    <link rel="stylesheet" href="Style3.css">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Laundry Orders</title>
+    <link rel="stylesheet" href="addt.css">
+</head>
+
+<body>
+<h1>Place Order</h1>
+
+<form method="POST" action="">
+    <table border=1 align="center" cellspacing="0" cellpadding="10">
+    
+        <tr>
+            <td> Laundry Type </td>
+            <td> 
+                <select name="Laundry_Type" required>
+                    <option value="">Select</option>
+                    <option value="Beddings">Beddings</option>
+                    <option value="Curtains">Curtains</option>
+                    <option value="Towel">Towel</option>
+                    <option value="Topper">Topper</option>
+                    <option value="Table Cloth">Table Cloth</option>
+                    <option value="Mixed">Mixed</option>
+                </select> 
+            </td>
+        </tr>
+        <tr>
+            <td> Laundry Quantity </td>
+            <td> <input type="number" name="Laundry_Quantity" required min="1"> </td>
+        </tr>
+        <tr>
+            <td> Cleaning Type </td>
+            <td> 
+                <select name="Cleaning_Type" required>
+                    <option value="">Select</option>
+                    <option value="Dry Cleaning">Dry Cleaning</option>
+                    <option value="Wet Cleaning">Wet Cleaning</option>
+                    <option value="Spot Cleaning">Spot Cleaning</option>
+                    <option value="Mixed">Mixed</option>
+                </select> 
+            </td>
+        </tr>
+        <tr>    
+            <td> Place </td>
+            <td> <input type="text" name="Place" required> </td>
+        </tr>
+        <tr>
+            <td> Priority Note (optional) </td>
+            <td> <textarea name="Priority_note" rows="4" cols="50"></textarea> </td>
+        </tr>
+        <input type="hidden" name="Status" value="Pending"> 
+        <tr>
+            <td colspan="2">
+                <button type="submit" name="Order"> Submit</button>
+            </td>
+        </tr>
+    </table>
+</form>
+
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
 
-        .container {
-            max-width: 1000px;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            margin: 0 auto; /* Centers the container horizontally */
-        }
-
-        h2 {
+        h1 {
             text-align: center;
-            margin-bottom: 20px;
             color: #333;
         }
 
-        .order-instructions {
-            background-color: #f1f1f1;
-            padding: 15px;
-            margin-bottom: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .order-instructions h3 {
-            color: #333;
-        }
-
-        .order-instructions p {
-            color: #555;
-            font-size: 16px;
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 20px auto;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
         }
 
-        th, td {
-            padding: 12px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-
-        th {
-            background: #4CAF50;
-            color: white;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        .search-container {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .search-container input {
+        td {
             padding: 10px;
-            width: 250px;
-            margin-right: 10px;
+            border-bottom: 1px solid #ddd;
         }
 
-        .search-container button {
-            padding: 10px;
-            background-color: #333;
-            color: white;
-            border: none;
-            cursor: pointer;
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
 
-        .search-container button:hover {
-            background-color: #555;
-        }
-
-        .btn {
+        button {
             background-color: #4CAF50;
             color: white;
-            padding: 10px;
+            padding: 10px 20px;
             border: none;
+            border-radius: 4px;
             cursor: pointer;
-            margin-top: 20px;
-            display: block;
-            width: 100%;
+            font-size: 16px;
         }
 
-        .btn:hover {
+        button:hover {
             background-color: #45a049;
         }
     </style>
-</head>
-<body>
-    <div class="container">
-        <h2>Your Laundry Orders</h2>
-        
-        <!-- Instructions Section -->
-        <div class="order-instructions">
-            <h3>How to Place an Order</h3>
-            <p>To place a new order, simply provide your laundry details below. Choose the type of laundry, and specify the amount. After submitting the form, your order will appear in the list below, and we will contact you for pickup and delivery.</p>
-        </div>
 
-        <!-- Order Form -->
-        <form action="submit_order.php" method="POST">
-            <h3>Place a New Order</h3>
-            <label for="laundry_type">Laundry Type:</label>
-            <select name="laundry_type" id="laundry_type" required>
-                <option value="Clothes">Clothes</option>
-                <option value="Bedding">Bedding</option>
-                <option value="Curtains">Curtains</option>
-                <option value="Towels">Towels</option>
-                <!-- Add more options as needed -->
-            </select><br><br>
+<?php
 
-            <label for="laundry_amount">Amount:</label>
-            <input type="number" name="laundry_amount" id="laundry_amount" placeholder="Enter amount" required><br><br>
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-            <label for="order_date">Preferred Order Date:</label>
-            <input type="date" name="order_date" id="order_date" required><br><br>
+if (isset($_POST['Order'])) {
+    $Order_date = date("Y-m-d");
+    $Laundry_Type = $_POST['Laundry_Type'];
+    $Laundry_Quantity = $_POST['Laundry_Quantity'];
+    $Cleaning_Type = $_POST['Cleaning_Type'];
+    $Place = $_POST['Place'];
+    $Priority_note = $_POST['Priority_note'];
+    $Status = $_POST['Status'];
+    $User_id = $_SESSION['User_ID'];
+   
 
-               
-            </select><br><br>
+    $sql = "INSERT INTO Orders (Order_date, Laundry_type, Laundry_quantity, Cleaning_type, Place, Priority_note, Status, User_ID)
+     VALUES ('$Order_date', '$Laundry_Type', '$Laundry_Quantity', '$Cleaning_Type', '$Place', '$Priority_note', '$Status' , '$User_id')";
 
-            <button type="submit" class="btn">Place Order</button>
-        </form>
+    $query = mysqli_query($conn, $sql);
 
-
-        
-        </table>
-    </div>
+    if ($query) {
+        echo "Order placed successfully!";
+    } else {
+        echo "<script> alert('Error: " . mysqli_error($conn) . "'); </script>";
+    }
+    
+}
+?>
 </body>
 </html>

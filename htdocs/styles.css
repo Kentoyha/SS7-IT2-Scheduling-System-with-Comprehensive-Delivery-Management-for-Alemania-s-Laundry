@@ -1,17 +1,23 @@
 /* General Styles */
 body {
+    background-image: url('Images/bg4.png'), url('Images/bg5.png');
+    background-size: 800px ;
+
+    background-repeat: no-repeat;
+    
     font-family: 'Arial', sans-serif;
     background-color: #f4f4f4; /* Light gray background */
     margin: 0;
     padding: 0;
     color: #333; /* Dark gray text */
+    min-height: 100vh; /* Ensure the body takes at least the full height of the viewport */
 }
 
 /* Header Styles */
 header {
     background-color: #0078d7; /* Blue header */
     color: white;
-    padding: 20px;
+    padding: 10px;
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -24,12 +30,23 @@ header h1 {
 
 /* Form Styles */
 form {
-    background-color: white;
-    max-width: 400px;
-    margin: 50px auto;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: rgba(238, 240, 157, 0.8); /* Semi-transparent white background */
+    max-width: 350px;
+    margin-left: 19px;
+    margin:30px auto;
+    padding: 80px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+    margin-top: 150px;
+    height: auto; /* adjust this value to make the form longer */
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Light border for separation */
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
 }
 
 form input[type="text"],
