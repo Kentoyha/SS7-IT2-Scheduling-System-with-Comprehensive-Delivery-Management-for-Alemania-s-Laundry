@@ -13,9 +13,10 @@ if (isset($_POST['submit'])) {
 
     if (mysqli_num_rows($result) == 1) {
         $row = mysqli_fetch_assoc($result);
-        $_SESSION['User_ID'] = $row['User_ID'];
+        $_SESSION['username'] = $username;
+        $_SESSION['Admin_ID'] = $row['Admin_ID'];
         $_SESSION['account_level'] = 1; // Admin account level
-        header("Location: dashboard.php"); // Redirect to admin dashboard
+        header("Location: home.php"); // Redirect to admin dashboard
         exit();
     } else {
         // Check in the User table
@@ -24,9 +25,10 @@ if (isset($_POST['submit'])) {
 
         if (mysqli_num_rows($result) == 1) {
             $row = mysqli_fetch_assoc($result);
+            $_SESSION['username'] = $username;
             $_SESSION['User_ID'] = $row['User_ID'];
             $_SESSION['account_level'] = 2; // User account level
-            header("Location: dashboard1.php"); // Redirect to user dashboard
+            header("Location: Home1.php"); // Redirect to user dashboard
             exit();
         } else {
             echo "<script>alert('Invalid username or password.');</script>";
@@ -41,7 +43,7 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="Styles.css">
 </head>
 <body>
     <header>
@@ -51,6 +53,7 @@ if (isset($_POST['submit'])) {
         <input type="text" name="username" placeholder="Username" required>
         <input type="password" name="password" placeholder="Password" required>
         <input type="submit" name="submit" value="Login">
+        <p>Dont have an account?<a href="register.php">Register</a></p>
     </form>
 </body>
 </html>

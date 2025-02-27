@@ -8,7 +8,7 @@ include 'db_connect.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="register.css">
 </head>
 <body>
     <header>
@@ -24,6 +24,7 @@ include 'db_connect.php';
             <option value="2">User</option>
         </select>
         <input type="submit" name="submit" value="Register">
+        <p>Already have an account?<a href="login.php">Login</a></p>
     </form>
 
         <?php
@@ -36,7 +37,7 @@ include 'db_connect.php';
             $account_level = $_POST['account_level'];
 
             if($account_level == 1){
-                $query = "INSERT INTO Admin(Username, Password, Contact_info, Email) VALUES ('$username', '$password', '$contact', '$email')";
+                $query = "INSERT INTO Admin (Username, Password, Contact_info, Email) VALUES ('$username', '$password', '$contact', '$email')";
                 if (mysqli_query($conn, $query)) {
                     echo "<script>
                             alert('Admin registered successfully.');
@@ -47,7 +48,7 @@ include 'db_connect.php';
                     echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
                 }
             } else {
-                $query = "INSERT INTO User(Username, Password, Contact_info, Email) VALUES ('$username', '$password', '$contact', '$email')";
+                $query = "INSERT INTO User (Username, Password, Contact_info, Email) VALUES ('$username', '$password', '$contact', '$email')";
                 if (mysqli_query($conn, $query)) {
                     echo "<script>
                             alert('User registered successfully.');

@@ -1,25 +1,33 @@
 /* General Styles */
 body {
-    background-image: url('Images/bg4.png'), url('Images/bg5.png');
-    background-size: 800px ;
-
-    background-repeat: no-repeat;
-    
     font-family: 'Arial', sans-serif;
+    background-image: url("Images/bg6.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
     background-color: #f4f4f4; /* Light gray background */
     margin: 0;
     padding: 0;
     color: #333; /* Dark gray text */
-    min-height: 100vh; /* Ensure the body takes at least the full height of the viewport */
 }
 
 /* Header Styles */
 header {
     background-color: #0078d7; /* Blue header */
     color: white;
-    padding: 10px;
+    padding: 20px;
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+a {
+    color: #0078d7; /* Blue link */
+    text-decoration: none;
+    font-weight: bold;
 }
 
 header h1 {
@@ -30,23 +38,21 @@ header h1 {
 
 /* Form Styles */
 form {
-    background-color: rgba(238, 240, 157, 0.8); /* Semi-transparent white background */
-    max-width: 350px;
-    margin-left: 19px;
-    margin:30px auto;
-    padding: 80px;
-    border-radius: 12px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
-    margin-top: 150px;
-    height: auto; /* adjust this value to make the form longer */
-    border: 1px solid rgba(0, 0, 0, 0.1); /* Light border for separation */
+    background-color: transparent;
+    max-width: 400px; /* Slightly wider form */
+    margin: 50px auto; /* More space around the form */
+    padding: 40px; /* Reduced padding */
+    border-radius: 15px; /* More rounded corners */
+    box-shadow: 0 8px 16px rgba(2, 2, 2, 2); /* Enhanced shadow */
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Light border */
+    margin-top: 180px;
 }
 
 form label {
     display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #555;
+    margin-bottom: 8px; /* More space below labels */
+    font-weight: 500; /* Slightly bolder labels */
+    color: #444; /* Darker label color */
 }
 
 form input[type="text"],
@@ -55,27 +61,30 @@ form input[type="number"],
 form input[type="email"],
 form select {
     width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 12px; /* Slightly larger input fields */
+    margin: 8px 0 20px 0; /* Adjusted spacing */
+    border: 1px solid #ccc; /* Slightly darker border */
+    border-radius: 6px; /* More rounded input fields */
     font-size: 1rem;
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Add a subtle shadow */
 }
 
 form input[type="submit"] {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     background-color: #0078d7; /* Blue button */
     color: white;
     border: none;
-    border-radius: 4px;
-    font-size: 1rem;
+    border-radius: 6px; /* More rounded button */
+    font-size: 1.1rem; /* Slightly larger font size */
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition */
 }
 
 form input[type="submit"]:hover {
     background-color: #005bb5; /* Darker blue on hover */
+    transform: translateY(-2px); /* Slight lift on hover */
 }
 
 /* Dashboard Styles */

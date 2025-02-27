@@ -1,22 +1,17 @@
 <?php
 include("db_connect.php");
-include("menu.php");
-
-
+include("Menu2.php");
 
 session_start();
 
-
-
-if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 2) {
-    header("Location: login.php"); // Redirect to login page if not logged in or not a user
-  
-   
-}
-
-
+if (!isset($_SESSION['username']) || !isset($_SESSION['User_ID']) || $_SESSION['account_level'] != 2) {
+    header("Location: login.php"); 
+    exit();
     
-  
+    $User_ID = $_SESSION['User_ID'];
+    
+   
+}   
 ?>
 
 
@@ -65,8 +60,15 @@ if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 2) {
             <td> <input type="text" name="Place" required> </td>
         </tr>
         <tr>
-            <td> Priority Note (optional) </td>
-            <td> <textarea name="Priority_note" rows="4" cols="50"></textarea> </td>
+            <td> Priority Number </td>
+            <td>
+            <select name="Priority" required>
+                <option value="">Select Priority Number</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+            </td>
         </tr>
         <input type="hidden" name="Status" value="Pending"> 
         <tr>
@@ -144,22 +146,21 @@ if (isset($_POST['Order'])) {
     $Laundry_Quantity = $_POST['Laundry_Quantity'];
     $Cleaning_Type = $_POST['Cleaning_Type'];
     $Place = $_POST['Place'];
-    $Priority_note = $_POST['Priority_note'];
+    $Priority_number = $_POST['Priority'];
     $Status = $_POST['Status'];
-    $User_id = $_SESSION['User_ID'];
+    $User_ID = $_SESSION['User_ID'];
    
 
-    $sql = "INSERT INTO Orders (Order_date, Laundry_type, Laundry_quantity, Cleaning_type, Place, Priority_note, Status, User_ID)
-     VALUES ('$Order_date', '$Laundry_Type', '$Laundry_Quantity', '$Cleaning_Type', '$Place', '$Priority_note', '$Status' , '$User_id')";
+    $sql = "INSERT INTO Orders (Order_date, Laundry_type, Laundry_quantity, Cleaning_type, Place, Priority_number, Status, User_ID)
+     VALUES ('$Order_date', '$Laundry_Type', '$Laundry_Quantity', '$Cleaning_Type', '$Place', '$Priority_number', '$Status' , '$User_ID')";
 
     $query = mysqli_query($conn, $sql);
 
     if ($query) {
-        echo "Order placed successfully!";
+        echo "<script>alert('Order is Placed Successfully'); window.location.href='Orders2.php';</script>";
     } else {
         echo "<script> alert('Error: " . mysqli_error($conn) . "'); </script>";
     }
-    
 }
 ?>
 </body>

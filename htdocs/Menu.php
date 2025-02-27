@@ -1,48 +1,46 @@
-<nav>
+
+<nav>  
     <ul>
-        <li><a href="dashboard.php">Home</a></li>
-        <li><a href="Laundry_Orders.php">Laundry</a></li>
-        <li><a href="Deliveirs.php">Delivery</a></li>
-        <li><a href="Schedules.php">Schedules</a></li>
-        <li> <a href="Reciept.php">Reciept</a></li>
-    </ul>
-</nav>
+        <li><a href="home.php">Home</a></li>
+        <li><a href="Orders.php">Orders</a></li>
+        <li><a href="Delivery.php">Deliveries</a></li>
+        <li><a href="Pickup.php">Pick Up</a></li>
+        <li><a href="">Reciept</a></li>
+     </ul>
+        </nav>
+        <style>
+        /* General Reset */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
 
+        nav {
+            background-color: #0078d7; /* Matches the black background in the image */
+            padding: 0px;
+        }
 
-<style>
-    /* menu.css - Stylesheet for menu.php */
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center; /* Center the menu items */
+            align-items: center;
+            height: 80px;
+        }
 
+        nav ul li {
+            margin: 0 15px; /* Spacing between menu items */
+        }
 
-nav {
-    background-color: #0056b3;
-    padding: 10px 0;
-    text-align: center;
-}
-
-
-nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
-
-
-nav ul li {
-    display: inline;
-    margin: 0 15px;
-}
-
-
-nav ul li a {
-    color: white;
-    text-decoration: none;
-    font-size: 18px;
-    font-weight: bold;
-    transition: color 0.3s ease;
-}
-
-
-nav ul li a:hover {
-    color: #ffcc00;
-}
-</style>
+        nav ul li a {
+            text-decoration: none;
+            color: #fff; /* White text color */
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+                </style>
