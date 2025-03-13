@@ -1,39 +1,38 @@
 <?php
 include 'db_connect.php';
-
 session_start(); // Start the session
 
 if (isset($_POST['submit'])) {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
 
-    // Check in the Admin table
-    $query = "SELECT * FROM Admin WHERE Username = '$username' AND Password = '$password'";
-    $result = mysqli_query($conn, $query) or die(mysqli_error($conn)); // Debugging
+    // Prepare a single query for both Admin and User
+    $query = "SELECT *, 'Admin' AS role FROM Admin WHERE Username = ? 
+              UNION 
+              SELECT *, 'User' AS role FROM User WHERE Username = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "ss", $username, $username);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
-    if (mysqli_num_rows($result) == 1) {
-        $row = mysqli_fetch_assoc($result);
-        $_SESSION['username'] = $username;
-        $_SESSION['Admin_ID'] = $row['Admin_ID'];
-        $_SESSION['account_level'] = 1; // Admin account level
-        header("Location: home.php"); // Redirect to admin dashboard
-        exit();
-    } else {
-        // Check in the User table
-        $query = "SELECT * FROM User WHERE Username = '$username' AND Password = '$password'";
-        $result = mysqli_query($conn, $query) or die(mysqli_error($conn)); // Debugging
-
-        if (mysqli_num_rows($result) == 1) {
-            $row = mysqli_fetch_assoc($result);
+    if ($row = mysqli_fetch_assoc($result)) {
+        if (password_verify($password, $row['Password'])) { // Verify hashed password
             $_SESSION['username'] = $username;
-            $_SESSION['User_ID'] = $row['User_ID'];
-            $_SESSION['account_level'] = 2; // User account level
-            header("Location: Home1.php"); // Redirect to user dashboard
+            $_SESSION['account_level'] = ($row['role'] === 'Admin') ? 1 : 2;
+
+            if ($row['role'] === 'Admin') {
+                $_SESSION['Admin_ID'] = $row['Admin_ID'];
+                header("Location: home.php");
+            } else {
+                $_SESSION['User_ID'] = $row['User_ID'];
+                header("Location: Home1.php");
+            }
             exit();
-        } else {
-            echo "<script>alert('Invalid username or password.');</script>";
         }
     }
+
+    // Show error message only once if login fails
+    echo "<script>alert('Invalid username or password.');</script>";
 }
 ?>
 
@@ -43,17 +42,24 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="Styles.css">
+    <link rel="stylesheet" href="Styles1.css">
 </head>
 <body>
     <header>
-        <h1>LOG IN </h1>
+        <h1>Welcome to Alemania's Laundry</h1>
     </header>
-    <form method="POST">
+
+    <div class="logo-container">
+        <img src="Images/bg6.jpg" alt="logo" class="logo">
+    </div>
+
+    <h3 class="login-title">Log in</h3>
+
+    <form method="POST" class="login-form">
         <input type="text" name="username" placeholder="Username" required>
         <input type="password" name="password" placeholder="Password" required>
         <input type="submit" name="submit" value="Login">
-        <p>Dont have an account?<a href="register.php">Register</a></p>
+        <p>Don't have an account? <a href="register.php">Register</a></p>
     </form>
 </body>
 </html>
