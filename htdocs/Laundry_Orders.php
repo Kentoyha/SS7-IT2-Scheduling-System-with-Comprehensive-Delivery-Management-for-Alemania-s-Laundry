@@ -4,12 +4,15 @@ include("Menu.php");
 
 session_start();
 
-if (!isset($_SESSION['username']) || !isset($_SESSION['Admin_ID']) || $_SESSION['account_level'] != 1) {
+if (!isset($_SESSION['username']) || !isset($_SESSION['User_ID']) || $_SESSION['account_level'] != "admin") {
     header("Location: login.php"); // Redirect to login page if not logged in or not an admin
     exit();
 }
-  
+echo "<pre>";
+    print_r($_SESSION);
+    echo "</pre>";  
 ?>
+
 
 
 <head>
