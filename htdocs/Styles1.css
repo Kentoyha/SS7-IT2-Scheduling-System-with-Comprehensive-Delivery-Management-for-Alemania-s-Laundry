@@ -1,20 +1,33 @@
 /* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Arial', sans-serif;
     background-color: #e9ecef; /* Light gray background */
-    margin: 0;
-    padding: 0;
-    color: #333; /* Dark gray text */
+    color: #333;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Header */
 header {
-    background-color: #007bff; /* Blue header */
+    background-color: #007bff;
     color: white;
-    padding: 20px;
+    width: 100%;
+    padding: 50px;
     text-align: center;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: bold;
+    position: fixed;
+    top: 0;
+    left: 0;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -22,58 +35,60 @@ header {
 .logo-container {
     display: flex;
     justify-content: center;
-    margin: 30px 0 15px 0; /* Increased space */
+    margin-top: 25px; /* Push below header */
+    margin-bottom: 12px;
 }
 
 .logo {
-    width: 250px;
-    height: 120px;
-    border-radius: 10%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    height: 140px;
+    border-radius: 8%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     transition: transform 0.3s ease-in-out;
 }
 
 .logo:hover {
-    transform: scale(1.1); /* Slightly enlarge on hover */
+    transform: scale(1.1);
 }
 
-/* Login Title */
+/* Title */
 .login-title {
     text-align: center;
     font-size: 1.8rem;
-    color: #333;
     font-weight: bold;
-    margin-bottom: 15px;
+    margin: 10px 0;
 }
 
-/* Login Form */
+/* Form Container */
 .login-form {
     background: white;
-    max-width: 400px;
-    margin: 0 auto; /* Center the form */
     padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    width: 550px; /* Increased width */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-/* Form Inputs */
-form input[type="text"],
-form input[type="password"] {
+/* Grouped inputs */
+
+
+form input
+{
     width: 100%;
-    padding: 14px;
-    margin: 10px 0;
+    padding: 12px;
+    margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 1rem;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    transition: 0.3s ease-in-out;
 }
 
-form input[type="text"]:focus,
-form input[type="password"]:focus {
-    border-color: #0078d7;
-    box-shadow: 0 4px 8px rgba(0, 120, 215, 0.2);
+/* Input Focus Effect */
+form input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 120, 215, 0.3);
 }
 
 /* Submit Button */
@@ -91,20 +106,21 @@ form input[type="submit"] {
 
 form input[type="submit"]:hover {
     background-color: #005bb5;
-    transform: translateY(-2px);
+    transform: scale(1.05);
 }
 
 /* Register Link */
 p {
     text-align: center;
     font-size: 1rem;
+    margin-top: 10px;
 }
 
 a {
-    color: #0078d7;
+    color: #007bff;
     text-decoration: none;
     font-weight: bold;
-    transition: color 0.3s ease-in-out;
+    transition: 0.3s ease-in-out;
 }
 
 a:hover {
@@ -112,12 +128,18 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Footer */
-footer {
-    text-align: center;
-    padding: 15px;
-    background-color: #0078d7;
-    color: white;
-    font-size: 0.9rem;
-    margin-top: 40px;
+/* Responsive Design */
+@media screen and (max-width: 600px) {
+    .login-form {
+        width: 90%; /* Make form responsive for smaller screens */
+    }
+
+    .form-group {
+        flex-direction: column;
+    }
+
+    .form-group input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
 }

@@ -99,33 +99,51 @@ error_reporting(E_ALL);
     </form>
 
     <?php
-  if(isset($_POST['Assign_staff'])){
-    $Staff = trim($_POST['Staff']);
-    $Contact = trim($_POST['Contact']);
-    $Delivery_Date = trim($_POST['Delivery_Date']); // Gets the selected date from dropdown
-    $Admin_ID = 1; // Modify if needed
-    $Status = "Out for Delivery"; 
+    if(isset($_POST['Assign_staff'])){
+        $Staff = trim($_POST['Staff']);
+        $Contact = trim($_POST['Contact']);
+        $Delivery_Date = trim($_POST['Delivery_Date']); // Gets the selected date from dropdown
+        $Admin_ID = 1; // Modify if needed
+        $Status = "Out for Delivery"; 
 
-    // Prepare SQL statement to insert into Delivery table
-    $sql = "INSERT INTO `Delivery` (Order_ID, Admin_ID, Delivery_date, Delivery_staff_name, Contact_info, Status) 
-            VALUES (?, ?, ?, ?, ?, ?)";
+        // Start Transaction
+        mysqli_begin_transaction($conn);
 
-    $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "iissss", $Order_id, $Admin_ID, $Delivery_Date, $Staff, $Contact, $Status);
-    
-    $result = mysqli_stmt_execute($stmt);
+        try {
+            // Insert into Delivery table
+            $sql = "INSERT INTO `Delivery` (Order_ID, Admin_ID, Delivery_date, Delivery_staff_name, Contact_info, Status) 
+                    VALUES (?, ?, ?, ?, ?, ?)";
 
-    if($result){
-        echo "<script>alert('Staff assigned successfully for the Order:Status is set To be Delivered.'); window.location.href='Orders2.php?Order_ID=$Order_id';</script>";
-    } else {
-        echo "<script>alert('Error in assigning staff: " . mysqli_error($conn) . "');</script>";
-    } 
-    
-    mysqli_stmt_close($stmt);
-}
+            $stmt = mysqli_prepare($conn, $sql);
+            mysqli_stmt_bind_param($stmt, "iissss", $Order_id, $Admin_ID, $Delivery_Date, $Staff, $Contact, $Status);
+            $result1 = mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
 
+            if(!$result1) {
+                throw new Exception("Error inserting into Delivery: " . mysqli_error($conn));
+            }
 
+            // Update Order status to "Out for Delivery"
+            $update_sql = "UPDATE `Orders` SET Status = ? WHERE Order_ID = ?";
+            $stmt = mysqli_prepare($conn, $update_sql);
+            mysqli_stmt_bind_param($stmt, "si", $Status, $Order_id);
+            $result2 = mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
 
+            if(!$result2) {
+                throw new Exception("Error updating order status: " . mysqli_error($conn));
+            }
+
+            // Commit transaction
+            mysqli_commit($conn);
+
+            echo "<script>alert('Staff assigned successfully, Order is now Out for Delivery'); window.location.href='Orders2.php';</script>";
+        } catch (Exception $e) {
+            // Rollback on failure
+            mysqli_rollback($conn);
+            echo "<script>alert('Transaction failed: " . $e->getMessage() . "');</script>";
+        }
+    }
     ?>
 
 </body>

@@ -144,9 +144,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Order_ID']) && isset($
         </tr>
 
         <?php
-        $sql = "SELECT Order_ID, Order_date, Laundry_type, Laundry_quantity, Cleaning_type, Place, Priority_number, Status 
-        FROM Orders
-        ORDER BY Priority_number ASC";
+       $sql = "SELECT Order_ID, Order_date, Laundry_type, Laundry_quantity, Cleaning_type, Place, Priority_number, Status 
+       FROM Orders
+       WHERE Status IN ('Pending', 'Delivered')
+       ORDER BY Priority_number ASC";
 
         $query = mysqli_query($conn, $sql);
         if (!$query) {

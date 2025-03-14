@@ -1,6 +1,6 @@
 <?php
 include("db_connect.php");
-include("Menu.php");
+include("Menu2.php");
 
 session_start();
 
@@ -41,6 +41,7 @@ if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 2) {
             <th>Pickup Date</th>
             <th>Pickup Staff Name</th>
             <th>Contact Info</th>
+            <th>Status</th>
         </tr>
         <?php
         $sql = "SELECT Pickups.*, Orders.Laundry_type, Orders.Laundry_quantity, Orders.Cleaning_type, Orders.Place 
@@ -52,13 +53,14 @@ if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 2) {
             while ($row = mysqli_fetch_assoc($result)) {
                 echo "<tr>";
                 echo "<td>" . $row['Laundry_quantity'] . " x " . $row['Laundry_type'] . " - " . $row['Cleaning_type'] . "<br>" . $row['Place'] . "</td>";
-                echo "<td>" . $row['Pickup_date'] . "</td>";
+                echo "<td>" . $row['Date'] . "</td>";
                 echo "<td>" . $row['Pickup_staff_name'] . "</td>";
                 echo "<td>" . $row['Contact_info'] . "</td>";
+                echo "<td>" . $row['Status'] . "</td>";
                 echo "</tr>";
             }
         } else {
-            echo "<tr><td colspan='4'>No records found.</td></tr>";
+            echo "<tr><td colspan='5'>No records found.</td></tr>";
         }
         ?>
     </table>

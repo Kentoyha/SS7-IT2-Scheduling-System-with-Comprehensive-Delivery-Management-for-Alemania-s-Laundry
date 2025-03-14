@@ -4,8 +4,8 @@
         <li><a href="home.php">Home</a></li>
         <li><a href="Orders.php">Orders</a></li>
         <li><a href="Delivery.php">Deliveries</a></li>
-        <li><a href="Pickup.php">Pick Up</a></li>
-        <li><a href="">Reciept</a></li>
+        <li><a href="Pickups.php">Pick Up</a></li>
+        <li><a href="Receipts.php">Receipt</a></li>
      </ul>
         </nav>
         <style>

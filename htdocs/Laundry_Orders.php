@@ -26,7 +26,7 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['Admin_ID']) || $_SESSION[
             <td> Laundry Type </td>
             <td> 
                 <select name="Laundry_Type" required>
-                    <option value="">Select</option>
+                    <option value=""disabled select>Select</option>
                     <option value="Beddings">Beddings</option>
                     <option value="Curtains">Curtains</option>
                     <option value="Towel">Towel</option>
@@ -44,7 +44,7 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['Admin_ID']) || $_SESSION[
             <td> Cleaning Type </td>
             <td> 
                 <select name="Cleaning_Type" required>
-                    <option value="">Select</option>
+                    <option value=""disabled select>Select</option>
                     <option value="Dry Cleaning">Dry Cleaning</option>
                     <option value="Wet Cleaning">Wet Cleaning</option>
                     <option value="Spot Cleaning">Spot Cleaning</option>
@@ -60,7 +60,7 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['Admin_ID']) || $_SESSION[
             <td> Priority Number </td>
             <td>
             <select name="Priority" required>
-                <option value="">Select Priority Number</option>
+                <option value=""disabled select>Select Priority Number</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>

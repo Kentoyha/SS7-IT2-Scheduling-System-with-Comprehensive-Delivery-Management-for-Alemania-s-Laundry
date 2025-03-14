@@ -135,7 +135,7 @@ error_reporting(E_ALL);
             <th>Cleaning Type</th>
             <th>Place</th>
             <th>Status</th>
-            <th>Assign Delivery<br> Staff</th>
+            <th>Assign Staff</th>
         </tr>
 
 
@@ -143,11 +143,9 @@ error_reporting(E_ALL);
 
 $sql = "SELECT Order_ID, Order_date, Laundry_type, Laundry_quantity, Cleaning_type, Place, Priority_number, Status 
         FROM Orders 
-        WHERE Status = 'To be Delivered' 
-        AND Order_ID NOT IN (
-            SELECT DISTINCT Order_ID FROM Delivery
-        )
+        WHERE Status IN ('To be Delivered', 'Ready for Pick up') 
         ORDER BY Priority_number ASC";
+
 
 $query = mysqli_query($conn, $sql);
 
@@ -164,7 +162,11 @@ if (!$query) {
         echo "<td>" . $result["Cleaning_type"] . "</td>";
         echo "<td>" . $result["Place"] . "</td>";
         echo "<td>" . $result["Status"] . "</td>";
-        echo "<td><a href='Assign_delivery_staff.php?Order_ID=" . $result["Order_ID"] . "' class='actbutton'>Assign</a></td>";
+        echo "<td>";
+            echo "<a href='Assign_delivery_staff.php?Order_ID=" . $result["Order_ID"] . "' class='actedit'>Delivery</a>";
+            echo "<a href='Assign_pickup_staff.php?Order_ID=" . $result["Order_ID"] . "' class='actbutton'>Pick up</a>";
+            echo "</td>";
+        
         echo "</tr>";
     }
     echo "</table>";
