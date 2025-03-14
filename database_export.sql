@@ -62,7 +62,7 @@ CREATE TABLE `Delivery` (
   KEY `Admin_Delivery` (`Admin_ID`),
   CONSTRAINT `Admin_Delivery` FOREIGN KEY (`Admin_ID`) REFERENCES `Admin` (`Admin_ID`),
   CONSTRAINT `Orders_Delivery` FOREIGN KEY (`Order_ID`) REFERENCES `Orders` (`Order_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,7 +71,7 @@ CREATE TABLE `Delivery` (
 
 LOCK TABLES `Delivery` WRITE;
 /*!40000 ALTER TABLE `Delivery` DISABLE KEYS */;
-INSERT INTO `Delivery` VALUES (1,'2025-03-14','Toyken','09065118019','Delivered',1,1),(6,'2025-03-14','Barkik bobo nabata','09065118109','Delivered',2,1),(7,'2025-03-14','Nagi Seishiro','09065118019','Out for Delivery',2,1),(8,'2025-03-14','Toyken','09065118019','Delivered',1,1);
+INSERT INTO `Delivery` VALUES (1,'2025-03-14','Toyken','09065118019','Delivered',1,1),(6,'2025-03-14','Barkik bobo nabata','09065118109','Delivered',2,1),(7,'2025-03-14','Nagi Seishiro','09065118019','To Be Delivered',2,1),(8,'2025-03-14','Toyken','09065118019','Delivered',1,1),(9,'2025-03-14','jerick','','Out for Delivery',6,1);
 /*!40000 ALTER TABLE `Delivery` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -98,7 +98,7 @@ CREATE TABLE `Orders` (
   KEY `Admin_Orders` (`Admin_ID`),
   CONSTRAINT `Admin_Orders` FOREIGN KEY (`Admin_ID`) REFERENCES `Admin` (`Admin_ID`),
   CONSTRAINT `User_Orders` FOREIGN KEY (`User_ID`) REFERENCES `User` (`User_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -107,7 +107,7 @@ CREATE TABLE `Orders` (
 
 LOCK TABLES `Orders` WRITE;
 /*!40000 ALTER TABLE `Orders` DISABLE KEYS */;
-INSERT INTO `Orders` VALUES (1,'2025-03-13','Beddings','15','Wet Cleaning','Hotel','1','On the way',NULL,1),(2,'2025-03-13','Topper','13','Spot Cleaning','Naawan','2','Out for Delivery',NULL,1),(3,'2025-03-13','Table Cloth','14','Wet Cleaning','Naawan','3','To be Delivered',NULL,1),(4,'2025-03-13','Table Cloth','18','Wet Cleaning','Kupal ka yata eh','2','On the way',NULL,1);
+INSERT INTO `Orders` VALUES (1,'2025-03-13','Beddings','15','Wet Cleaning','Hotel','1','On the way',NULL,1),(2,'2025-03-13','Topper','13','Spot Cleaning','Naawan','2','Out for Delivery',NULL,1),(3,'2025-03-13','Table Cloth','14','Wet Cleaning','Naawan','3','To be Delivered',NULL,1),(4,'2025-03-13','Table Cloth','18','Wet Cleaning','Kupal ka yata eh','2','On the way',NULL,1),(5,'2025-03-14','Beddings','5','Dry Cleaning','Naawan','1','In Progress',NULL,1),(6,'2025-03-14','Mixed','69','Mixed','Naawan, Iligan City','1','Out for Delivery',2,NULL);
 /*!40000 ALTER TABLE `Orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -190,8 +190,9 @@ CREATE TABLE `User` (
   `Password` varchar(100) DEFAULT NULL,
   `Email` varchar(40) DEFAULT NULL,
   `Contact_info` varchar(40) DEFAULT NULL,
+  `usertype` varchar(40) NOT NULL,
   PRIMARY KEY (`User_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -200,7 +201,7 @@ CREATE TABLE `User` (
 
 LOCK TABLES `User` WRITE;
 /*!40000 ALTER TABLE `User` DISABLE KEYS */;
-INSERT INTO `User` VALUES (1,'Kentoy','$2y$10$cet5YS/R2/ChYfNGokEosuWZNXXzR40VMzR5Al8I2xJM01NrAowU6','Aganap.cliffordkent@ici.edu.ph','09065118019');
+INSERT INTO `User` VALUES (1,'Kentoy','$2y$10$cet5YS/R2/ChYfNGokEosuWZNXXzR40VMzR5Al8I2xJM01NrAowU6','Aganap.cliffordkent@ici.edu.ph','09065118019','admin'),(2,'user','$2y$10$.PlH4w1mttEw2UsdBDndE.X0KqNjfmphPnkp8SugRD56LilGgTrpO','test@test.com','12345129783','user');
 /*!40000 ALTER TABLE `User` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -213,4 +214,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-14  0:39:51
+-- Dump completed on 2025-03-14  3:57:10
