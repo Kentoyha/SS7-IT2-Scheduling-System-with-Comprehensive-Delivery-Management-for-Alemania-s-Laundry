@@ -1,40 +1,51 @@
 <?php
-session_start(); // ✅ Start session at the top
+session_start();
 
 include("db_connect.php");
 include("Menu.php");
 include("Logout.php");
 
-// ✅ Check if the user is logged in and is an admin
 if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 1) {
     header("Location: login.php"); 
     exit();
 }
 
-// ✅ Handle status update request
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Pickup_ID']) && isset($_POST['status'])) {
+if (
+    $_SERVER["REQUEST_METHOD"] == "POST" &&
+    isset($_POST['Pickup_ID']) &&
+    isset($_POST['status'])
+) {
     $Pickup_ID = intval($_POST['Pickup_ID']);
-    $new_status = trim(htmlspecialchars($_POST['status'])); 
+    $new_status = $_POST['status'];
 
-   
-    $valid_statuses = ['Ready for Pick up','On the way', 'Picked up'];
-    if (!in_array($new_status, $valid_statuses)) {
-        die("Error: Invalid status value.");
-    }
-
+    // Update Pickup status
     $stmt = $conn->prepare("UPDATE Pickups SET Status = ? WHERE Pickup_ID = ?");
     $stmt->bind_param("si", $new_status, $Pickup_ID);
 
     if ($stmt->execute()) {
-        echo "<script>
-                alert('Status updated successfully.');
-                window.location.href = 'Pickups.php';
-              </script>";
+        // Also update the Orders status
+        $stmt = $conn->prepare("UPDATE Orders SET Status = ? WHERE Order_ID = (SELECT Order_ID FROM Pickups WHERE Pickup_ID = ?)");
+        $stmt->bind_param("si", $new_status, $Pickup_ID);
+        $stmt->execute();
+
+        echo "<script>alert('Status updated successfully.'); window.location.href = 'Pickups.php';</script>";
         exit();
     } else {
         echo "Error updating status: " . $stmt->error;
     }
 }
+
+$show_unassigned = isset($_GET['show_unassigned']) && $_GET['show_unassigned'] === 'true';
+
+$sql = $show_unassigned
+    ? "SELECT Orders.Order_ID, Orders.Laundry_type, Orders.Laundry_quantity, Orders.Cleaning_type, Orders.Place, Orders.Status 
+        FROM Orders WHERE Orders.Status = 'Ready for Pick up'"
+    : "SELECT Orders.Order_ID, Orders.Laundry_type, Orders.Laundry_quantity, Orders.Cleaning_type, Orders.Place, Orders.Status, 
+        Pickups.Pickup_ID, Pickups.Date, Pickups.Pickup_staff_name 
+        FROM Orders INNER JOIN Pickups ON Orders.Order_ID = Pickups.Order_ID 
+        WHERE Pickups.Pickup_ID IS NOT NULL AND Pickups.Status != 'Picked up' ORDER BY Pickups.Date ASC";
+
+$query = mysqli_query($conn, $sql);
 ?>
 
 <!DOCTYPE html>
@@ -46,8 +57,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Pickup_ID']) && isset(
     <title>Pickups Management</title>
 </head>
 <body>
-    <h1>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h1> <!-- ✅ Prevent XSS -->
+    <h1>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h1>
     <h2>Pickups List</h2>
+
+    <form method="GET" style="margin-bottom: 10px; text-align: center;">
+        <input type="hidden" name="show_unassigned" value="<?php echo $show_unassigned ? 'false' : 'true'; ?>">
+        <button type="submit" class="toggle-btn">
+            <?php echo $show_unassigned ? 'View Active Pickups' : 'View Ready for Pick Up Orders'; ?>
+        </button>
+    </form>
 
     <table>
         <tr>
@@ -55,43 +73,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Pickup_ID']) && isset(
             <th>Pickup Date</th>
             <th>Pickup Staff Name</th>
             <th>Status</th>
+            <?php if (!$show_unassigned) { echo '<th>Set Status</th>'; } ?>
         </tr>
 
         <?php
-        
-        $sql = "SELECT Pickups.*, 
-                       Orders.Laundry_type, 
-                       Orders.Laundry_quantity, 
-                       Orders.Cleaning_type, 
-                       Orders.Place 
-                FROM Pickups 
-                INNER JOIN Orders ON Pickups.Order_ID = Orders.Order_ID 
-                ORDER BY Pickups.Date ASC"; 
-
-        $query = mysqli_query($conn, $sql);
-        if (!$query) {
-            echo "Error: " . mysqli_error($conn);
-        } else {
+        if ($query) {
             while ($row = mysqli_fetch_assoc($query)) {
-                echo "<tr>";
-                echo "<td>" . htmlspecialchars($row['Laundry_quantity']) . "<br>" . 
-                             htmlspecialchars($row['Laundry_type']) . "<br>" . 
-                             htmlspecialchars($row['Cleaning_type']) . "<br>" . 
-                             htmlspecialchars($row['Place']) . "</td>";
-                echo "<td>" . htmlspecialchars($row["Date"]) . "</td>";
-                echo "<td>" . htmlspecialchars($row["Pickup_staff_name"]) . "</td>";
-                echo "<td>
-                        <form method='POST'>
+                echo "<tr><td>" . htmlspecialchars($row['Laundry_quantity']) . "x " . htmlspecialchars($row['Laundry_type']) . "<br>" . htmlspecialchars($row['Cleaning_type']) . "<br>" . htmlspecialchars($row['Place']) . "</td>";
+                echo "<td>" . htmlspecialchars($row["Date"] ?? 'Not Assigned') . "</td>";
+                echo "<td>" . htmlspecialchars($row["Pickup_staff_name"] ?? 'Not Assigned') . "</td>";
+                echo "<td>" . htmlspecialchars($row["Status"]) . "</td>";
+                
+                if (!$show_unassigned && $row['Status'] == 'On the way' && isset($row['Pickup_ID'])) {
+                    echo "<td><form method='POST'>
                             <input type='hidden' name='Pickup_ID' value='" . htmlspecialchars($row['Pickup_ID']) . "'>
-                            <select name='status' onchange='this.form.submit()'>
-                                <option value='Ready for Pick up' " . ($row['Status'] == 'Ready for Pick up' ? 'selected' : '') . ">Ready for Pick up</option>
-                                <option value='In Progress' " . ($row['Status'] == 'On the way' ? 'selected' : '') . ">On the way</option>
-                                <option value='Completed' " . ($row['Status'] == 'Picked up' ? 'selected' : '') . ">Picked up</option>
-                            </select>
-                        </form>
-                      </td>";
+                            <button type='submit' name='status' value='Picked up' class='status-btn ready-for-pickup'>Picked up</button>
+                          </form></td>";
+                }
                 echo "</tr>";
             }
+        } else {
+            echo "<tr><td colspan='5'>No records found.</td></tr>";
         }
         ?>
     </table>

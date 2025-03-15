@@ -18,41 +18,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Order_ID']) && isset($
     // Update Order status
     $stmt = $conn->prepare("UPDATE Orders SET Status = ? WHERE Order_ID = ?");
     $stmt->bind_param("si", $new_status, $Order_ID);
-
-    if ($stmt->execute()) {
-        // If the status is changed to Completed, handle special cases
-        if ($new_status == 'Completed') {
-            // Retrieve order details
-            $stmt = $conn->prepare("SELECT Place FROM Orders WHERE Order_ID = ?");
-            $stmt->bind_param("i", $Order_ID);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $order = $result->fetch_assoc();
-            $place = $order['Place'];
-
-            if ($place == 'Hotel') {
-                // Automatically generate a receipt for hotel orders
-                $stmt = $conn->prepare("INSERT INTO Receipts (Order_ID, Delivery_ID, Pickup_ID, Date_completed, Time_completed) 
-                                        VALUES (?, (SELECT Delivery_ID FROM Delivery WHERE Order_ID = ?), NULL, NOW(), NOW())");
-                $stmt->bind_param("ii", $Order_ID, $Order_ID);
-                $stmt->execute();
-            } else {
-                // Move order to Pickups table for non-hotel locations
-                $stmt = $conn->prepare("INSERT INTO Pickups (Delivery_ID, Date, Status, Pickup_staff_name, Contact_info, Admin_ID) 
-                                        VALUES ((SELECT Delivery_ID FROM Delivery WHERE Order_ID = ?), NOW(), 'Pending', '', '', 
-                                        (SELECT Admin_ID FROM Orders WHERE Order_ID = ?))");
-                $stmt->bind_param("ii", $Order_ID, $Order_ID);
-                $stmt->execute();
-            }
-        }
-        echo "<script>alert('Status has been changed'); window.location.href='Orders.php';</script>";
-        exit();
-    } else {
-        echo "Error updating record: " . $conn->error;
-    }
-    $stmt->close();
+    $stmt->execute();
+    echo "<script>alert('Status has been changed'); window.location.href='Orders.php';</script>";
+    exit();
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -120,6 +89,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Order_ID']) && isset($
         table tr:hover {
             background-color: #f1f1f1;
         }
+
+        .status-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            color: white;
+        }
+
+        .to-be-delivered { background-color: #FFA500; }
+        .in-progress { background-color: #4CAF50; }
     </style>
 </head>
 <body>
@@ -141,6 +122,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Order_ID']) && isset($
             <th>Place</th>
             <th>Priority Number</th>
             <th>Status</th>
+            <th>Set Status</th>
         </tr>
 
         <?php
@@ -162,18 +144,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Order_ID']) && isset($
                 echo "<td>" . htmlspecialchars($result["Cleaning_type"]) . "</td>";
                 echo "<td>" . htmlspecialchars($result["Place"]) . "</td>";
                 echo "<td>" . htmlspecialchars($result["Priority_number"]) . "</td>";
-                echo "<td>
-                        <form method='POST'>
-                            <input type='hidden' name='Order_ID' value='" . htmlspecialchars($result['Order_ID']) . "'>
-                            <select name='status' onchange='this.form.submit()'>
-                                <option value='Pending' " . ($result['Status'] == 'Pending' ? 'selected' : '') . ">Pending</option>
-                                <option value='To be Delivered' " . ($result['Status'] == 'To be Delivered' ? 'selected' : '') . ">To be Delivered</option>
-                                <option value='Delivered' " . ($result['Status'] == 'Delivered' ? 'selected' : '') . ">Delivered</option>
-                                <option value='In Progress' " . ($result['Status'] == 'In Progress' ? 'selected' : '') . ">In Progress</option>
-                                <option value='Completed' " . ($result['Status'] == 'Completed' ? 'selected' : '') . ">Completed</option>
-                            </select>
-                        </form>
-                    </td>";
+                echo "<td>" . htmlspecialchars($result["Status"]) . "</td>";
+                echo "<td>";
+                if ($result['Status'] == 'Pending' && ($result['Place'] != 'Hotel' && $result['Place'] != 'The Hotel')) {
+                    echo "<form method='POST'><input type='hidden' name='Order_ID' value='" . htmlspecialchars($result['Order_ID']) . "'><button class='status-btn to-be-delivered' name='status' value='To be Delivered'>To be Delivered</button></form>";
+                } elseif ($result['Status'] == 'Pending' && ($result['Place'] == 'Hotel' || $result['Place'] == 'The Hotel')) {
+                    echo "<form method='POST'><input type='hidden' name='Order_ID' value='" . htmlspecialchars($result['Order_ID']) . "'><button class='status-btn in-progress' name='status' value='In Progress'>In Progress</button></form>";
+                } elseif ($result['Status'] == 'Delivered') {
+                    echo "<form method='POST'><input type='hidden' name='Order_ID' value='" . htmlspecialchars($result['Order_ID']) . "'><button class='status-btn in-progress' name='status' value='In Progress'>In Progress</button></form>";
+                }
+                echo "</td>";
                 echo "</tr>";
             }
         }

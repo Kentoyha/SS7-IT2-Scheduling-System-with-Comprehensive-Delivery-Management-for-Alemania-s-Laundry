@@ -10,9 +10,8 @@ error_reporting(E_ALL);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teams</title>
+    <title>Orders</title>
     <style>
-       
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f9f9f9;
@@ -22,16 +21,15 @@ error_reporting(E_ALL);
 
         h1 {
             text-align: center;
-            color: black;        }
+            color: black;
+        }
 
-       
         .add-team-container {
             display: flex;
             justify-content: center;
             margin-bottom: 20px;
         }
 
-       
         .add-team-btn {
             background-color: #4CAF50; 
             color: white;
@@ -46,7 +44,6 @@ error_reporting(E_ALL);
             background-color: #45a049;
         }
 
-        
         table {
             width: 80%;
             margin: 0 auto;
@@ -75,47 +72,42 @@ error_reporting(E_ALL);
             background-color: #f1f1f1;
         }
 
-        
-        .actbutton, .actdelete {
-            background-color: #4CAF50;
-            color: white;
+        .actbutton, .actdelete, .actedit {
             padding: 6px 12px;
             border-radius: 4px;
             text-decoration: none;
+            color: white;
+            display: inline-block;
+            margin: 2px;
         }
 
         .actedit {
             background-color: #1cc6ff;
-            padding: 6px 12px;
-            border-radius: 4px;
-            text-decoration: none;
-            color: white;
         }
         .actedit:hover {
             background-color: #32b6e3;
         }
 
-        .actbutton:hover, .actdelete:hover {
+        .actbutton {
+            background-color: #4CAF50;
+        }
+        .actbutton:hover {
             background-color: #45a049;
         }
 
         .actdelete {
             background-color: #dc3545;
         }
-
         .actdelete:hover {
             background-color: #c82333;
         }
 
-      
         img {
             width: 80px;
             height: 80px;
             border-radius: 50%;
             object-fit: cover;
         }
-        
-
     </style>
 </head>
 <body>
@@ -123,13 +115,12 @@ error_reporting(E_ALL);
 
     <div class="add-team-container">
         <a href="Laundry2_Orders.php">
-            <button class="add-team-btn">Place Order</button align="center">
+            <button class="add-team-btn">Place Order</button>
         </a>
     </div>
 
     <table>
         <tr>
-            
             <th>Laundry Type</th>
             <th>Laundry Quantity</th>
             <th>Cleaning Type</th>
@@ -138,42 +129,44 @@ error_reporting(E_ALL);
             <th>Assign Staff</th>
         </tr>
 
-
         <?php
+        $sql = "SELECT Order_ID, Laundry_type, Laundry_quantity, Cleaning_type, Place, Status 
+                FROM Orders 
+                WHERE Status IN ('To be Delivered', 'Ready for Pick up') 
+                AND Place != 'Hotel'
+                ORDER BY 
+                    CASE 
+                        WHEN Status = 'Ready for Pick up' THEN 1 
+                        ELSE 2 
+                    END, 
+                    Order_ID ASC"; 
 
-$sql = "SELECT Order_ID, Order_date, Laundry_type, Laundry_quantity, Cleaning_type, Place, Priority_number, Status 
-        FROM Orders 
-        WHERE Status IN ('To be Delivered', 'Ready for Pick up') 
-        ORDER BY Priority_number ASC";
+        $query = mysqli_query($conn, $sql);
 
+        if (!$query) {
+            echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+        } else {
+            while ($result = mysqli_fetch_assoc($query)) {
+                echo "<tr>";
+                echo "<td>" . $result["Laundry_type"] . "</td>";
+                echo "<td>" . $result["Laundry_quantity"] . "</td>";
+                echo "<td>" . $result["Cleaning_type"] . "</td>";
+                echo "<td>" . $result["Place"] . "</td>";
+                echo "<td>" . $result["Status"] . "</td>";
+                echo "<td>";
 
-$query = mysqli_query($conn, $sql);
+                // Show the correct button based on status
+                if ($result["Status"] == "To be Delivered") {
+                    echo "<a href='Assign_delivery_staff.php?Order_ID=" . $result["Order_ID"] . "' class='actedit'>Delivery</a>";
+                } elseif ($result["Status"] == "Ready for Pick up") {
+                    echo "<a href='Assign_pickup_staff.php?Order_ID=" . $result["Order_ID"] . "' class='actbutton'>Pick up</a>";
+                }
 
-
-if (!$query) {
-    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-} else
- {
-
-    while ($result = mysqli_fetch_assoc($query)) {
-        echo "<tr>";
-        echo "<td>" . $result["Laundry_type"] . "</td>";
-        echo "<td>" . $result["Laundry_quantity"] . "</td>";
-        echo "<td>" . $result["Cleaning_type"] . "</td>";
-        echo "<td>" . $result["Place"] . "</td>";
-        echo "<td>" . $result["Status"] . "</td>";
-        echo "<td>";
-            echo "<a href='Assign_delivery_staff.php?Order_ID=" . $result["Order_ID"] . "' class='actedit'>Delivery</a>";
-            echo "<a href='Assign_pickup_staff.php?Order_ID=" . $result["Order_ID"] . "' class='actbutton'>Pick up</a>";
-            echo "</td>";
-        
-        echo "</tr>";
-    }
-    echo "</table>";
-}
-?>
-
-
+                echo "</td>";
+                echo "</tr>";
+            }
+        }
+        ?>
     </table>
 </body>
 </html>

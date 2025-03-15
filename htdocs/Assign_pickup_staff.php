@@ -1,8 +1,32 @@
 <?php
+session_start();
 include 'db_connect.php';
 include 'Menu2.php';
 
-// Get today's date
+// Ensure the user is logged in and has a valid session
+if (!isset($_SESSION['username']) || $_SESSION['account_level'] != '2') {
+    header("Location: login.php");
+    exit();
+}
+
+// Fetch Admin_ID if not already set
+if (!isset($_SESSION['User_ID'])) {
+    $username = $_SESSION['username'];
+    $query = "SELECT User_ID FROM Users WHERE username = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "s", $username);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if ($row = mysqli_fetch_assoc($result)) {
+        $_SESSION['User_ID'] = $row['User_ID'];
+    } else {
+        die("Error: User_ID not found for the logged-in user.");
+    }
+    mysqli_stmt_close($stmt);
+}
+
+$User_ID = $_SESSION['User_ID'];
 $today = date('Y-m-d'); 
 $tomorrow = date('Y-m-d', strtotime('+1 day')); 
 $next_day = date('Y-m-d', strtotime('+2 days'));
@@ -14,7 +38,6 @@ error_reporting(E_ALL);
 if(isset($_GET['Order_ID'])){
     $Order_id = trim($_GET['Order_ID']);
     
-    // Retrieve order details
     $sql = "SELECT Order_date, Laundry_type, Laundry_quantity, Cleaning_type, Place, Priority_number, Status 
             FROM `Orders` WHERE Order_ID = ?";
     
@@ -26,13 +49,13 @@ if(isset($_GET['Order_ID'])){
     if ($result && mysqli_num_rows($result) > 0) {
         $Order = mysqli_fetch_assoc($result);
     } else {
-        echo "Order not found or error in query: " . mysqli_error($conn);
-        exit;
+        echo "<script>alert('Order not found.'); window.location.href='Orders2.php';</script>";
+        exit();
     }
     mysqli_stmt_close($stmt);
 } else {
-    echo "Order ID not provided.";
-    exit;
+    echo "<script>alert('Order ID not provided.'); window.location.href='Orders2.php';</script>";
+    exit();
 }
 ?>
 
@@ -50,19 +73,19 @@ if(isset($_GET['Order_ID'])){
         <table align="center" cellspacing="0" cellpadding="10" border="1">
             <tr>
                 <td>Laundry Type</td>
-                <td><?php echo htmlspecialchars($Order['Laundry_type'] ?? ''); ?></td>
+                <td><?php echo htmlspecialchars($Order['Laundry_type']); ?></td>
             </tr>
             <tr>
                 <td>Laundry Quantity</td>
-                <td><?php echo htmlspecialchars($Order['Laundry_quantity'] ?? ''); ?></td>
+                <td><?php echo htmlspecialchars($Order['Laundry_quantity']); ?></td>
             </tr>
             <tr>
                 <td>Cleaning Type</td>
-                <td><?php echo htmlspecialchars($Order['Cleaning_type'] ?? ''); ?></td>
+                <td><?php echo htmlspecialchars($Order['Cleaning_type']); ?></td>
             </tr>
             <tr>
                 <td>Place</td>
-                <td><?php echo htmlspecialchars($Order['Place'] ?? ''); ?></td>
+                <td><?php echo htmlspecialchars($Order['Place']); ?></td>
             </tr>
             <tr>
                 <td><label for="Staff">Pick up Staff Name</label></td>
@@ -98,45 +121,48 @@ if(isset($_GET['Order_ID'])){
     <?php
     if(isset($_POST['Assign_staff'])){
         $Staff = trim($_POST['Staff']);
-        $Contact = trim($_POST['Contact']); 
-        $Date = trim($_POST['Delivery_Date']);  
-        $Admin_ID = 1;  
-        $Status = "On the way";  
+        $Contact = trim($_POST['Contact']);
+        $Date = trim($_POST['Delivery_Date']);
+        $Status = "On the way";
 
-        // Validate contact number (must be exactly 11 digits)
         if (!empty($Contact) && !preg_match('/^\d{11}$/', $Contact)) {
             die("<script>alert('Invalid contact number. It must be exactly 11 digits.'); window.history.back();</script>");
         }
 
         $Contact = !empty($Contact) ? $Contact : NULL;
 
-        // Insert into Pickups table
-        $sql = "INSERT INTO `Pickups` (Order_ID, Admin_ID, Date, Pickup_staff_name, Contact_info, Status) 
-                VALUES (?, ?, ?, ?, ?, ?)";
+        mysqli_begin_transaction($conn);
 
-        $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt, "iissss", $Order_id, $Admin_ID, $Date, $Staff, $Contact, $Status);
-        $result = mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
+        try {
+            $sql = "INSERT INTO `Pickups` (Order_ID, User_ID, Date, Pickup_staff_name, Contact_info, Status) 
+                    VALUES (?, ?, ?, ?, ?, ?)";
+            $stmt = mysqli_prepare($conn, $sql);
+            mysqli_stmt_bind_param($stmt, "iissss", $Order_id, $User_ID, $Date, $Staff, $Contact, $Status);
+            $result1 = mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
 
-        if($result){
-            // ✅ Update Orders table to set Status = "On the way"
+            if(!$result1) {
+                throw new Exception("Error inserting into Pickups: " . mysqli_error($conn));
+            }
+
             $updateOrderSql = "UPDATE `Orders` SET `Status` = ? WHERE `Order_ID` = ?";
             $stmtUpdate = mysqli_prepare($conn, $updateOrderSql);
             mysqli_stmt_bind_param($stmtUpdate, "si", $Status, $Order_id);
-            mysqli_stmt_execute($stmtUpdate);
+            $result2 = mysqli_stmt_execute($stmtUpdate);
             mysqli_stmt_close($stmtUpdate);
 
-            echo "<script>
-                    alert('Staff assigned successfully. Status is set to $Status.');
-                    window.location.href='Orders2.php?Order_ID=$Order_id';
-                  </script>";
-        } else {
-            echo "<script>alert('Error in assigning staff: " . mysqli_error($conn) . "');</script>";
+            if(!$result2) {
+                throw new Exception("Error updating order status: " . mysqli_error($conn));
+            }
+
+            mysqli_commit($conn);
+
+            echo "<script>alert('Staff assigned successfully. Status is set to $Status.'); window.location.href='Orders2.php?Order_ID=$Order_id';</script>";
+        } catch (Exception $e) {
+            mysqli_rollback($conn);
+            echo "<script>alert('Transaction failed: " . addslashes($e->getMessage()) . "');</script>";
         }
     }
-
-    // Close database connection
     mysqli_close($conn);
     ?>
 </body>

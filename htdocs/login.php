@@ -6,22 +6,20 @@ if (isset($_POST['submit'])) {
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
 
-    // Prepare a single query for both Admin and User
-    $query = "SELECT *, 'Admin' AS role FROM Admin WHERE Username = ? 
-              UNION 
-              SELECT *, 'User' AS role FROM User WHERE Username = ?";
+    
+    $query = "SELECT * FROM Users WHERE Username = ?";
     $stmt = mysqli_prepare($conn, $query);
-    mysqli_stmt_bind_param($stmt, "ss", $username, $username);
+    mysqli_stmt_bind_param($stmt, "s", $username);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
 
     if ($row = mysqli_fetch_assoc($result)) {
-        if (password_verify($password, $row['Password'])) { // Verify hashed password
+        if (password_verify($password, $row['Password'])) { 
             $_SESSION['username'] = $username;
-            $_SESSION['account_level'] = ($row['role'] === 'Admin') ? 1 : 2;
+            $_SESSION['account_level'] = ($row['Usertype'] === 'Admin') ? 1 : 2;
 
-            if ($row['role'] === 'Admin') {
-                $_SESSION['Admin_ID'] = $row['Admin_ID'];
+            if ($row['Usertype'] === 'Admin') {
+                $_SESSION['User_ID'] = $row['Admin_ID'];
                 header("Location: home.php");
             } else {
                 $_SESSION['User_ID'] = $row['User_ID'];

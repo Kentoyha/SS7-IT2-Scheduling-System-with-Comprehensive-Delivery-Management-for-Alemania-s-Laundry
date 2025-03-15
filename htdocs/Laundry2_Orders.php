@@ -56,17 +56,16 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['User_ID']) || $_SESSION['
             </td>
         </tr>
         <tr>    
-            <td> Place </td>
-            <td> <input type="text" name="Place" required> </td>
+        <td> Place </td>
+        <td> <input type="text" name="Place" value="Beat Naawan" required readonly> </td>
         </tr>
         <tr>
             <td> Priority Number </td>
             <td>
             <select name="Priority" required>
-                <option value="">Select Priority Number</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
                 <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
             </select>
             </td>
         </tr>

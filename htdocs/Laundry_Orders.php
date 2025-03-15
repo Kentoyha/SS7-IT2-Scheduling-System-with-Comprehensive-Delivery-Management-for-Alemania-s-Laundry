@@ -4,12 +4,35 @@ include("Menu.php");
 
 session_start();
 
-if (!isset($_SESSION['username']) || !isset($_SESSION['Admin_ID']) || $_SESSION['account_level'] != 1) {
-    header("Location: login.php"); // Redirect to login page if not logged in or not an admin
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Check if the user is logged in and has the correct access level
+if (!isset($_SESSION['username']) || $_SESSION['account_level'] != '1') {
+    header("Location: login.php");
     exit();
 }
-  
+
+// Fetch User_ID from the database if not set in session
+if (!isset($_SESSION['User_ID'])) {
+    $username = $_SESSION['username']; 
+    $query = "SELECT User_ID FROM Users WHERE username = '$username'"; 
+    $result = mysqli_query($conn, $query);
+    
+    if ($row = mysqli_fetch_assoc($result)) {
+        $_SESSION['User_ID'] = $row['User_ID'];
+    } else {
+        die("Error: User_ID not found for logged-in user.");
+    }
+}
+
+
 ?>
+
+<!DOCTYPE html>
+<html>
+</
 
 
 <head>
@@ -53,17 +76,17 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['Admin_ID']) || $_SESSION[
             </td>
         </tr>
         <tr>    
-            <td> Place </td>
-            <td> <input type="text" name="Place" required> </td>
+        <td> Place </td>
+        <td> <input type="text" name="Place" value="Hotel" required readonly> </td>
         </tr>
         <tr>
             <td> Priority Number </td>
             <td>
             <select name="Priority" required>
                 <option value=""disabled select>Select Priority Number</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
                 <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
             </select>
             </td>
         </tr>
@@ -133,9 +156,6 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['Admin_ID']) || $_SESSION[
 
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 if (isset($_POST['Order'])) {
     $Order_date = date("Y-m-d");
@@ -145,11 +165,17 @@ if (isset($_POST['Order'])) {
     $Place = $_POST['Place'];
     $Priority_number = $_POST['Priority'];
     $Status = $_POST['Status'];
-    $Admin_ID = $_SESSION['Admin_ID'];
-   
 
-    $sql = "INSERT INTO Orders (Order_date, Laundry_type, Laundry_quantity, Cleaning_type, Place, Priority_number, Status, Admin_ID)
-     VALUES ('$Order_date', '$Laundry_Type', '$Laundry_Quantity', '$Cleaning_Type', '$Place', '$Priority_number', '$Status' , '$Admin_ID')";
+    // Ensure User_ID is valid
+    $User_ID = isset($_SESSION['User_ID']) ? $_SESSION['User_ID'] : NULL;
+
+    if ($User_ID === NULL) {
+        echo "<script>alert('Error: User not found. Please log in again.');</script>";
+        exit();
+    }
+
+    $sql = "INSERT INTO Orders (Order_date, Laundry_type, Laundry_quantity, Cleaning_type, Place, Priority_number, Status, User_ID)
+            VALUES ('$Order_date', '$Laundry_Type', '$Laundry_Quantity', '$Cleaning_Type', '$Place', '$Priority_number', '$Status', '$User_ID')";
 
     $query = mysqli_query($conn, $sql);
 
@@ -159,6 +185,7 @@ if (isset($_POST['Order'])) {
         echo "<script> alert('Error: " . mysqli_error($conn) . "'); </script>";
     }
 }
+
 ?>
 </body>
 </html>

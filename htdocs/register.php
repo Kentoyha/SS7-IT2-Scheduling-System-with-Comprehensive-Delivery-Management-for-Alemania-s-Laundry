@@ -21,24 +21,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Hash the password for security
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    // Determine the correct table
-    if ($account_level == 1) {
-        $query = "INSERT INTO Admin (Username, Password, Contact_info, Email) VALUES (?, ?, ?, ?)";
-    } elseif ($account_level == 2) {
-        $query = "INSERT INTO User (Username, Password, Contact_info, Email) VALUES (?, ?, ?, ?)";
-    } else {
-        echo "<script>alert('Invalid account level.');</script>";
-        exit();
-    }
+    // Determine user type
+    $usertype = ($account_level == 1) ? 'Admin' : 'User';
+
+    // Insert into Users table
+    $query = "INSERT INTO Users (Username, Password, Contact_info, Email, Usertype) VALUES (?, ?, ?, ?, ?)";
 
     // Prepare SQL statement to prevent SQL injection
     $stmt = mysqli_prepare($conn, $query);
     if ($stmt) {
-        mysqli_stmt_bind_param($stmt, "ssss", $username, $hashed_password, $contact, $email);
+        mysqli_stmt_bind_param($stmt, "sssss", $username, $hashed_password, $contact, $email, $usertype);
         
         if (mysqli_stmt_execute($stmt)) {
             echo "<script>
-                    alert('" . ($account_level == 1 ? "Admin" : "User") . " registered successfully.');
+                    alert('$usertype registered successfully.');
                     window.location.href='login.php';
                   </script>";
             exit();

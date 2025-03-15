@@ -2,7 +2,15 @@
 include 'db_connect.php';
 include 'Menu2.php';
 
-// Get today's date
+session_start();
+
+// Check if the user is not logged in
+if (!isset($_SESSION['User_ID']) || $_SESSION['account_level'] != '2') {
+    header("Location: login.php"); 
+    exit();
+}
+
+$User_ID = $_SESSION['User_ID'];
 $today = date('Y-m-d'); 
 $tomorrow = date('Y-m-d', strtotime('+1 day')); 
 $next_day = date('Y-m-d', strtotime('+2 days'));
@@ -103,19 +111,18 @@ error_reporting(E_ALL);
         $Staff = trim($_POST['Staff']);
         $Contact = trim($_POST['Contact']);
         $Delivery_Date = trim($_POST['Delivery_Date']); // Gets the selected date from dropdown
-        $Admin_ID = 1; // Modify if needed
         $Status = "Out for Delivery"; 
-
+        $User_ID = $_SESSION['User_ID'];
         // Start Transaction
         mysqli_begin_transaction($conn);
 
         try {
             // Insert into Delivery table
-            $sql = "INSERT INTO `Delivery` (Order_ID, Admin_ID, Delivery_date, Delivery_staff_name, Contact_info, Status) 
+            $sql = "INSERT INTO `Delivery` (Order_ID, User_ID, Delivery_date, Delivery_staff_name, Contact_info, Status) 
                     VALUES (?, ?, ?, ?, ?, ?)";
 
             $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, "iissss", $Order_id, $Admin_ID, $Delivery_Date, $Staff, $Contact, $Status);
+            mysqli_stmt_bind_param($stmt, "iissss", $Order_id, $User_ID, $Delivery_Date, $Staff, $Contact, $Status);
             $result1 = mysqli_stmt_execute($stmt);
             mysqli_stmt_close($stmt);
 
