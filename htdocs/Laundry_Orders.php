@@ -4,35 +4,12 @@ include("Menu.php");
 
 session_start();
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-// Check if the user is logged in and has the correct access level
-if (!isset($_SESSION['username']) || $_SESSION['account_level'] != '1') {
-    header("Location: login.php");
+if (!isset($_SESSION['username']) || !isset($_SESSION['Admin_ID']) || $_SESSION['account_level'] != 1) {
+    header("Location: login.php"); // Redirect to login page if not logged in or not an admin
     exit();
 }
-
-// Fetch User_ID from the database if not set in session
-if (!isset($_SESSION['User_ID'])) {
-    $username = $_SESSION['username']; 
-    $query = "SELECT User_ID FROM Users WHERE username = '$username'"; 
-    $result = mysqli_query($conn, $query);
-    
-    if ($row = mysqli_fetch_assoc($result)) {
-        $_SESSION['User_ID'] = $row['User_ID'];
-    } else {
-        die("Error: User_ID not found for logged-in user.");
-    }
-}
-
-
+  
 ?>
-
-<!DOCTYPE html>
-<html>
-</
 
 
 <head>

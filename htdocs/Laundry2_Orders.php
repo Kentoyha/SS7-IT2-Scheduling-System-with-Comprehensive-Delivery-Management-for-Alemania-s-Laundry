@@ -1,16 +1,15 @@
 <?php
+session_start();
 include("db_connect.php");
 include("Menu2.php");
 
-session_start();
+if (!isset($_SESSION['username']) || !isset($_SESSION['User_ID']) || $_SESSION['account_level'] != "user") {
+    // header("Location: login.php"); 
 
-if (!isset($_SESSION['username']) || !isset($_SESSION['User_ID']) || $_SESSION['account_level'] != 2) {
-    header("Location: login.php"); 
+    echo "<pre>";
+    print_r($_SESSION);
+    echo "</pre>";
     exit();
-    
-    $User_ID = $_SESSION['User_ID'];
-    
-   
 }   
 ?>
 
