@@ -1,6 +1,6 @@
 <?php
 include 'db_connect.php';
-include 'Menu2.php';
+include 'Menu.php';
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);

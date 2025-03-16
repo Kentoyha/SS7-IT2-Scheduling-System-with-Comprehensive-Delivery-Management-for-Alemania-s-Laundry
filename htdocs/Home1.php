@@ -5,7 +5,7 @@ include 'Logout.php';
 session_start(); // Start the session
 
 // Check if the user is logged in and has the correct account level
-if (!isset($_SESSION['username']) || $_SESSION['account_level'] != "user") {
+if (!isset($_SESSION['username']) || $_SESSION['account_level'] != "2") {
     header("Location: login.php"); // Redirect to login page if not logged in or not a user
     exit();
 }

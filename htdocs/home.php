@@ -3,6 +3,7 @@ include("db_connect.php");
 include("Menu.php");
 include("Logout.php");
 
+session_start();
 // ✅ Check if the user is logged in and is an admin
 if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 1) {
     header("Location: login.php"); // Redirect to login page if not an admin
@@ -107,11 +108,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Order_ID']) && isset($
 <body>
     <h1>Orders</h1>
 
-    <div class="add-team-container">
-        <a href="Laundry_Orders.php">
-            <button class="add-team-btn">Place Order</button>
-        </a>
-    </div>
 
     <table>
         <tr>

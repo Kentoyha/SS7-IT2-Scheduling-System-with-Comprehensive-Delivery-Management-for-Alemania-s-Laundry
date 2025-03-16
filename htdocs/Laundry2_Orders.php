@@ -3,32 +3,32 @@ session_start();
 include("db_connect.php");
 include("Menu2.php");
 
-if (!isset($_SESSION['username']) || !isset($_SESSION['User_ID']) || $_SESSION['account_level'] != "user") {
-    // header("Location: login.php"); 
-
-    echo "<pre>";
-    print_r($_SESSION);
-    echo "</pre>";
+// Check if the user is logged in and has a valid session
+if (!isset($_SESSION['username']) && $_SESSION['account_level'] != "2") {
+    header("Location: login.php"); 
     exit();
-}   
+}
 ?>
 
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Order</title>
     <link rel="stylesheet" href="addt.css">
 </head>
-
 <body>
+
 <h1>Place Order</h1>
 
 <form method="POST" action="">
     <table border=1 align="center" cellspacing="0" cellpadding="10">
-    
         <tr>
             <td> Laundry Type </td>
             <td> 
                 <select name="Laundry_Type" required>
-                    <option value="">Select</option>
+                    <option value="" disabled selected>Select</option>
                     <option value="Beddings">Beddings</option>
                     <option value="Curtains">Curtains</option>
                     <option value="Towel">Towel</option>
@@ -46,7 +46,7 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['User_ID']) || $_SESSION['
             <td> Cleaning Type </td>
             <td> 
                 <select name="Cleaning_Type" required>
-                    <option value="">Select</option>
+                    <option value="" disabled selected>Select</option>
                     <option value="Dry Cleaning">Dry Cleaning</option>
                     <option value="Wet Cleaning">Wet Cleaning</option>
                     <option value="Spot Cleaning">Spot Cleaning</option>
@@ -55,82 +55,82 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['User_ID']) || $_SESSION['
             </td>
         </tr>
         <tr>    
-        <td> Place </td>
-        <td> <input type="text" name="Place" value="Beat Naawan" required readonly> </td>
+            <td> Place </td>
+            <td> <input type="text" name="Place" value="Beat Naawan" required readonly> </td>
         </tr>
         <tr>
             <td> Priority Number </td>
             <td>
-            <select name="Priority" required>
-                <option value="3">3</option>
-                <option value="2">2</option>
-                <option value="1">1</option>
-            </select>
+                <select name="Priority" required>
+                    <option value="3">3</option>
+                    <option value="2">2</option>
+                    <option value="1">1</option>
+                </select>
             </td>
         </tr>
         <input type="hidden" name="Status" value="Pending"> 
         <tr>
             <td colspan="2">
-                <button type="submit" name="Order"> Submit</button>
+                <button type="submit" name="Order">Submit</button>
             </td>
         </tr>
     </table>
 </form>
 
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
 
-        h1 {
-            text-align: center;
-            color: #333;
-        }
+    h1 {
+        text-align: center;
+        color: #333;
+    }
 
-        form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            margin: 20px auto;
-        }
+    form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: 20px auto;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
 
-        td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
+    td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
 
-        input[type="text"] {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
+    input[type="text"], input[type="number"], select {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
 
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
+    button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
 
-        button:hover {
-            background-color: #45a049;
-        }
-    </style>
+    button:hover {
+        background-color: #45a049;
+    }
+</style>
 
 <?php
 
@@ -143,23 +143,33 @@ if (isset($_POST['Order'])) {
     $Laundry_Type = $_POST['Laundry_Type'];
     $Laundry_Quantity = $_POST['Laundry_Quantity'];
     $Cleaning_Type = $_POST['Cleaning_Type'];
-    $Place = $_POST['Place'];
+    $Place = "Beat Naawan"; // Ensuring Place is always 'Beat Naawan'
     $Priority_number = $_POST['Priority'];
     $Status = $_POST['Status'];
-    $User_ID = $_SESSION['User_ID'];
-   
 
+    // Ensure User_ID is retrieved from session
+    $User_ID = isset($_SESSION['User_ID']) ? $_SESSION['User_ID'] : NULL;
+
+    if ($User_ID === NULL) {
+        echo "<script>alert('Error: User not found. Please log in again.');</script>";
+        exit();
+    }
+
+    // Use prepared statements to prevent SQL Injection
     $sql = "INSERT INTO Orders (Order_date, Laundry_type, Laundry_quantity, Cleaning_type, Place, Priority_number, Status, User_ID)
-     VALUES ('$Order_date', '$Laundry_Type', '$Laundry_Quantity', '$Cleaning_Type', '$Place', '$Priority_number', '$Status' , '$User_ID')";
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-    $query = mysqli_query($conn, $sql);
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, "ssisissi", $Order_date, $Laundry_Type, $Laundry_Quantity, $Cleaning_Type, $Place, $Priority_number, $Status, $User_ID);
+    $query = mysqli_stmt_execute($stmt);
 
     if ($query) {
-        echo "<script>alert('Order is Placed Successfully'); window.location.href='Orders2.php';</script>";
+        echo "<script>alert('Order Placed Successfully'); window.location.href='Orders2.php';</script>";
     } else {
-        echo "<script> alert('Error: " . mysqli_error($conn) . "'); </script>";
+        echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
     }
 }
 ?>
+
 </body>
 </html>

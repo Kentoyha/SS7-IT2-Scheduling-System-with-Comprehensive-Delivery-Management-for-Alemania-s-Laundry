@@ -10,11 +10,7 @@ if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 1) {
     exit();
 }
 
-if (
-    $_SERVER["REQUEST_METHOD"] == "POST" &&
-    isset($_POST['Pickup_ID']) &&
-    isset($_POST['status'])
-) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Pickup_ID']) && isset($_POST['status'])) {
     $Pickup_ID = intval($_POST['Pickup_ID']);
     $new_status = $_POST['status'];
 
@@ -43,7 +39,10 @@ $sql = $show_unassigned
     : "SELECT Orders.Order_ID, Orders.Laundry_type, Orders.Laundry_quantity, Orders.Cleaning_type, Orders.Place, Orders.Status, 
         Pickups.Pickup_ID, Pickups.Date, Pickups.Pickup_staff_name 
         FROM Orders INNER JOIN Pickups ON Orders.Order_ID = Pickups.Order_ID 
-        WHERE Pickups.Pickup_ID IS NOT NULL AND Pickups.Status != 'Picked up' ORDER BY Pickups.Date ASC";
+        WHERE Pickups.Pickup_ID IS NOT NULL AND Pickups.Status != 'Completed'
+        ORDER BY 
+            CASE WHEN Pickups.Status = 'On the way' THEN 1 ELSE 2 END, 
+            Pickups.Date ASC";
 
 $query = mysqli_query($conn, $sql);
 ?>
@@ -73,7 +72,20 @@ $query = mysqli_query($conn, $sql);
             <th>Pickup Date</th>
             <th>Pickup Staff Name</th>
             <th>Status</th>
-            <?php if (!$show_unassigned) { echo '<th>Set Status</th>'; } ?>
+            <?php 
+            $show_set_status = false;
+            while ($row = mysqli_fetch_assoc($query)) {
+                if ($row['Status'] !== 'Picked up') {
+                    $show_set_status = true;
+                    break;
+                }
+            }
+            mysqli_data_seek($query, 0); // Reset pointer to fetch data again
+
+            if (!$show_unassigned && $show_set_status) { 
+                echo '<th>Set Status</th>'; 
+            }
+            ?>
         </tr>
 
         <?php
@@ -84,7 +96,8 @@ $query = mysqli_query($conn, $sql);
                 echo "<td>" . htmlspecialchars($row["Pickup_staff_name"] ?? 'Not Assigned') . "</td>";
                 echo "<td>" . htmlspecialchars($row["Status"]) . "</td>";
                 
-                if (!$show_unassigned && $row['Status'] == 'On the way' && isset($row['Pickup_ID'])) {
+                // Only show "Set Status" column if the status is NOT "Picked up"
+                if (!$show_unassigned && $show_set_status && $row['Status'] !== 'Picked up' && isset($row['Pickup_ID'])) {
                     echo "<td><form method='POST'>
                             <input type='hidden' name='Pickup_ID' value='" . htmlspecialchars($row['Pickup_ID']) . "'>
                             <button type='submit' name='status' value='Picked up' class='status-btn ready-for-pickup'>Picked up</button>
