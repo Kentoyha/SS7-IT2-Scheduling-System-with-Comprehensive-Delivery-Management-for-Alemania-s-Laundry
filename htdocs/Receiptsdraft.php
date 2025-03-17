@@ -109,7 +109,7 @@ $sql = "SELECT Receipts.*, Orders.Order_date, Orders.Laundry_type, Orders.Laundr
         INNER JOIN Orders ON Receipts.Order_ID = Orders.Order_ID
         LEFT JOIN Delivery ON Receipts.Delivery_ID = Delivery.Delivery_ID
         LEFT JOIN Pickups ON Receipts.Pickup_ID = Pickups.Pickup_ID
-        WHERE 1 $condition"; 
+        WHERE 1 $condition"; // Applying filter condition
 
 $result = mysqli_query($conn, $sql);
 
@@ -124,6 +124,7 @@ if (!$result) {
         <th>Date Ordered</th>
         <th>Date Delivered</th>
         <th>Date Picked up</th>
+        <th>Action</th>
     </tr>
 
     <?php
@@ -133,6 +134,13 @@ if (!$result) {
         echo "<td>" . htmlspecialchars($row["Order_date"]) . "</td>";
         echo "<td>" . htmlspecialchars($row["Delivery_date"] ?? "N/A") . "</td>";
         echo "<td>" . htmlspecialchars($row["Pickup_Date"] ?? "N/A") . "</td>";
+        echo "<td>";
+        if ($row['Status'] === 'Unchecked') {
+            echo "<a href='?Receipt_ID=" . $row['Receipt_ID'] . "' style='color: red;'>Mark as Checked</a>";
+        } else {
+            echo "<span style='color: green;'>Checked</span>";
+        }
+        echo "</td>";
         echo "</tr>";
     }
     ?>

@@ -35,7 +35,7 @@ CREATE TABLE `Delivery` (
   KEY `Users_Delivery` (`User_ID`),
   CONSTRAINT `Orders_Delivery` FOREIGN KEY (`Order_ID`) REFERENCES `Orders` (`Order_ID`),
   CONSTRAINT `Users_Delivery` FOREIGN KEY (`User_ID`) REFERENCES `Users` (`User_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +44,7 @@ CREATE TABLE `Delivery` (
 
 LOCK TABLES `Delivery` WRITE;
 /*!40000 ALTER TABLE `Delivery` DISABLE KEYS */;
-INSERT INTO `Delivery` VALUES (8,'2025-03-19','Nagi Seishiro','09065118019','Delivered',26,2),(9,'2025-03-18','Toyken','09065118019','Delivered',28,2),(10,'2025-03-18','Barkik bobo nabata','09065118019','Delivered',29,2),(11,'2025-03-18','Toyken','09065118019','Delivered',30,2),(12,'2025-03-18','King ina mo boi','09065118019','Delivered',34,2);
+INSERT INTO `Delivery` VALUES (8,'2025-03-19','Nagi Seishiro','09065118019','Delivered',26,2),(9,'2025-03-18','Toyken','09065118019','Delivered',28,2),(10,'2025-03-18','Barkik bobo nabata','09065118019','Delivered',29,2),(11,'2025-03-18','Toyken','09065118019','Delivered',30,2),(12,'2025-03-18','King ina mo boi','09065118019','Delivered',34,2),(13,'2025-03-19','Toyken','09065118019','Delivered',37,2),(14,'2025-03-18','Barkik bobo nabata','09065118019','Delivered',38,2);
 /*!40000 ALTER TABLE `Delivery` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -68,7 +68,7 @@ CREATE TABLE `Orders` (
   PRIMARY KEY (`Order_ID`),
   KEY `Users_Orders` (`User_ID`),
   CONSTRAINT `Users_Orders` FOREIGN KEY (`User_ID`) REFERENCES `Users` (`User_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -77,7 +77,7 @@ CREATE TABLE `Orders` (
 
 LOCK TABLES `Orders` WRITE;
 /*!40000 ALTER TABLE `Orders` DISABLE KEYS */;
-INSERT INTO `Orders` VALUES (26,'2025-03-17','Beddings','51','Wet Cleaning','Beat Naawan','1','Completed',2),(27,'2025-03-17','Curtains','51','Mixed','Hotel','3','Completed',1),(28,'2025-03-17','Curtains','51','Wet Cleaning','Beat Naawan','3','Completed',2),(29,'2025-03-17','Towel','51','Dry Cleaning','Beat Naawan','1','Completed',2),(30,'2025-03-17','Topper','51','Wet Cleaning','Beat Naawan','3','Completed',2),(31,'2025-03-17','Curtains','51','Spot Cleaning','Hotel','3','Completed',1),(32,'2025-03-17','Beddings','51','Dry Cleaning','Hotel','2','Completed',1),(33,'2025-03-17','Curtains','51','Dry Cleaning','Hotel','3','Completed',1),(34,'2025-03-17','Curtains','12','Spot Cleaning','Beat Naawan','2','Ready for Pick up',2),(35,'2025-03-17','Beddings','51','Wet Cleaning','Hotel','2','Completed',1);
+INSERT INTO `Orders` VALUES (26,'2025-03-17','Beddings','51','Wet Cleaning','Beat Naawan','1','Completed',2),(27,'2025-03-17','Curtains','51','Mixed','Hotel','3','Completed',1),(28,'2025-03-17','Curtains','51','Wet Cleaning','Beat Naawan','3','Completed',2),(29,'2025-03-17','Towel','51','Dry Cleaning','Beat Naawan','1','Completed',2),(30,'2025-03-17','Topper','51','Wet Cleaning','Beat Naawan','3','Completed',2),(31,'2025-03-17','Curtains','51','Spot Cleaning','Hotel','3','Completed',1),(32,'2025-03-17','Beddings','51','Dry Cleaning','Hotel','2','Completed',1),(33,'2025-03-17','Curtains','51','Dry Cleaning','Hotel','3','Completed',1),(34,'2025-03-17','Curtains','12','Spot Cleaning','Beat Naawan','2','Completed',2),(35,'2025-03-17','Beddings','51','Wet Cleaning','Hotel','2','Completed',1),(36,'2025-03-17','Towel','51','Wet Cleaning','Hotel','2','Completed',1),(37,'2025-03-17','Curtains','51','Dry Cleaning','Beat Naawan','3','Completed',2),(38,'2025-03-17','Curtains','51','Dry Cleaning','Beat Naawan','2','Completed',2);
 /*!40000 ALTER TABLE `Orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -101,7 +101,7 @@ CREATE TABLE `Pickups` (
   KEY `Users_Pickups` (`User_ID`),
   CONSTRAINT `Orders_Pickups` FOREIGN KEY (`Order_ID`) REFERENCES `Orders` (`Order_ID`),
   CONSTRAINT `Users_Pickups` FOREIGN KEY (`User_ID`) REFERENCES `Users` (`User_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -110,7 +110,7 @@ CREATE TABLE `Pickups` (
 
 LOCK TABLES `Pickups` WRITE;
 /*!40000 ALTER TABLE `Pickups` DISABLE KEYS */;
-INSERT INTO `Pickups` VALUES (6,'2025-03-18','Completed','Barkik bobo nabata','09065118019',26,2),(7,'2025-03-18','Completed','Barkik bobo nabata','09065118019',28,2),(8,'2025-03-18','Completed','Nagi Seishiro','09065118019',29,2),(9,'2025-03-19','Completed','Nagi Seishiro','09065118019',30,2);
+INSERT INTO `Pickups` VALUES (6,'2025-03-18','Completed','Barkik bobo nabata','09065118019',26,2),(7,'2025-03-18','Completed','Barkik bobo nabata','09065118019',28,2),(8,'2025-03-18','Completed','Nagi Seishiro','09065118019',29,2),(9,'2025-03-19','Completed','Nagi Seishiro','09065118019',30,2),(10,'2025-03-19','Completed','Toyken','09065118019',34,2),(11,'2025-03-18','Completed','Barkik bobo nabata','09065118019',37,2),(12,'2025-03-18','Completed','Toyken','09065118019',38,2);
 /*!40000 ALTER TABLE `Pickups` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -128,6 +128,7 @@ CREATE TABLE `Receipts` (
   `Pickup_ID` int(11) DEFAULT NULL,
   `Date_completed` date DEFAULT NULL,
   `Time_completed` time DEFAULT NULL,
+  `Status` enum('Checked','Unchecked') DEFAULT 'Unchecked',
   PRIMARY KEY (`Receipt_ID`),
   KEY `Orders_Receipts` (`Order_ID`),
   KEY `Delivery_Receipts` (`Delivery_ID`),
@@ -135,7 +136,7 @@ CREATE TABLE `Receipts` (
   CONSTRAINT `Delivery_Receipts` FOREIGN KEY (`Delivery_ID`) REFERENCES `Delivery` (`Delivery_ID`),
   CONSTRAINT `Orders_Receipts` FOREIGN KEY (`Order_ID`) REFERENCES `Orders` (`Order_ID`),
   CONSTRAINT `Pickups_Receipts` FOREIGN KEY (`Pickup_ID`) REFERENCES `Pickups` (`Pickup_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -144,7 +145,7 @@ CREATE TABLE `Receipts` (
 
 LOCK TABLES `Receipts` WRITE;
 /*!40000 ALTER TABLE `Receipts` DISABLE KEYS */;
-INSERT INTO `Receipts` VALUES (1,35,NULL,NULL,'2025-03-17','04:39:37');
+INSERT INTO `Receipts` VALUES (1,35,NULL,NULL,'2025-03-17','04:39:37','Unchecked'),(2,34,12,10,'2025-03-17','05:12:33','Unchecked'),(3,36,NULL,NULL,'2025-03-17','13:13:13','Unchecked'),(4,37,13,11,'2025-03-17','13:15:01','Unchecked'),(5,38,14,12,'2025-03-17','13:19:45','Unchecked');
 /*!40000 ALTER TABLE `Receipts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -185,4 +186,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-17  5:00:31
+-- Dump completed on 2025-03-17 13:36:58

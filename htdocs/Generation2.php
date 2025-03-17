@@ -3,7 +3,7 @@ include 'db_connect.php';
 include 'Logout.php';
 session_start();
 
-if (!isset($_SESSION['username']) || $_SESSION['account_level'] != "2") {
+if (!isset($_SESSION['username']) || $_SESSION['account_level'] != "1") {
     header("Location: login.php");
     exit();
 }

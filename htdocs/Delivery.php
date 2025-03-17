@@ -106,7 +106,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     echo "<table>";
     echo "<tr>
-            <th>Order ID</th>
             <th>Order Date</th>
             <th>Laundry Details</th>
             <th>Delivery Date</th>
@@ -124,7 +123,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
             echo "<tr>";
-            echo "<td>" . htmlspecialchars($row['Order_ID']) . "</td>";
             echo "<td>" . htmlspecialchars($row['Order_date']) . "</td>";
             echo "<td>" . htmlspecialchars($row['Laundry_quantity']) . "x " . 
                          htmlspecialchars($row['Laundry_type']) . "<br>" . 

@@ -79,48 +79,59 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Pickup_ID'])) {
 </head>
 <body>
     <h1>Pickups</h1>
-
-    <table>
-        <tr>
-            <th>Order Details</th>
-            <th>Pickup Date</th>
-            <th>Pickup Staff Name</th>
-            <th>Contact Info</th>
-            <th>Status</th>
-            <th>Action</th>
-        </tr>
-        <?php
+    <?php
         $sql = "SELECT Pickups.*, Orders.Laundry_type, Orders.Laundry_quantity, Orders.Cleaning_type, Orders.Place 
                 FROM Pickups 
                 INNER JOIN Orders ON Pickups.Order_ID = Orders.Order_ID
                 WHERE Pickups.Status != 'Completed'";
         $result = mysqli_query($conn, $sql);
-
-        if (mysqli_num_rows($result) > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
-                echo "<tr>";
-                echo "<td>" . $row['Laundry_quantity'] . " x " . $row['Laundry_type'] . " - " . $row['Cleaning_type'] . "<br>" . $row['Place'] . "</td>";
-                echo "<td>" . $row['Date'] . "</td>";
-                echo "<td>" . $row['Pickup_staff_name'] . "</td>";
-                echo "<td>" . $row['Contact_info'] . "</td>";
-                echo "<td>" . $row['Status'] . "</td>";
-                
-                if ($row['Status'] == 'Picked up') {
-                    echo "<td>
-                            <form method='POST'>
-                                <input type='hidden' name='Pickup_ID' value='" . $row['Pickup_ID'] . "'>
-                                <button type='submit' class='complete-btn'>Completed</button>
-                            </form>
-                          </td>";
-                } else {
-                    echo "<td>-</td>";
-                }
-                echo "</tr>";
-            }
+    
+    echo "<table>";
+    echo "<tr>";
+    echo "<th>Order Details</th>";
+    echo "<th>Pickup Date</th>";
+    echo "<th>Pickup Staff Name</th>";
+    echo "<th>Contact Info</th>";
+    echo "<th>Status</th>";
+    
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        if ($row['Status'] != 'On the way'){
+            echo "<th>Action</th>";
         } else {
-            echo "<tr><td colspan='6'>No records found.</td></tr>";
+            echo "<th>-</th>";
         }
-        ?>
-    </table>
+    } else {
+        echo "<th>-</th>"; 
+    }
+    echo "</tr>";
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        mysqli_data_seek($result, 0); 
+        while ($row = mysqli_fetch_assoc($result)) {
+            echo "<tr>";
+            echo "<td>" . htmlspecialchars($row['Laundry_quantity']) . " x " . htmlspecialchars($row['Laundry_type']) . " - " . htmlspecialchars($row['Cleaning_type']) . "<br>" . htmlspecialchars($row['Place']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['Date']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['Pickup_staff_name']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['Contact_info']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['Status']) . "</td>";
+            
+            if ($row['Status'] == 'Picked up') {
+                echo "<td>
+                        <form method='POST'>
+                            <input type='hidden' name='Pickup_ID' value='" . htmlspecialchars($row['Pickup_ID']) . "'>
+                            <button type='submit' class='complete-btn'>Completed</button>
+                        </form>
+                      </td>";
+            } else {
+                echo "<td>-</td>";
+            }
+            echo "</tr>";
+        }
+    } else {
+        echo "<tr><td colspan='6'>No records found.</td></tr>";
+    }
+    echo "</table>";
+    ?>
 </body>
 </html>

@@ -114,7 +114,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Order_ID']) && isset($
 
     <table>
         <tr>
-            <th>Order ID</th>
             <th>Laundry Type</th>
             <th>Order Date</th>
             <th>Laundry Quantity</th>
@@ -137,7 +136,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Order_ID']) && isset($
         } else {
             while ($result = mysqli_fetch_assoc($query)) {
                 echo "<tr>";
-                echo "<td>" . htmlspecialchars($result["Order_ID"]) . "</td>";
                 echo "<td>" . htmlspecialchars($result["Laundry_type"]) . "</td>";
                 echo "<td>" . htmlspecialchars($result["Order_date"]) . "</td>";
                 echo "<td>" . htmlspecialchars($result["Laundry_quantity"]) . "</td>";
