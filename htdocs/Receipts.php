@@ -1,35 +1,15 @@
-<?php
-include 'db_connect.php';
-include 'Menu.php';
+<?php 
+include 'db_connect.php'; // Database connection
+include 'Menu.php'; // Include the menu
+include 'Logout.php';
+session_start(); // Start session
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-// Retrieve completed orders with necessary details
-$sql = "SELECT 
-            r.Receipt_ID, 
-            o.Order_ID, 
-            o.Laundry_type, 
-            o.Laundry_quantity, 
-            o.Cleaning_type, 
-            o.Place, 
-            d.Delivery_ID, 
-            p.Pickup_ID, 
-            o.Date_completed, 
-            o.Time_completed
-        FROM Receipts r
-        INNER JOIN Orders o ON r.Order_ID = o.Order_ID
-        LEFT JOIN Delivery d ON r.Delivery_ID = d.Delivery_ID
-        LEFT JOIN Pickups p ON r.Pickup_ID = p.Pickup_ID
-        WHERE o.Status = 'Completed'
-        ORDER BY o.Date_completed DESC";
-
-$result = mysqli_query($conn, $sql);
-
-if (!$result) {
-    die("Query failed: " . mysqli_error($conn));
+// Check if user is logged in and has the correct access level
+if (!isset($_SESSION['username']) && $_SESSION['account_level'] != "1") {
+    header("Location: login.php");
+    exit();
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -38,62 +18,108 @@ if (!$result) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Receipts</title>
+    <link rel="stylesheet" href="home.css">
     <style>
-        body { font-family: Arial, sans-serif; }
-        .container { width: 90%; margin: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid black; padding: 10px; text-align: center; }
-        th { background-color: #f2f2f2; }
-        .print-btn { margin-top: 20px; padding: 10px 15px; background: green; color: white; border: none; cursor: pointer; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: black;
+        }
+
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table th, table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            color: #333;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Receipts</h2>
+<h1>Completed Orders</h1>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Receipt ID</th>
-                <th>Order Details</th>
-                <th>Delivery ID</th>
-                <th>Pickup ID</th>
-                <th>Completion Date</th>
-                <th>Completion Time</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-                <tr>
-                    <td><?php echo htmlspecialchars($row['Receipt_ID']); ?></td>
-                    <td>
-                        <?php echo htmlspecialchars($row['Laundry_quantity']) . "x " . 
-                                    htmlspecialchars($row['Laundry_type']) . "<br>" . 
-                                    "Cleaning: " . htmlspecialchars($row['Cleaning_type']) . "<br>" . 
-                                    "Place: " . htmlspecialchars($row['Place']); ?>
-                    </td>
-                    <td><?php echo htmlspecialchars($row['Delivery_ID'] ?? 'N/A'); ?></td>
-                    <td><?php echo htmlspecialchars($row['Pickup_ID'] ?? 'N/A'); ?></td>
-                    <td><?php echo htmlspecialchars($row['Date_completed']); ?></td>
-                    <td><?php echo htmlspecialchars($row['Time_completed']); ?></td>
-                    <td>
-                        <button class="print-btn" onclick="printReceipt(<?php echo $row['Receipt_ID']; ?>)">Print</button>
-                    </td>
-                </tr>
-            <?php endwhile; ?>
-        </tbody>
-    </table>
-</div>
+<form method="GET" style="text-align: center;">
+    <input type="hidden" name="show_unassigned" value="<?php echo isset($_GET['show_unassigned']) && $_GET['show_unassigned'] === 'true' ? 'false' : 'true'; ?>">
+    <button type="submit">
+        <?php echo isset($_GET['show_unassigned']) && $_GET['show_unassigned'] === 'true' ? 'Display Completed Orders' : 'Display Completed Hotel Orders'; ?>
+    </button>
+</form>
 
-<script>
-function printReceipt(receiptID) {
-    window.open("print_receipt.php?Receipt_ID=" + receiptID, "_blank");
+<?php
+$show_unassigned = isset($_GET['show_unassigned']) && $_GET['show_unassigned'] === 'true';
+
+$sql = "SELECT Receipts.*, Orders.Order_date, Orders.Laundry_type, Orders.Laundry_quantity, 
+               Orders.Cleaning_type, Orders.Place, Orders.Status, 
+               Delivery.Delivery_date, Delivery.Delivery_staff_name, 
+               Pickups.Date AS Pickup_Date, Pickups.Pickup_staff_name
+        FROM Receipts
+        INNER JOIN Orders ON Receipts.Order_ID = Orders.Order_ID
+        LEFT JOIN Delivery ON Receipts.Delivery_ID = Delivery.Delivery_ID
+        LEFT JOIN Pickups ON Receipts.Pickup_ID = Pickups.Pickup_ID
+        WHERE Orders.Place " . ($show_unassigned ? "= 'Hotel'" : "!= 'Hotel'");
+
+$result = mysqli_query($conn, $sql);
+
+if (!$result) {
+    echo "Error: " . mysqli_error($conn);
+} else {
+?>
+
+<table>
+    <tr>
+        <th>Order Details</th>
+        <th>Date Ordered</th>
+        <th>Date Delivered</th>
+        <th>Date Picked up</th>
+        <th>Date Completed</th>
+        <th>Time Completed</th>
+    </tr>
+
+    <?php
+    while ($row = mysqli_fetch_assoc($result)) {
+        echo "<tr>";
+        echo "<td><a href='Generation.php?order_id=" . htmlspecialchars($row['Order_ID']) . "'>" . htmlspecialchars($row['Order_ID']) . "</a></td>";
+        echo "<td>" . htmlspecialchars($row["Order_date"]) . "</td>";
+        echo "<td>" . htmlspecialchars($row["Delivery_date"] ?? "N/A") . "</td>";
+        echo "<td>" . htmlspecialchars($row["Pickup_Date"] ?? "N/A") . "</td>";
+        echo "<td>" . htmlspecialchars($row["Date_completed"]) . "</td>";
+        echo "<td>" . htmlspecialchars($row["Time_completed"]) . "</td>";
+        echo "</tr>";
+    }
+    ?>
+</table>
+
+<?php
 }
-</script>
+mysqli_close($conn);
+?>
 
 </body>
 </html>
-
-<?php mysqli_close($conn); ?>

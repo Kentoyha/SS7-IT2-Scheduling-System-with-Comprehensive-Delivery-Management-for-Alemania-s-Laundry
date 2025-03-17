@@ -3,7 +3,7 @@
     <ul>
         <li><a href="Home1.php">Home</a></li>
         <li><a href="Orders2.php">Laundry Orders</a></li>
-        <li><a href="Delivery1.php">Delivery</a></li>
+        <li><a href="Delivery1.php">Deliveries</a></li>
         <li><a href="Pickup.php">Pick up</a></li>
         <li><a href="Receipt.php">Receipts</a></li>
       
@@ -19,6 +19,7 @@
         }
 
         nav {
+            
             background-color: #0078d7; /* Matches the black background in the image */
             padding: 0px;
         }

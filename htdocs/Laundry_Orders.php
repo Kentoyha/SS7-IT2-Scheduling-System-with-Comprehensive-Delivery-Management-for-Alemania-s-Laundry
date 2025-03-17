@@ -5,7 +5,7 @@ include("Menu.php");
 session_start();
 
 // Check if the user is logged in and has a valid session
-if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 1) {
+if (!isset($_SESSION['username']) && $_SESSION['account_level'] != 1) {
     header("Location: login.php");
     exit();
 
@@ -75,7 +75,7 @@ if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 1) {
         <input type="hidden" name="Status" value="Pending"> 
         <tr>
             <td colspan="2">
-                <button type="submit" name="Order">Submit</button>
+                <button type="submit" name="Order">Place Order</button>
             </td>
         </tr>
     </table>

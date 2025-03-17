@@ -5,7 +5,7 @@ include("Logout.php");
 session_start();
 
 // Ensure only authorized users can access this page
-if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 2) {
+if (!isset($_SESSION['username']) && $_SESSION['account_level'] != 2) {
     header("Location: login.php");
     exit();
 }
@@ -14,25 +14,47 @@ if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 2) {
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Pickup_ID'])) {
     $Pickup_ID = intval($_POST['Pickup_ID']);
     $new_status = "Completed";
-    
-    // Update Pickups table
-    $stmt = $conn->prepare("UPDATE Pickups SET Status = ? WHERE Pickup_ID = ?");
-    $stmt->bind_param("si", $new_status, $Pickup_ID);
-    
-    if ($stmt->execute()) {
-        // Update Orders table
-        $stmt = $conn->prepare("UPDATE Orders SET Status = ? WHERE Order_ID = (SELECT Order_ID FROM Pickups WHERE Pickup_ID = ?)");
+
+    // Fetch Order_ID from Pickups table
+    $stmt = $conn->prepare("SELECT Order_ID FROM Pickups WHERE Pickup_ID = ?");
+    $stmt->bind_param("i", $Pickup_ID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $pickupData = $result->fetch_assoc();
+    $Order_ID = $pickupData['Order_ID'];
+
+    if ($Order_ID) {
+        // Update Pickups table
+        $stmt = $conn->prepare("UPDATE Pickups SET Status = ? WHERE Pickup_ID = ?");
         $stmt->bind_param("si", $new_status, $Pickup_ID);
         $stmt->execute();
-        
-        echo "<script>alert('Status updated successfully.'); window.location.href = 'Pickup.php';</script>";
+
+        // Update Orders table
+        $stmt = $conn->prepare("UPDATE Orders SET Status = ? WHERE Order_ID = ?");
+        $stmt->bind_param("si", $new_status, $Order_ID);
+        $stmt->execute();
+
+        // Fetch Delivery_ID from Delivery table
+        $stmt = $conn->prepare("SELECT Delivery_ID FROM Delivery WHERE Order_ID = ?");
+        $stmt->bind_param("i", $Order_ID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $deliveryData = $result->fetch_assoc();
+        $Delivery_ID = $deliveryData ? $deliveryData['Delivery_ID'] : NULL;
+
+        // Generate receipt
+        $stmt = $conn->prepare("INSERT INTO Receipts (Order_ID, Delivery_ID, Pickup_ID, Date_completed, Time_completed) VALUES (?, ?, ?, CURDATE(), CURTIME())");
+        $stmt->bind_param("iii", $Order_ID, $Delivery_ID, $Pickup_ID);
+        $stmt->execute();
+
+        echo "<script>alert('Order is now completed. A receipt has been generated.'); window.location.href = 'Receipt.php';</script>";
         exit();
     } else {
-        echo "Error updating status: " . $stmt->error;
+        echo "<script>alert('Error: Order not found.');</script>";
     }
 }
-
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

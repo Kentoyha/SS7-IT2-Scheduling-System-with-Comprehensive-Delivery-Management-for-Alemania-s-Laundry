@@ -5,7 +5,7 @@ include("Logout.php");
 session_start();
 
 // Ensure only admin users can access this page
-if (!isset($_SESSION['username']) || $_SESSION['account_level'] != '1') {
+if (!isset($_SESSION['username']) && $_SESSION['account_level'] != '1') {
     header("Location: login.php");
     exit();
 }

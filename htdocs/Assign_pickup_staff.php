@@ -4,7 +4,7 @@ include 'db_connect.php';
 include 'Menu2.php';
 
 // Ensure the user is logged in and has a valid session
-if (!isset($_SESSION['username']) || $_SESSION['account_level'] != '2') {
+if (!isset($_SESSION['username']) && $_SESSION['account_level'] != '2') {
     header("Location: login.php");
     exit();
 }

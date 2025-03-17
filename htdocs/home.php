@@ -1,11 +1,14 @@
-<?php
+<?php 
 include("db_connect.php");
 include("Menu.php");
 include("Logout.php");
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 session_start();
 // ✅ Check if the user is logged in and is an admin
-if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 1) {
+if (!isset($_SESSION['username']) && $_SESSION['account_level'] != 1) {
     header("Location: login.php"); // Redirect to login page if not an admin
     exit();
 }
@@ -19,7 +22,67 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Order_ID']) && isset($
     $stmt = $conn->prepare("UPDATE Orders SET Status = ? WHERE Order_ID = ?");
     $stmt->bind_param("si", $new_status, $Order_ID);
     $stmt->execute();
-    echo "<script>alert('Status has been changed'); window.location.href='home.php';</script>";
+
+    if ($new_status == 'Completed') {
+        // ✅ Check if order is from "The Hotel"
+        $sql = "SELECT Place FROM Orders WHERE Order_ID = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $Order_ID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $order = $result->fetch_assoc();
+
+        if ($order['Place'] == 'Hotel' || $order['Place'] == 'The Hotel') {
+            // ✅ Get Delivery and Pickup IDs if they exist
+            $Delivery_ID = NULL;
+            $Pickup_ID = NULL;
+
+            $sql = "SELECT Delivery_ID FROM Delivery WHERE Order_ID = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $Order_ID);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $delivery = $result->fetch_assoc();
+            if ($delivery) {
+                $Delivery_ID = $delivery['Delivery_ID'];
+            }
+
+            $sql = "SELECT Pickup_ID FROM Pickups WHERE Order_ID = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $Order_ID);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $pickup = $result->fetch_assoc();
+            if ($pickup) {
+                $Pickup_ID = $pickup['Pickup_ID'];
+            }
+
+            // ✅ Insert into Receipts table with NULL handling
+            $sql = "INSERT INTO Receipts (Order_ID, Delivery_ID, Pickup_ID, Date_completed, Time_completed) 
+                    VALUES (?, ?, ?, CURDATE(), CURTIME())";
+            $stmt = $conn->prepare($sql);
+
+            // Bind parameters correctly
+            if ($Delivery_ID === NULL && $Pickup_ID === NULL) {
+                $stmt->bind_param("iss", $Order_ID, $Delivery_ID, $Pickup_ID);
+            } elseif ($Delivery_ID === NULL) {
+                $stmt->bind_param("isi", $Order_ID, $Delivery_ID, $Pickup_ID);
+            } elseif ($Pickup_ID === NULL) {
+                $stmt->bind_param("iis", $Order_ID, $Delivery_ID, $Pickup_ID);
+            } else {
+                $stmt->bind_param("iii", $Order_ID, $Delivery_ID, $Pickup_ID);
+            }
+
+            $stmt->execute();
+
+            // ✅ Show a different message and redirect to Receipts.php
+            echo "<script>alert('Order is now completed. A receipt has been generated.'); window.location.href='Receipts.php';</script>";
+            exit();
+        }
+    }
+
+    // ✅ If status is not 'Completed', show a different message
+    echo "<script>alert('Status has been changed.'); window.location.href='home.php';</script>";
     exit();
 }
 ?>
@@ -107,7 +170,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Order_ID']) && isset($
 </head>
 <body>
     <h1>Orders</h1>
-
 
     <table>
         <tr>

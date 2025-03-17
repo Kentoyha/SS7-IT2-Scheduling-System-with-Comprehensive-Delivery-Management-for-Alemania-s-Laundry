@@ -49,13 +49,14 @@ if (isset($_POST['submit'])) {
         <h1>Welcome to Alemania's Laundry</h1>
     </header>
 
+    <form method="POST" class="login-form">
     <div class="logo-container">
         <img src="Images/bg6.jpg" alt="logo" class="logo">
     </div>
 
     <h3 class="login-title">Log in</h3>
 
-    <form method="POST" class="login-form">
+   
         <input type="text" name="username" placeholder="Username" required>
         <input type="password" name="password" placeholder="Password" required>
         <input type="submit" name="submit" value="Login">

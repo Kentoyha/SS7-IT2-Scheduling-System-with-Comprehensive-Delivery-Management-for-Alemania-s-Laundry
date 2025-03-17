@@ -5,7 +5,7 @@ include("db_connect.php");
 include("Menu.php");
 include("Logout.php");
 
-if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 1) {
+if (!isset($_SESSION['username']) && $_SESSION['account_level'] != 1) {
     header("Location: login.php"); 
     exit();
 }
