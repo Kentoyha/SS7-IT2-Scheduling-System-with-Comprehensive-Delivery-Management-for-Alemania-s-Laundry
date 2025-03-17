@@ -1,13 +1,16 @@
 <?php
-session_start();
 include("db_connect.php");
 include("Menu2.php");
 
+session_start();
+
 // Check if the user is logged in and has a valid session
-if (!isset($_SESSION['username']) && $_SESSION['account_level'] != "2") {
-    header("Location: login.php"); 
+if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 2) {
+    header("Location: login.php");
     exit();
+
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -56,12 +59,13 @@ if (!isset($_SESSION['username']) && $_SESSION['account_level'] != "2") {
         </tr>
         <tr>    
             <td> Place </td>
-            <td> <input type="text" name="Place" value="Beat Naawan" required readonly> </td>
+            <td> <input type="text" name="Place" value="Beat Nawaan" required readonly> </td>
         </tr>
         <tr>
             <td> Priority Number </td>
             <td>
                 <select name="Priority" required>
+                    <option value="" disabled selected>Select Priority Number</option>
                     <option value="3">3</option>
                     <option value="2">2</option>
                     <option value="1">1</option>
@@ -134,16 +138,12 @@ if (!isset($_SESSION['username']) && $_SESSION['account_level'] != "2") {
 
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 if (isset($_POST['Order'])) {
     $Order_date = date("Y-m-d");
     $Laundry_Type = $_POST['Laundry_Type'];
     $Laundry_Quantity = $_POST['Laundry_Quantity'];
     $Cleaning_Type = $_POST['Cleaning_Type'];
-    $Place = "Beat Naawan"; // Ensuring Place is always 'Beat Naawan'
+    $Place = "Beat Naawan"; 
     $Priority_number = $_POST['Priority'];
     $Status = $_POST['Status'];
 
@@ -160,7 +160,7 @@ if (isset($_POST['Order'])) {
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "ssisissi", $Order_date, $Laundry_Type, $Laundry_Quantity, $Cleaning_Type, $Place, $Priority_number, $Status, $User_ID);
+    mysqli_stmt_bind_param($stmt, "ssissisi", $Order_date, $Laundry_Type, $Laundry_Quantity, $Cleaning_Type, $Place, $Priority_number, $Status, $User_ID);
     $query = mysqli_stmt_execute($stmt);
 
     if ($query) {
@@ -169,6 +169,7 @@ if (isset($_POST['Order'])) {
         echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
     }
 }
+
 ?>
 
 </body>

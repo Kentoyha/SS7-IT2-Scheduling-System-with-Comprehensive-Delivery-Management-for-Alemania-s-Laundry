@@ -2,7 +2,7 @@
 <nav>  
     <ul>
         <li><a href="home.php">Home</a></li>
-        <li><a href="Orders.php">Orders</a></li>
+        <li><a href="Orders.php">Laundry Orders</a></li>
         <li><a href="Delivery.php">Deliveries</a></li>
         <li><a href="Pickups.php">Pick Up</a></li>
         <li><a href="Receipts.php">Receipt</a></li>

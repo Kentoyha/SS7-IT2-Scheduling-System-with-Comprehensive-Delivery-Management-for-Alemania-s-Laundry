@@ -157,7 +157,7 @@ if(isset($_GET['Order_ID'])){
 
             mysqli_commit($conn);
 
-            echo "<script>alert('Staff assigned successfully. Status is set to $Status.'); window.location.href='Orders2.php?Order_ID=$Order_id';</script>";
+            echo "<script>alert('Staff assigned successfully. Status is set to $Status.'); window.location.href='Pickup.php?Order_ID=$Order_id';</script>";
         } catch (Exception $e) {
             mysqli_rollback($conn);
             echo "<script>alert('Transaction failed: " . addslashes($e->getMessage()) . "');</script>";

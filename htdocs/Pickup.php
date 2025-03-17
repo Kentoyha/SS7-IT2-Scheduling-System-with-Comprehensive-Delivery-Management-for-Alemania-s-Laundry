@@ -1,7 +1,7 @@
 <?php
 include("db_connect.php");
 include("Menu2.php");
-
+include("Logout.php");
 session_start();
 
 // Ensure only authorized users can access this page
@@ -87,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Pickup_ID'])) {
                     echo "<td>
                             <form method='POST'>
                                 <input type='hidden' name='Pickup_ID' value='" . $row['Pickup_ID'] . "'>
-                                <button type='submit' class='complete-btn'>Complete</button>
+                                <button type='submit' class='complete-btn'>Completed</button>
                             </form>
                           </td>";
                 } else {

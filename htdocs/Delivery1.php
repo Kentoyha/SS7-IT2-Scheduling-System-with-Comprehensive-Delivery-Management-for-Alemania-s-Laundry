@@ -1,7 +1,17 @@
 <?php
 include 'db_connect.php';
 include 'Menu2.php';
+include 'Logout.php';
+
+session_start();
+// ✅ Check if the user is logged in and is an admin
+if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 2) {
+    header("Location: login.php"); // Redirect to login page if not an admin
+    exit();
+}
+
 ?>
+
 <!DOCTYPE html>
 <html>
 <body>

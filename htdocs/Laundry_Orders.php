@@ -8,6 +8,7 @@ session_start();
 if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 1) {
     header("Location: login.php");
     exit();
+
 }
 
 ?>
@@ -142,12 +143,12 @@ if (isset($_POST['Order'])) {
     $Laundry_Type = $_POST['Laundry_Type'];
     $Laundry_Quantity = $_POST['Laundry_Quantity'];
     $Cleaning_Type = $_POST['Cleaning_Type'];
-    $Place = "Hotel"; // Manually set to avoid any input errors
+    $Place = "Hotel"; 
     $Priority_number = $_POST['Priority'];
     $Status = $_POST['Status'];
 
     // Ensure User_ID is retrieved from session
-    $User_ID = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : NULL;
+    $User_ID = isset($_SESSION['User_ID']) ? $_SESSION['User_ID'] : NULL;
 
     if ($User_ID === NULL) {
         echo "<script>alert('Error: User not found. Please log in again.');</script>";

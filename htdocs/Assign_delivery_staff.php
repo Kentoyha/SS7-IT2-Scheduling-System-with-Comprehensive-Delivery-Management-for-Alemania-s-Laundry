@@ -144,7 +144,7 @@ error_reporting(E_ALL);
             // Commit transaction
             mysqli_commit($conn);
 
-            echo "<script>alert('Staff assigned successfully, Order is now Out for Delivery'); window.location.href='Orders2.php';</script>";
+            echo "<script>alert('Staff assigned successfully, Order is now Out for Delivery'); window.location.href='Delivery1.php';</script>";
         } catch (Exception $e) {
             // Rollback on failure
             mysqli_rollback($conn);

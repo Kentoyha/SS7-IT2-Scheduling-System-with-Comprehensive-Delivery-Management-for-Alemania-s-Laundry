@@ -1,7 +1,7 @@
 <?php
 include("db_connect.php");
 include("Menu.php");
-
+include("Logout.php");
 session_start();
 
 // Ensure only admin users can access this page

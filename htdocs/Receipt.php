@@ -1,10 +1,10 @@
 <?php 
-include 'Menu.php';
+include 'Menu2.php';
 
 session_start(); // Start the session
 
 // Check if the user is logged in and has the correct account level
-if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 1) {
+if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 2) {
     header("Location: login.php"); // Redirect to login page if not logged in or not an admin
     exit();
 }
@@ -114,34 +114,8 @@ if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 1) {
 <body>
     <div class="container">
         <h2>Reciept</h2>
-        <table>
-            <tr>
-                <th>Order Details</th>
-                <th>Date</th>
-                <th>Time</th>
-            </tr>
-            <?php
-            $conn = new mysqli("localhost", "root", "", "laundry_db");
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-            }
-            $sql = "SELECT * FROM schedule";
-            $result = $conn->query($sql);
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    echo "<tr>
-                            <td>{$row['id']}</td>
-                            
-                            <td>{$row['date']}</td>
-                            <td>{$row['time']}</td>
-                            
-                          </tr>";
-                }
-            } else {
-                echo "<tr><td colspan='5'>No schedules found</td></tr>";
-            }
-            $conn->close();
-            ?>
+       
+           
         </table>
     </div>
 </body>

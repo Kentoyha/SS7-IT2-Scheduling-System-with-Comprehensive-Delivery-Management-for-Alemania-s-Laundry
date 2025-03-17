@@ -132,31 +132,28 @@ if (!isset($_SESSION['username']) || $_SESSION['account_level'] != "2") {
     </style>
 </head>
 <body>
-    <h1>Orders</h1>
+    <h1>On going Orders</h1>
     <table>
         <tr>
             <th>Order Date</th>
             <th>Laundry Type</th>
             <th>Laundry Quantity</th>
             <th>Cleaning Type</th>
-            <th>Place</th>
             <th>Status</th>
         </tr>
 
         <?php
-        $sql = "SELECT * FROM Orders WHERE STATUS = 'In Progress'ORDER BY Priority_number DESC";
+        $sql = "SELECT * FROM Orders WHERE STATUS = 'In Progress' ORDER BY Priority_number DESC";
         $query = mysqli_query($conn, $sql);
         if (!$query) {
             echo "Error: " . $sql . "<br>" . mysqli_error($conn);
         } else {
             while ($result = mysqli_fetch_assoc($query)) {
                 echo "<tr>";
-               // echo "<td><a href='team_players.php?team_id=" . $result["Team_id"] . "' style='text-decoration: none;'><img src='{$result['File_path1']}' alt='Team Logo'></a></td>";
                 echo "<td>" . $result["Order_date"] . "</td>";
                 echo "<td>" . $result["Laundry_type"] . "</td>";
                 echo "<td>" . $result["Laundry_quantity"] . "</td>";
                 echo "<td>" . $result["Cleaning_type"] ."</td>";
-                echo "<td>" . $result["Place"] . "</td>";
                 echo "<td>" . $result["Status"] . "</td>";
                 echo "</tr>";
             }
