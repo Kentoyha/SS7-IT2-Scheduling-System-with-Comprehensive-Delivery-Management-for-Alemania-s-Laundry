@@ -79,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Order_ID']) && isset($
             $stmt->execute();
 
             // ✅ Show a different message and redirect to Receipts.php
-            echo "<script>alert('Order is now completed. A receipt has been generated.'); window.location.href='Receipts.php';</script>";
+            echo "<script>alert('Order is now completed. A receipt has been generated.'); window.location.href='home.php';</script>";
             exit();
         }
     }

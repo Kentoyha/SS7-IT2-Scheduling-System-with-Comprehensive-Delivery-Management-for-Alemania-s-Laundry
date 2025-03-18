@@ -7,8 +7,8 @@ include 'Logout.php';
 session_start(); // Start the session
 
 // Check if the user is logged in and has the correct account level
-if (!isset($_SESSION['username']) && $_SESSION['account_level'] != "2") {
-    header("Location: login.php");
+if (!isset($_SESSION['username']) ||  $_SESSION['account_level'] != "2") {
+    header("Location: index.php");
     exit();
 }
 
@@ -162,17 +162,7 @@ $total_pages = ceil($total_results / $results_per_page);
                 }
             }
 
-            if (isset($_GET['action']) && isset($_GET['Team_id'])) {
-                $action = trim($_GET['action']);
-                $Team_id = trim($_GET['Team_id']);
-
-                if ($action == 'delete') {
-                    $sql = "DELETE FROM Team WHERE Team_id = $Team_id";
-                    if (mysqli_query($conn, $sql)) {
-                        echo "<script>alert('Team has been removed'); window.location='Teams.php';</script>";
-                    }
-                }
-            }
+           
             ?>
         </tbody>
     </table>

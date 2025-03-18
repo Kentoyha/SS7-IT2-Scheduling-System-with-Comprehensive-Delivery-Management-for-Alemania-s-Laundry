@@ -46,13 +46,13 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 80px; /* Push below header */
-    margin-bottom: 20px;
+    margin-top: 30px; /* Push below header */
+    margin-bottom: 15px;
 }
 
 .logo {
-    width: 320px;
-    height: 160px;
+    width: 280px;
+    height: 120px;
     border-radius: 8%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     transition: transform 0.3s ease-in-out;

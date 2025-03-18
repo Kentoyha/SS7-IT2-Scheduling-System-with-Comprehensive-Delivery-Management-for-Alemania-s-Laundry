@@ -1,19 +1,35 @@
 <?php
+// filepath: /workspaces/SS7-IT2-Scheduling-System-with-Comprehensive-Delivery-Management-for-Alemania-s-Laundry/htdocs/register.php
+
 include 'db_connect.php';
 
 // Enable error reporting for debugging
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// Check if an admin user already exists
+$admin_exists = false;
+$check_admin_query = "SELECT COUNT(*) FROM Users WHERE Usertype = 'Admin'";
+$admin_result = mysqli_query($conn, $check_admin_query);
+
+if ($admin_result) {
+    $admin_count = mysqli_fetch_array($admin_result)[0];
+    $admin_exists = ($admin_count > 0);
+} else {
+    echo "<script>alert('Database error checking for existing admin.');</script>";
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
     $contact = trim($_POST['contact']);
     $email = trim($_POST['email']);
-    $account_level = $_POST['account_level'];
+
+    // If admin exists, automatically set account_level to 2 (User)
+    $account_level = $admin_exists ? 2 : $_POST['account_level'];
 
     // Validate input
-    if (empty($username) || empty($password) || empty($contact) || empty($email) || empty($account_level)) {
+    if (empty($username) || empty($password) || empty($contact) || empty($email)) {
         echo "<script>alert('All fields are required!');</script>";
         exit();
     }
@@ -64,13 +80,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h1>Welcome to Alemania's Laundry</h1>
     </header>
 
+    
+    <form method="POST" class="login-form">
     <div class="logo-container">
         <img src="Images/bg6.jpg" alt="logo" class="logo">
     </div>
 
     <h3 class="login-title">Account Registration</h3>
 
-    <form method="POST" class="login-form">
         <div class="form-group">
             <input type="text" name="username" placeholder="Username" class="form-control" required>
             <input type="password" name="password" placeholder="Password" class="form-control" required>
@@ -81,14 +98,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="email" name="email" placeholder="Email Address" required>
         </div>
 
+        <?php if (!$admin_exists): ?>
         <select name="account_level" required>
             <option value="" disabled selected>Select Role</option>
             <option value="1">Admin</option>
             <option value="2">User</option>
         </select>
+        <?php endif; ?>
 
         <input type="submit" value="Register">
-        <p>Already have an account? <a href="login.php">Login</a></p>
+        <p>Already have an account? <a href="index.php">Login</a></p>
     </form>
 </body>
 </html>

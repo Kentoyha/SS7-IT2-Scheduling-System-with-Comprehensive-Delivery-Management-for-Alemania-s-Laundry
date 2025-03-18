@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Pickup_ID'])) {
         $stmt->bind_param("iii", $Order_ID, $Delivery_ID, $Pickup_ID);
         $stmt->execute();
 
-        echo "<script>alert('Order is now completed. A receipt has been generated.'); window.location.href = 'Receipt.php';</script>";
+        echo "<script>alert('Order is now completed. A receipt has been generated.'); window.location.href = 'Pickup.php';</script>";
         exit();
     } else {
         echo "<script>alert('Error: Order not found.');</script>";
@@ -156,11 +156,11 @@ $show_unassigned = isset($_GET['show_unassigned']) && $_GET['show_unassigned'] =
         }
 
         .complete-btn:hover {
-            background-color: #0056b3; /* Darker blue on hover */
+            background-color: #0056b3 ; /* Darker blue on hover */
         }
 
         .styled-button {
-            background-color: #3498db; /* A different shade of blue */
+            background-color: #007bff; /* A different shade of blue */
             border: none;
             color: white;
             padding: 10px 20px;
@@ -186,7 +186,7 @@ $show_unassigned = isset($_GET['show_unassigned']) && $_GET['show_unassigned'] =
     <form method="GET" style="margin-bottom: 10px; text-align: center;">
         <input type="hidden" name="show_unassigned" value="<?php echo $show_unassigned ? 'false' : 'true'; ?>">
         <button type="submit" class="styled-button">
-            <?php echo $show_unassigned ? 'Show Assigned Pickups' : 'Show Pickups On The Way'; ?>
+            <?php echo $show_unassigned ? 'Show Picked up Orders' : 'Show Pickups On The Way'; ?>
         </button>
     </form>
 

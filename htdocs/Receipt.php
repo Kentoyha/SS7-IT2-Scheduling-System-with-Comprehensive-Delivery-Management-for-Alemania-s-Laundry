@@ -128,7 +128,7 @@ $result = $conn->query($sql);
         }
 
         .filter-buttons button {
-            background-color: #007bff;
+            background-color: #007bff; /* Blue */
             color: white;
             border: none;
             padding: 12px 20px;
@@ -139,8 +139,9 @@ $result = $conn->query($sql);
         }
 
         .filter-buttons button:hover {
-            background-color: #0056b3;
+            background-color: #0056b3; /* Darker Blue */
         }
+        
 
         .container {
             display: flex;

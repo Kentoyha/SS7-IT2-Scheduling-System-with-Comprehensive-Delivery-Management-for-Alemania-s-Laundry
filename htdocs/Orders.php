@@ -305,7 +305,7 @@ tr:hover {
                 </select>
 
                 <label for="Place">Place:</label>
-                <input type="text" name="Place" id="Place" value="Hotel" required>
+                <input type="text" name="Place" id="Place" value="Hotel" readonly>
 
                 <label for="Priority">Priority Number:</label>
                 <select name="Priority" id="Priority" required>
