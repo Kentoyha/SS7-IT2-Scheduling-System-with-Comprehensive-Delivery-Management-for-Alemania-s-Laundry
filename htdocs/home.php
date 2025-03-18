@@ -1,5 +1,7 @@
 <?php
 // filepath: /workspaces/SS7-IT2-Scheduling-System-with-Comprehensive-Delivery-Management-for-Alemania-s-Laundry/htdocs/home.php
+
+// filepath: /workspaces/SS7-IT2-Scheduling-System-with-Comprehensive-Delivery-Management-for-Alemania-s-Laundry/htdocs/home.php
 include("db_connect.php");
 include("Menu.php");
 include("Logout.php");
@@ -86,6 +88,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Order_ID']) && isset($
     echo "<script>alert('Status has been changed.'); window.location.href='home.php';</script>";
     exit();
 }
+
+// Pagination settings
+$results_per_page = 6;
+$current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
+$start_from = ($current_page - 1) * $results_per_page;
+
+// Retrieve total number of orders
+$total_query = "SELECT COUNT(*) AS total FROM Orders WHERE Status = 'In Progress'";
+$total_result = mysqli_query($conn, $total_query);
+$total_row = mysqli_fetch_assoc($total_result);
+$total_results = $total_row['total'];
+
+$total_pages = ceil($total_results / $results_per_page);
+
+// Fetch paginated orders
+$sql = "SELECT Order_ID, Order_date, Laundry_type, Laundry_quantity, Cleaning_type, Place, Priority_number, Status 
+        FROM Orders
+        WHERE Status = 'In Progress'
+        ORDER BY Priority_number ASC
+        LIMIT $start_from, $results_per_page";
+
+$query = mysqli_query($conn, $sql);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -96,102 +120,107 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Order_ID']) && isset($
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f9f9f9;
+            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
-            color: #333; /* Added a default text color */
+            color: #333;
         }
 
         h1 {
             text-align: center;
-            color: #007bff; /* Changed to a more appealing color */
-            margin-bottom: 30px; /* Increased margin */
-            font-family: Arial, sans-serif; /* Changed font */
-        }
-
-        .add-team-container {
-            display: flex;
-            justify-content: center;
+            font-weight: bold;
             margin-bottom: 20px;
-        }
-
-        .add-team-btn {
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease; /* Added transition for hover effect */
-        }
-
-        .add-team-btn:hover {
-            background-color: #45a049;
+            color: black;
+            text-transform: uppercase;
         }
 
         table {
-            width: 90%; /* Increased width */
-            margin: 20px auto; /* Added top and bottom margin */
+            width: 98%; /* Increased width */
+            margin: 20px auto;
             border-collapse: collapse;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slightly stronger shadow */
             background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px; /* Added border-radius for a softer look */
-            overflow: hidden; /* Ensures the border-radius is applied correctly */
+            border-radius: 10px; /* More rounded corners */
+            overflow: hidden;
         }
 
-        table th, table td {
-            padding: 15px; /* Increased padding */
+        th, td {
+            padding: 14px 16px; /* Adjusted padding */
             text-align: center;
-            border: none; /* Removed default border */
+            border-bottom: 1px solid #ddd;
+            color: #444; /* Slightly darker text */
         }
 
-        table th {
-            background-color: #007bff; /* Changed to a more appealing color */
-            font-weight: 500; /* Lighter font weight */
-            color: white;
-            text-transform: uppercase; /* Added text transform */
-            letter-spacing: 1px; /* Added letter spacing */
+        th {
+            background-color: #f0f0f0; /* Slightly darker header */
+            color: #333; /* Darker header text */
+            font-weight: 600; /* Slightly bolder header text */
+            text-transform: uppercase;
+            letter-spacing: 0.8px; /* Adjusted letter spacing */
         }
 
-        table tr:nth-child(even) {
-            background-color: #f2f2f2;
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
         }
-
-        table tr:hover {
-            background-color: #e6f7ff; /* Lighter hover color */
-            transition: background-color 0.3s ease; /* Added transition for smooth hover effect */
+       
+        tr:hover {
+            background-color: #ebf9ff; /* Lighter hover color */
+            transition: background-color 0.3s ease;
         }
 
         .status-btn {
-            padding: 10px 15px; /* Adjusted padding */
+            padding: 9px 14px; /* Adjusted padding */
             border: none;
-            border-radius: 5px; /* Adjusted border-radius */
+            border-radius: 5px; /* More rounded buttons */
             cursor: pointer;
             font-size: 14px;
             color: white;
-            transition: background-color 0.3s ease; /* Added transition for hover effect */
+            transition: transform 0.2s ease, box-shadow 0.2s ease; /* Added transform and box-shadow transition */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Added subtle shadow */
         }
 
-        .to-be-delivered { background-color: #FFA500; }
-        .in-progress { background-color: #4CAF50; }
-        .completed { background-color: #008CBA; }
-        .ready-for-pickup { background-color: #FFD700; }
-
-        /* Hover effect for status buttons */
         .status-btn:hover {
-            opacity: 0.8;
+            transform: translateY(-2px); /* Slight lift on hover */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Increased shadow on hover */
+        }
+
+        .to-be-delivered { background-color: #F4A460; } /* Sandy Brown */
+        .in-progress { background-color: #5cb85c; } /* Emerald Green */
+        .completed { background-color: #5bc0de; } /* Turquoise */
+        .ready-for-pickup { background-color: #DAA520; } /* Darker Gold */
+
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            display: inline-block;
+            padding: 8px 16px;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            color: #333;
+        }
+
+        .pagination a.active {
+            background-color: #007bff;
+            color: white;
+            border: 1px solid #007bff;
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: #ddd;
         }
     </style>
 </head>
 <body>
-    <h1>Orders</h1>
+    <h1>Processing Orders</h1>
 
     <table>
         <thead>
             <tr>
-                <th>Laundry Type</th>
                 <th>Order Date</th>
+                <th>Laundry Type</th>
                 <th>Laundry Quantity</th>
                 <th>Cleaning Type</th>
                 <th>Place</th>
@@ -202,19 +231,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Order_ID']) && isset($
         </thead>
         <tbody>
             <?php
-            $sql = "SELECT Order_ID, Order_date, Laundry_type, Laundry_quantity, Cleaning_type, Place, Priority_number, Status 
-                    FROM Orders
-                    WHERE Status = 'In Progress'
-                    ORDER BY Priority_number ASC";
-
-            $query = mysqli_query($conn, $sql);
             if (!$query) {
                 echo "<tr><td colspan='8'>Error: " . $sql . "<br>" . mysqli_error($conn) . "</td></tr>";
             } else {
                 while ($result = mysqli_fetch_assoc($query)) {
                     echo "<tr>";
-                    echo "<td>" . htmlspecialchars($result["Laundry_type"]) . "</td>";
                     echo "<td>" . htmlspecialchars($result["Order_date"]) . "</td>";
+                    echo "<td>" . htmlspecialchars($result["Laundry_type"]) . "</td>";
                     echo "<td>" . htmlspecialchars($result["Laundry_quantity"]) . "</td>";
                     echo "<td>" . htmlspecialchars($result["Cleaning_type"]) . "</td>";
                     echo "<td>" . htmlspecialchars($result["Place"]) . "</td>";
@@ -233,5 +256,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Order_ID']) && isset($
             ?>
         </tbody>
     </table>
+
+    <!-- Pagination Links -->
+    <div class="pagination">
+        <?php
+        if ($current_page > 1) {
+            echo "<a href='home.php?page=" . ($current_page - 1) . "'>&laquo; Prev</a>";
+        }
+
+        for ($page = 1; $page <= $total_pages; $page++) {
+            echo "<a href='home.php?page=$page' class='" . ($page == $current_page ? "active" : "") . "'>$page</a>";
+        }
+
+        if ($current_page < $total_pages) {
+            echo "<a href='home.php?page=" . ($current_page + 1) . "'>Next &raquo;</a>";
+        }
+        ?>
+    </div>
 </body>
 </html>

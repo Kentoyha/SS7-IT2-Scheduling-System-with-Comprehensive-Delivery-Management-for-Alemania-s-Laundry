@@ -1,4 +1,5 @@
 <?php
+// filepath: /workspaces/SS7-IT2-Scheduling-System-with-Comprehensive-Delivery-Management-for-Alemania-s-Laundry/htdocs/Delivery.php
 include("db_connect.php");
 include("Menu.php");
 include("Logout.php");
@@ -41,33 +42,98 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f9f9f9;
+            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
+            color: #333;
         }
-        h1 { text-align: center; color: black; }
-        table { width: 90%; margin: 20px auto; border-collapse: collapse; background-color: #fff; }
-        table th, table td { padding: 12px; text-align: center; border: 1px solid #ddd; }
-        table th { background-color: #f2f2f2; font-weight: bold; color: #333; }
-        table tr:nth-child(even) { background-color: #f9f9f9; }
-        table tr:hover { background-color: #f1f1f1; }
-        .status-btn { padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; color: white; }
-        .ready-for-pickup { background-color: #FFD700; }
-        .completed { background-color: #008CBA; }
+
+        h1 {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: black;
+            text-transform: uppercase;
+        }
+
+
+        table {
+            width: 98%; /* Increased width */
+            margin: 20px auto;
+            border-collapse: collapse;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slightly stronger shadow */
+            background-color: #fff;
+            border-radius: 10px; /* More rounded corners */
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 14px 16px; /* Adjusted padding */
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            color: #444; /* Slightly darker text */
+        }
+
+        th {
+            background-color: #f0f0f0; /* Slightly darker header */
+            color: #333; /* Darker header text */
+            font-weight: bold; /* Slightly bolder header text */
+            text-transform: uppercase;
+            letter-spacing: 0.8px; /* Adjusted letter spacing */
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #ebf9ff; /* Lighter hover color */
+            transition: background-color 0.3s ease;
+        }
+
+        .status-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .ready-for-pickup {
+            background-color: #5cb85c;
+        }
+
+        .completed {
+            background-color: #5bc0de;
+        }
+
         .toggle-btn {
             display: block;
             width: 250px;
             margin: 20px auto;
             padding: 10px;
             font-size: 16px;
-            background-color: #4CAF50;
+            background-color: #007bff;
             color: white;
             border: none;
             cursor: pointer;
             border-radius: 5px;
             text-align: center;
+            transition: background-color 0.3s ease;
         }
-        .toggle-btn:hover { background-color: #45a049; }
+
+        .toggle-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            table {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -105,6 +171,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = mysqli_query($conn, $sql);
 
     echo "<table>";
+    echo "<thead>";
     echo "<tr>
             <th>Order Date</th>
             <th>Laundry Details</th>
@@ -119,6 +186,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     echo "</tr>";
+    echo "</thead>";
+    echo "<tbody>";
 
     if (mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
@@ -138,8 +207,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 echo "<td>";
                 if ($row['Status'] == 'Out for Delivery') {
                     echo "<form method='POST'>
-                            <input type='hidden' name='Delivery_ID' value='" . $row['Delivery_ID'] . "'>
-                            <button class='status-btn ready-for-pickup' name='status' value='Delivered'>Delivered</button>
+                            <input type='hidden' name='Delivery_ID' value='" . htmlspecialchars($row['Delivery_ID']) . "'>
+                            <button class='status-btn completed' name='status' value='Delivered'>Delivered</button>
                           </form>";
                 }
                 echo "</td>";
@@ -150,6 +219,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         echo "<tr><td colspan='" . ($show_unassigned ? 7 : 8) . "'>No pending deliveries.</td></tr>";
     }
+    echo "</tbody>";
     echo "</table>";
     ?>
 </body>

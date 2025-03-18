@@ -57,7 +57,7 @@ if (isset($_POST['Order'])) {
 }
 
 // Pagination settings
-$results_per_page = 4;
+$results_per_page = 3;
 $current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
 $start_from = ($current_page - 1) * $results_per_page;
 
@@ -87,135 +87,153 @@ $result = mysqli_query($conn, $sql);
     <title>Orders</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
 
-        h1 {
-            text-align: center;
-            color: #007bff;
-            margin-bottom: 20px;
-            font-family: Arial, sans-serif;
-        }
+/* Center title properly */
+.order-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
 
-        .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            padding: 28px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin: 10px auto;
-            max-width: 1600px;
-        }
+/* Main container layout */
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 35px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 25px auto;
+    max-width: 94%;
+}
 
-        .form-container {
-            background-color: #f8f9fa;
-            padding: 20px;
-            margin-top: 69px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            width: 45%;
-            order: -1;
-            display: flex;
-            flex-direction: column;
-        }
+/* Left section (Form) */
+.left-section {
+    width: 45%;
+    text-align: center; /* Centering the form section */
+}
 
-        .table-container {
-            width: 50%;
-        }
+/* Right section (Table) */
+.right-section {
+    width: 50%;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+/* Form container styles */
+.form-container {
+    background-color: #f8f9fa;
+    padding: 20px;
+    margin-top: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
+/* Inputs and Selects */
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
 
-        th {
-            background-color: #e9ecef;
-            color: #495057;
-            font-weight: 600;
-        }
+/* Buttons */
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
 
-        tr:hover {
-            background-color: #f5f5f5;
-        }
+button:hover {
+    background-color: #0056b3;
+}
 
-        input[type="text"],
-        input[type="number"],
-        select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
+/* Table Styles */
+.table-container {
+    width: 100%;
+}
 
-        button, .toggle-btn {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-        }
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+}
 
-        button:hover, .toggle-btn:hover {
-            background-color: #0056b3;
-        }
+th, td {
+    padding: 14px 16px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    color: #444;
+}
 
-        .actbutton,
-        .actdelete,
-        .actedit {
+th {
+    background-color: #f0f0f0;
+    color: #333;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+/* Row hover effect */
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #ebf9ff;
+    transition: background-color 0.3s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .left-section, .right-section {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+
+        .status-btn {
             padding: 8px 12px;
+            border: none;
             border-radius: 4px;
-            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
             color: white;
-            display: inline-block;
-            margin: 4px;
-            transition: background-color 0.3s ease;
         }
 
-        .actedit {
-            background-color: #1cc6ff;
+        .to-be-delivered {
+            background-color: #FF8C00; /* A slightly darker shade of orange */
         }
 
-        .actedit:hover {
-            background-color: #32b6e3;
-        }
-
-        .actbutton {
+        .in-progress {
             background-color: #4CAF50;
-        }
-
-        .actbutton:hover {
-            background-color: #45a049;
-        }
-
-        .actdelete {
-            background-color: #dc3545;
-        }
-
-        .actdelete:hover {
-            background-color: #c82333;
-        }
-
-        .toggle-btn {
-            margin-bottom: 20px;
-            display: block;
         }
 
         .pagination {
@@ -254,31 +272,17 @@ $result = mysqli_query($conn, $sql);
                 margin-bottom: 20px;
             }
         }
-
-        .status-btn {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            color: white;
-        }
-
-        .to-be-delivered {
-            background-color: #FFA500;
-        }
-
-        .in-progress {
-            background-color: #4CAF50;
-        }
     </style>
 </head>
 <body>
 
-    <div class="container">
+<div class="container">
+    <div class="left-section">
+        <!-- Centered Title -->
+        <h2 class="order-title">PLACE NEW ORDERS</h2>
+
         <!-- Place Order Form -->
         <div class="form-container">
-            <h2>Place New Order</h2>
             <form method="POST" action="">
                 <label for="Laundry_Type">Laundry Type:</label>
                 <select name="Laundry_Type" id="Laundry_Type" required>
@@ -301,10 +305,7 @@ $result = mysqli_query($conn, $sql);
                 </select>
 
                 <label for="Place">Place:</label>
-                <?php
-                $placeValue = isset($_POST['Place']) ? htmlspecialchars($_POST['Place']) : 'Hotel';
-                ?>
-                <input type="text" name="Place" id="Place" value="<?php echo $placeValue; ?>" required>
+                <input type="text" name="Place" id="Place" value="Hotel" required>
 
                 <label for="Priority">Priority Number:</label>
                 <select name="Priority" id="Priority" required>
@@ -321,10 +322,11 @@ $result = mysqli_query($conn, $sql);
                 </div>
             </form>
         </div>
+    </div>
 
-        <!-- Display Orders Table -->
+    <div class="right-section">
+        <h2 class="order-title">CURRENT ORDERS</h2>
         <div class="table-container">
-            <h2 style="text-align: center;">Current Orders</h2>
             <table>
                 <thead>
                     <tr>
@@ -358,29 +360,31 @@ $result = mysqli_query($conn, $sql);
                             }
                             echo "</td>";
                             echo "</tr>";
+                        }
                     }
+                    ?>
+                </tbody>
+            </table>
+            
+            <!-- Pagination Links -->
+            <div class="pagination">
+                <?php
+                if ($current_page > 1) {
+                    echo "<a href='Orders.php?page=" . ($current_page - 1) . "'>&laquo; Prev</a>";
+                }
+
+                for ($page = 1; $page <= $total_pages; $page++) {
+                    echo "<a href='Orders.php?page=$page' class='" . ($page == $current_page ? "active" : "") . "'>$page</a>";
+                }
+
+                if ($current_page < $total_pages) {
+                    echo "<a href='Orders.php?page=" . ($current_page + 1) . "'>Next &raquo;</a>";
                 }
                 ?>
-            </tbody>
-        </table>
-        
-        <!-- Pagination Links -->
-        <div class="pagination">
-            <?php
-            if ($current_page > 1) {
-                echo "<a href='Orders.php?page=" . ($current_page - 1) . "'>&laquo; Prev</a>";
-            }
-
-            for ($page = 1; $page <= $total_pages; $page++) {
-                echo "<a href='Orders.php?page=$page' class='" . ($page == $current_page ? "active" : "") . "'>$page</a>";
-            }
-
-            if ($current_page < $total_pages) {
-                echo "<a href='Orders.php?page=" . ($current_page + 1) . "'>Next &raquo;</a>";
-            }
-            ?>
+            </div>
         </div>
     </div>
+</div>
     
 </body>
 </html>

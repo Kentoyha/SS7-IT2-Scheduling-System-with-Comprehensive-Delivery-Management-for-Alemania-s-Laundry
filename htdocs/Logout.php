@@ -1,4 +1,4 @@
-<a href="logout.php" class="logout-btn">Logout</a>
+<a href="index.php" class="logout-btn">Logout</a>
 
 <style>
 .logout-btn {

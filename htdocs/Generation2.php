@@ -1,4 +1,5 @@
 <?php
+// filepath: /workspaces/SS7-IT2-Scheduling-System-with-Comprehensive-Delivery-Management-for-Alemania-s-Laundry/htdocs/Generation2.php
 include 'db_connect.php';
 include 'Logout.php';
 session_start();
@@ -62,43 +63,45 @@ mysqli_stmt_close($stmt);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #e3f2fd;
             margin: 0;
-            padding: 0;
+            padding: 20px; /* Add padding around the content */
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 98vh; /* Use min-height to ensure full height */
         }
 
         .receipt-container {
             background: #ffffff;
-            width: 400px;
-            padding: 20px;
+            width: 98%; /* Occupy more width */
+            max-width: 800px; /* Set a maximum width */
+            padding: 30px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
+            border-radius: 12px; /* More rounded corners */
             text-align: center;
+            box-sizing: border-box; /* Include padding in width calculation */
         }
 
         .receipt-header {
-            font-size: 22px;
+            font-size: 28px;
             font-weight: bold;
             color: #1976d2;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
 
         .receipt-info {
             text-align: left;
-            font-size: 14px;
+            font-size: 16px;
             color: #444;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
 
         .receipt-info div {
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
 
         .receipt-footer {
-            margin-top: 15px;
-            font-size: 12px;
+            margin-top: 25px;
+            font-size: 14px;
             color: #777;
         }
     </style>

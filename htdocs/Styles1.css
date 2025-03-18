@@ -21,7 +21,7 @@ header {
     background-color: #007bff;
     color: white;
     width: 100%;
-    padding: 20px;
+    padding: 40px;
     text-align: center;
     font-size: 2rem;
     font-weight: bold;
@@ -72,9 +72,9 @@ header {
 
 /* Form Container */
 .login-form {
-    margin-top: 120px;
+    margin-top: 150px;
     background: white;
-    padding: 60px;
+    padding: 30px;
     width: 550px; /* Adjusted width */
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
