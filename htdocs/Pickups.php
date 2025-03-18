@@ -1,5 +1,6 @@
 <?php
 // filepath: /workspaces/SS7-IT2-Scheduling-System-with-Comprehensive-Delivery-Management-for-Alemania-s-Laundry/htdocs/Pickups.php
+
 session_start();
 
 include("db_connect.php");
@@ -32,30 +33,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Pickup_ID']) && isset(
     }
 }
 
+// Pagination settings
+$results_per_page = 5;
+$current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
+$start_from = ($current_page - 1) * $results_per_page;
+
 $show_unassigned = isset($_GET['show_unassigned']) && $_GET['show_unassigned'] === 'true';
 
-$sql = $show_unassigned
-    ? "SELECT Orders.Order_ID, Orders.Laundry_type, Orders.Laundry_quantity, Orders.Cleaning_type, Orders.Place, Orders.Status, 
+// Construct the SQL query based on whether to show unassigned pickups or not
+$show_unassigned_condition = $show_unassigned
+    ? "Orders.Status IN ('Ready for Pick up', 'Picked up')"
+    : "Pickups.Status = 'On the way'";
+
+$sql = "SELECT Orders.Order_ID, Orders.Laundry_type, Orders.Laundry_quantity, Orders.Cleaning_type, Orders.Place, Orders.Status AS OrderStatus, 
             Pickups.Pickup_ID, Pickups.Date, Pickups.Pickup_staff_name, Pickups.Status AS PickupStatus, Pickups.Contact_info
         FROM Orders 
-        INNER JOIN Pickups ON Orders.Order_ID = Pickups.Order_ID 
-        WHERE Pickups.Status IN ('Ready for Pick up', 'Picked up')
+        LEFT JOIN Pickups ON Orders.Order_ID = Pickups.Order_ID 
+        WHERE $show_unassigned_condition
         ORDER BY 
             CASE 
-                WHEN Pickups.Status = 'Picked up' THEN 1
-                WHEN Pickups.Status = 'Ready for Pick up' THEN 2
+                WHEN Orders.Status = 'Picked up' THEN 1
+                WHEN Orders.Status = 'Ready for Pick up' THEN 2
                 ELSE 3
             END, 
-            Pickups.Date ASC"
-    : "SELECT Orders.Order_ID, Orders.Laundry_type, Orders.Laundry_quantity, Orders.Cleaning_type, Orders.Place, Orders.Status, 
-        Pickups.Pickup_ID, Pickups.Date, Pickups.Pickup_staff_name, Pickups.Status AS PickupStatus, Pickups.Contact_info
-        FROM Orders 
-        INNER JOIN Pickups ON Orders.Order_ID = Pickups.Order_ID 
-        WHERE Pickups.Status = 'On the way'
-        ORDER BY Pickups.Date ASC";
-
+            Pickups.Date ASC
+        LIMIT $start_from, $results_per_page;";
 
 $query = mysqli_query($conn, $sql);
+
+// Get total records for pagination
+$total_query = "SELECT COUNT(*) AS total
+                FROM Orders 
+                LEFT JOIN Pickups ON Orders.Order_ID = Pickups.Order_ID 
+                WHERE $show_unassigned_condition";
+
+$total_result = mysqli_query($conn, $total_query);
+$total_row = mysqli_fetch_assoc($total_result);
+$total_results = $total_row['total'];
+
+$total_pages = ceil($total_results / $results_per_page);
 ?>
 
 <!DOCTYPE html>
@@ -149,6 +165,30 @@ $query = mysqli_query($conn, $sql);
             background-color: #0056b3;
         }
 
+        /* Pagination styles */
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            display: inline-block;
+            padding: 8px 16px;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            color: #333;
+        }
+
+        .pagination a.active {
+            background-color: #007bff;
+            color: white;
+            border: 1px solid #007bff;
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: #ddd;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             table {
@@ -174,13 +214,13 @@ $query = mysqli_query($conn, $sql);
                 <th>Pickup Date</th>
                 <th>Pickup Staff Name</th>
                 <th>Contact Info</th>
-                <th>Status</th>
+                <th>Order Status</th>
                 <?php 
                 $show_set_status = false;
                 if ($query && mysqli_num_rows($query) > 0) {
                     mysqli_data_seek($query, 0);
                     while ($row = mysqli_fetch_assoc($query)) {
-                        if ($row['PickupStatus'] !== 'Picked up') {
+                        if ($row['OrderStatus'] !== 'Picked up') {
                             $show_set_status = true;
                             break;
                         }
@@ -203,9 +243,9 @@ $query = mysqli_query($conn, $sql);
                     echo "<td>" . htmlspecialchars($row["Date"] ?? 'Not Assigned') . "</td>";
                     echo "<td>" . htmlspecialchars($row["Pickup_staff_name"] ?? 'Not Assigned') . "</td>";
                     echo "<td>" . htmlspecialchars($row["Contact_info"] ?? 'Not Assigned') . "</td>";
-                    echo "<td>" . htmlspecialchars($row["PickupStatus"]) . "</td>";
+                    echo "<td>" . htmlspecialchars($row["OrderStatus"]) . "</td>";
                     
-                    if (!$show_unassigned && $show_set_status && $row['PickupStatus'] !== 'Picked up' && isset($row['Pickup_ID'])) {
+                    if (!$show_unassigned && $show_set_status && $row['OrderStatus'] !== 'Picked up' && isset($row['Pickup_ID'])) {
                         echo "<td><form method='POST'>
                                 <input type='hidden' name='Pickup_ID' value='" . htmlspecialchars($row['Pickup_ID']) . "'>
                                 <button type='submit' name='status' value='Picked up' class='status-btn ready-for-pickup'>Picked up</button>
@@ -214,10 +254,28 @@ $query = mysqli_query($conn, $sql);
                     echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='5'>No records found.</td></tr>";
+                echo "<tr><td colspan='6'>No records found.</td></tr>";
             }
             ?>
         </tbody>
     </table>
+
+    <!-- Pagination links -->
+    <div class="pagination">
+        <?php
+        if ($current_page > 1) {
+            echo '<a href="Pickups.php?page=' . ($current_page - 1) . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '">&laquo; Previous</a>';
+        }
+
+        for ($i = 1; $i <= $total_pages; $i++) {
+            $active_class = ($i == $current_page) ? 'active' : '';
+            echo '<a href="Pickups.php?page=' . $i . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '" class="' . $active_class . '">' . $i . '</a>';
+        }
+
+        if ($current_page < $total_pages) {
+            echo '<a href="Pickups.php?page=' . ($current_page + 1) . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '">Next &raquo;</a>';
+        }
+        ?>
+    </div>
 </body>
 </html>

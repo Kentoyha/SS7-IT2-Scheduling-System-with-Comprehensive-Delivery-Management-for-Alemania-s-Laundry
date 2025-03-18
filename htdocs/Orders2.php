@@ -106,7 +106,7 @@ $result = mysqli_query($conn, $sql);
 
         h1 {
             text-align: center;
-            color: #007bff;
+            color: black;
             margin-bottom: 20px;
             font-family: Arial, sans-serif;
         }
@@ -115,12 +115,12 @@ $result = mysqli_query($conn, $sql);
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            padding: 20px;
+            padding: 45px;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin: 20px auto;
-            max-width: 1200px;
+            max-width: 93%;
         }
 
         .form-container {
@@ -132,11 +132,19 @@ $result = mysqli_query($conn, $sql);
             order: -1;
             display: flex;
             flex-direction: column; /* Add this line */
+            align-items: center; /* Center items horizontally */
+        }
+
+        label {
+            text-align: center;
+            width: 100%;
         }
 
         .table-container {
             width: 50%;
         }
+
+       
 
         table {
             width: 100%;
@@ -154,6 +162,7 @@ $result = mysqli_query($conn, $sql);
             background-color: #e9ecef;
             color: #495057;
             font-weight: 600;
+            text-transform: uppercase;
         }
 
         tr:hover {
@@ -169,6 +178,7 @@ $result = mysqli_query($conn, $sql);
             border: 1px solid #ced4da;
             border-radius: 4px;
             box-sizing: border-box;
+           
         }
 
         button, .toggle-btn {
@@ -271,7 +281,7 @@ $result = mysqli_query($conn, $sql);
     <div class="container">
         <!-- Place Order Form -->
         <div class="form-container">
-            <h2>Place New Order</h2>
+            <h2>PLACE NEW ORDER</h2>
             <form method="POST" action="">
                 <label for="Laundry_Type">Laundry Type:</label>
                 <select name="Laundry_Type" id="Laundry_Type" required>

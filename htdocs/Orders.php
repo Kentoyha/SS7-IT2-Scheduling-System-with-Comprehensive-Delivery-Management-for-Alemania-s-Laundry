@@ -107,7 +107,7 @@ $result = mysqli_query($conn, $sql);
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 35px;
+    padding: 50px;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

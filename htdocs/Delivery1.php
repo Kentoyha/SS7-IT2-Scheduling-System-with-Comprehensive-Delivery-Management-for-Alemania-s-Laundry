@@ -1,191 +1,168 @@
 <?php
+// filepath: /workspaces/SS7-IT2-Scheduling-System-with-Comprehensive-Delivery-Management-for-Alemania-s-Laundry/htdocs/Delivery1.php
+
 include 'db_connect.php';
 include 'Menu2.php';
 include 'Logout.php';
 
 session_start();
-// ✅ Check if the user is logged in and is an admin
-if (!isset($_SESSION['username']) && $_SESSION['account_level'] != 2) {
+// ✅ Check if the user is logged in and has the correct account level
+if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 2) {
     header("Location: login.php"); // Redirect to login page if not an admin
     exit();
 }
 
+// Pagination settings
+$results_per_page = 10;
+$current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
+$start_from = ($current_page - 1) * $results_per_page;
+
+// Retrieve total number of delivery records
+$total_query = "SELECT COUNT(*) AS total FROM Delivery WHERE Status = 'Out for Delivery'";
+$total_result = mysqli_query($conn, $total_query);
+$total_row = mysqli_fetch_assoc($total_result);
+$total_results = $total_row['total'];
+
+$total_pages = ($total_results > 0) ? ceil($total_results / $results_per_page) : 0;
 ?>
 
 <!DOCTYPE html>
 <html>
-<body>
- <style>
-   
-   body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f4f4f4;
-        margin: 0;
-        padding: 0;
-    }
-
-    .title {
-        text-align: center;
-        color: #333;
-        margin-top: 20px;
-    }
-
-    .addplayer {
-        text-align: center;
-        margin: 20px 0;
-    }
-
-    .addplayer button {
-        background-color: #4CAF50;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        cursor: pointer;
-        font-size: 16px;
-        border-radius: 5px;
-    }
-
-    .addplayer button:hover {
-        background-color: #45a049;
-    }
-
-    table {
-        width: 80%;
-        margin: 20px auto;
-        border-collapse: collapse;
-        background-color: white;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    th, td {
-        padding: 12px;
-        text-align: Center;
-        border-bottom: 1px solid #ddd;
-    }
-
-    th {
-        background-color: #f2f2f2;
-    }
-
-    tr:hover {
-        background-color: #f5f5f5;
-    }
-
-    .button {
-        padding: 10px 15px;
-        border: none;
-        cursor: pointer;
-        font-size: 14px;
-        border-radius: 5px;
-    }
-
-    .button.green {
-        background-color: #4CAF50;
-        color: white;
-    }
-
-    .button.red {
-        background-color: #f44336;
-        color: white;
-    }
-
-    .button.green:hover {
-        background-color: #45a049;
-    }
-
-    .button.red:hover {
-        background-color: #e53935;
-    }
-
-    select {
-        padding: 10px;
-        font-size: 16px;
-        margin-right: 10px;
-    }
-
-    img {
-        border-radius: 50%;
-    }
-</style>
-       
-        <h1 align="center"> Delivery </h1>
-        <div class="container">
-        <div class="buanga">
-        <div class="addplayer">
-          
-        </div>
-        </div>
-        </div>
-        
-        <?php
-        
-        ?>
-        <table align="center" cellspacing="0" cellpadding="10">
-        <tr>
-            
-            <th>Order Date</th>
-            <th>Delivery Date</th>
-            <th>Delivery <br> Staff Name</th>
-            <th>Contact <br> Info  </th>
-            <th>Status</th>
-           
-            
-        
-
-        </tr>
-   
-        <?php
-       
-       $sql = "SELECT Delivery.*, Orders.Order_date 
-       FROM Delivery 
-       INNER JOIN Orders ON Delivery.Order_ID = Orders.Order_ID 
-       WHERE Delivery.Status = 'Out for Delivery'";
-
-    $result = mysqli_query($conn, $sql);
-
-    if (mysqli_num_rows($result) > 0) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            echo "<tr>";
-            
-            echo "<td>" . $row['Order_date'] . "</td>";
-            echo "<td>" . $row['Delivery_date'] . "</td>";
-            echo "<td>" . $row['Delivery_staff_name'] . "</td>";
-            echo "<td>" . $row['Contact_info'] . "</td>";
-            echo "<td>" . $row['Status'] . "</td>";
-            echo "</tr>";
+<head>
+    <title>Delivery</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
         }
-    } else {
-        echo "<tr><td colspan='5'>No records found.</td></tr>";
-    }
-    ?>
-    </table>
- <style>
-        .actdelete {
-            color: white;
-            background-color: red;
-            padding: 5px 10px;
+
+        h1 {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: black;
+            text-transform: uppercase;
+        }
+
+        table {
+            width: 98%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            color: #444;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            color: #333;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #ebf9ff;
+            transition: background-color 0.3s ease;
+        }
+
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            display: inline-block;
+            padding: 8px 16px;
             text-decoration: none;
-            border-radius: 5px;
+            border: 1px solid #ddd;
+            color: #333;
         }
-        .actdelete:hover {
-            background-color: darkred;
-        }
-   </style>
-    
-    <?php
-    ?> 
-    <?php
-    if (isset($_GET['action']) && isset($_GET['Game_id'])) {
-        $action = trim($_GET['action']);
-        $Game_id = trim($_GET['Game_id']);
 
-        if ($action == 'delete') {
-            $sql = "DELETE FROM Game WHERE Game_id = $Game_id";
-            if (mysqli_query($conn, $sql)) {
-                echo "<script> alert('Game has been removed'); window.location='Games.php'; </script>";
+        .pagination a.active {
+            background-color: #007bff;
+            color: white;
+            border: 1px solid #007bff;
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: #ddd;
+        }
+
+        @media (max-width: 768px) {
+            table {
+                width: 100%;
             }
         }
-    }
-    ?>
-    </body>
+    </style>
+</head>
+<body>
+    <h1 align="center">Delivery</h1>
+
+    <table align="center" cellspacing="0" cellpadding="10">
+        <tr>
+            <th>Order Date</th>
+            <th>Delivery Date</th>
+            <th>Delivery Staff Name</th>
+            <th>Contact Info</th>
+            <th>Status</th>
+        </tr>
+        <?php
+        $sql = "SELECT Delivery.*, Orders.Order_date 
+                FROM Delivery 
+                INNER JOIN Orders ON Delivery.Order_ID = Orders.Order_ID 
+                WHERE Delivery.Status = 'Out for Delivery'
+                LIMIT $start_from, $results_per_page";
+
+        $result = mysqli_query($conn, $sql);
+
+        if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<tr>";
+                echo "<td>" . $row['Order_date'] . "</td>";
+                echo "<td>" . $row['Delivery_date'] . "</td>";
+                echo "<td>" . $row['Delivery_staff_name'] . "</td>";
+                echo "<td>" . $row['Contact_info'] . "</td>";
+                echo "<td>" . $row['Status'] . "</td>";
+                echo "</tr>";
+            }
+        } else {
+            echo "<tr><td colspan='5'>No records found.</td></tr>";
+        }
+        ?>
+    </table>
+
+    <?php if ($total_results > 0) { ?>
+    <div class="pagination">
+        <?php
+        if ($current_page > 1) {
+            echo "<a href='Delivery1.php?page=" . ($current_page - 1) . "'>&laquo; Prev</a>";
+        }
+
+        for ($page = 1; $page <= $total_pages; $page++) {
+            echo "<a href='Delivery1.php?page=$page' class='" . ($page == $current_page ? "active" : "") . "'>$page</a>";
+        }
+
+        if ($current_page < $total_pages) {
+            echo "<a href='Delivery1.php?page=" . ($current_page + 1) . "'>Next &raquo;</a>";
+        }
+        ?>
+    </div>
+    <?php } ?>
+</body>
 </html>
