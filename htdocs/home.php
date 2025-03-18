@@ -1,4 +1,5 @@
-<?php 
+<?php
+// filepath: /workspaces/SS7-IT2-Scheduling-System-with-Comprehensive-Delivery-Management-for-Alemania-s-Laundry/htdocs/home.php
 include("db_connect.php");
 include("Menu.php");
 include("Logout.php");
@@ -98,11 +99,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Order_ID']) && isset($
             background-color: #f9f9f9;
             margin: 0;
             padding: 0;
+            color: #333; /* Added a default text color */
         }
 
         h1 {
             text-align: center;
-            color: black;
+            color: #007bff; /* Changed to a more appealing color */
+            margin-bottom: 30px; /* Increased margin */
+            font-family: Arial, sans-serif; /* Changed font */
         }
 
         .add-team-container {
@@ -112,13 +116,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Order_ID']) && isset($
         }
 
         .add-team-btn {
-            background-color: #4CAF50; 
+            background-color: #4CAF50;
             color: white;
             padding: 12px 25px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+            transition: background-color 0.3s ease; /* Added transition for hover effect */
         }
 
         .add-team-btn:hover {
@@ -126,93 +131,107 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Order_ID']) && isset($
         }
 
         table {
-            width: 80%;
-            margin: 0 auto;
+            width: 90%; /* Increased width */
+            margin: 20px auto; /* Added top and bottom margin */
             border-collapse: collapse;
             background-color: #fff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px; /* Added border-radius for a softer look */
+            overflow: hidden; /* Ensures the border-radius is applied correctly */
         }
 
         table th, table td {
-            padding: 12px;
+            padding: 15px; /* Increased padding */
             text-align: center;
-            border: 1px solid #ddd;
+            border: none; /* Removed default border */
         }
 
         table th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-            color: #333;
+            background-color: #007bff; /* Changed to a more appealing color */
+            font-weight: 500; /* Lighter font weight */
+            color: white;
+            text-transform: uppercase; /* Added text transform */
+            letter-spacing: 1px; /* Added letter spacing */
         }
 
         table tr:nth-child(even) {
-            background-color: #f9f9f9;
+            background-color: #f2f2f2;
         }
 
         table tr:hover {
-            background-color: #f1f1f1;
+            background-color: #e6f7ff; /* Lighter hover color */
+            transition: background-color 0.3s ease; /* Added transition for smooth hover effect */
         }
 
         .status-btn {
-            padding: 8px 12px;
+            padding: 10px 15px; /* Adjusted padding */
             border: none;
-            border-radius: 4px;
+            border-radius: 5px; /* Adjusted border-radius */
             cursor: pointer;
             font-size: 14px;
             color: white;
+            transition: background-color 0.3s ease; /* Added transition for hover effect */
         }
 
         .to-be-delivered { background-color: #FFA500; }
         .in-progress { background-color: #4CAF50; }
         .completed { background-color: #008CBA; }
         .ready-for-pickup { background-color: #FFD700; }
+
+        /* Hover effect for status buttons */
+        .status-btn:hover {
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body>
     <h1>Orders</h1>
 
     <table>
-        <tr>
-            <th>Laundry Type</th>
-            <th>Order Date</th>
-            <th>Laundry Quantity</th>
-            <th>Cleaning Type</th>
-            <th>Place</th>
-            <th>Priority Number</th>
-            <th>Status</th>
-            <th>Set Status</th>
-        </tr>
+        <thead>
+            <tr>
+                <th>Laundry Type</th>
+                <th>Order Date</th>
+                <th>Laundry Quantity</th>
+                <th>Cleaning Type</th>
+                <th>Place</th>
+                <th>Priority Number</th>
+                <th>Status</th>
+                <th>Set Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $sql = "SELECT Order_ID, Order_date, Laundry_type, Laundry_quantity, Cleaning_type, Place, Priority_number, Status 
+                    FROM Orders
+                    WHERE Status = 'In Progress'
+                    ORDER BY Priority_number ASC";
 
-        <?php
-       $sql = "SELECT Order_ID, Order_date, Laundry_type, Laundry_quantity, Cleaning_type, Place, Priority_number, Status 
-       FROM Orders
-       WHERE Status = 'In Progress'
-       ORDER BY Priority_number ASC";
-
-        $query = mysqli_query($conn, $sql);
-        if (!$query) {
-            echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-        } else {
-            while ($result = mysqli_fetch_assoc($query)) {
-                echo "<tr>";
-                echo "<td>" . htmlspecialchars($result["Laundry_type"]) . "</td>";
-                echo "<td>" . htmlspecialchars($result["Order_date"]) . "</td>";
-                echo "<td>" . htmlspecialchars($result["Laundry_quantity"]) . "</td>";
-                echo "<td>" . htmlspecialchars($result["Cleaning_type"]) . "</td>";
-                echo "<td>" . htmlspecialchars($result["Place"]) . "</td>";
-                echo "<td>" . htmlspecialchars($result["Priority_number"]) . "</td>";
-                echo "<td>" . htmlspecialchars($result["Status"]) . "</td>";
-                echo "<td>";
-                if ($result['Status'] == 'In Progress' && ($result['Place'] == 'Hotel' || $result['Place'] == 'The Hotel')) {
-                    echo "<form method='POST'><input type='hidden' name='Order_ID' value='" . htmlspecialchars($result['Order_ID']) . "'><button class='status-btn completed' name='status' value='Completed'>Completed</button></form>";
-                } elseif ($result['Status'] == 'In Progress') {
-                    echo "<form method='POST'><input type='hidden' name='Order_ID' value='" . htmlspecialchars($result['Order_ID']) . "'><button class='status-btn ready-for-pickup' name='status' value='Ready for Pick up'>Ready for Pick up</button></form>";
+            $query = mysqli_query($conn, $sql);
+            if (!$query) {
+                echo "<tr><td colspan='8'>Error: " . $sql . "<br>" . mysqli_error($conn) . "</td></tr>";
+            } else {
+                while ($result = mysqli_fetch_assoc($query)) {
+                    echo "<tr>";
+                    echo "<td>" . htmlspecialchars($result["Laundry_type"]) . "</td>";
+                    echo "<td>" . htmlspecialchars($result["Order_date"]) . "</td>";
+                    echo "<td>" . htmlspecialchars($result["Laundry_quantity"]) . "</td>";
+                    echo "<td>" . htmlspecialchars($result["Cleaning_type"]) . "</td>";
+                    echo "<td>" . htmlspecialchars($result["Place"]) . "</td>";
+                    echo "<td>" . htmlspecialchars($result["Priority_number"]) . "</td>";
+                    echo "<td>" . htmlspecialchars($result["Status"]) . "</td>";
+                    echo "<td>";
+                    if ($result['Status'] == 'In Progress' && ($result['Place'] == 'Hotel' || $result['Place'] == 'The Hotel')) {
+                        echo "<form method='POST'><input type='hidden' name='Order_ID' value='" . htmlspecialchars($result['Order_ID']) . "'><button class='status-btn completed' name='status' value='Completed'>Completed</button></form>";
+                    } elseif ($result['Status'] == 'In Progress') {
+                        echo "<form method='POST'><input type='hidden' name='Order_ID' value='" . htmlspecialchars($result['Order_ID']) . "'><button class='status-btn ready-for-pickup' name='status' value='Ready for Pick up'>Ready for Pick up</button></form>";
+                    }
+                    echo "</td>";
+                    echo "</tr>";
                 }
-                echo "</td>";
-                echo "</tr>";
             }
-        }
-        ?>
+            ?>
+        </tbody>
     </table>
 </body>
 </html>

@@ -25,13 +25,14 @@ if (!isset($_SESSION['username']) && $_SESSION['account_level'] != 2) {
 
 <h1>Place Order</h1>
 
+
 <form method="POST" action="">
     <table border=1 align="center" cellspacing="0" cellpadding="10">
         <tr>
             <td> Laundry Type </td>
             <td> 
                 <select name="Laundry_Type" required>
-                    <option value="" disabled selected>Select</option>
+                    <option value="" disabled selected> Click to Select</option>
                     <option value="Beddings">Beddings</option>
                     <option value="Curtains">Curtains</option>
                     <option value="Towel">Towel</option>
@@ -49,18 +50,21 @@ if (!isset($_SESSION['username']) && $_SESSION['account_level'] != 2) {
             <td> Cleaning Type </td>
             <td> 
                 <select name="Cleaning_Type" required>
-                    <option value="" disabled selected>Select</option>
-                    <option value="Dry Cleaning">Dry Cleaning</option>
                     <option value="Wet Cleaning">Wet Cleaning</option>
-                    <option value="Spot Cleaning">Spot Cleaning</option>
-                    <option value="Mixed">Mixed</option>
+                    <option value="Dry Cleaning">Dry Cleaning</option>
                 </select> 
             </td>
         </tr>
-        <tr>    
-            <td> Place </td>
-            <td> <input type="text" name="Place" value="Beat Nawaan" required readonly> </td>
-        </tr>
+        <tr>
+    <td> Place </td>
+        <td>
+         <?php
+         $placeValue = isset($_POST['Place']) ? htmlspecialchars($_POST['Place']) : 'Beat Naawan';
+         ?>
+         <input type="text" name="Place" value="<?php echo $placeValue; ?>" required>
+        </td>
+    </tr>
+
         <tr>
             <td> Priority Number </td>
             <td>
@@ -147,7 +151,7 @@ if (isset($_POST['Order'])) {
     $Priority_number = $_POST['Priority'];
     $Status = $_POST['Status'];
 
-    // Ensure User_ID is retrieved from session
+   
     $User_ID = isset($_SESSION['User_ID']) ? $_SESSION['User_ID'] : NULL;
 
     if ($User_ID === NULL) {

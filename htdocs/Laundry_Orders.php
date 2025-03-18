@@ -31,7 +31,7 @@ if (!isset($_SESSION['username']) && $_SESSION['account_level'] != 1) {
             <td> Laundry Type </td>
             <td> 
                 <select name="Laundry_Type" required>
-                    <option value="" disabled selected>Select</option>
+                    <option value="" disabled selected>Click to Select</option>
                     <option value="Beddings">Beddings</option>
                     <option value="Curtains">Curtains</option>
                     <option value="Towel">Towel</option>
@@ -49,19 +49,20 @@ if (!isset($_SESSION['username']) && $_SESSION['account_level'] != 1) {
             <td> Cleaning Type </td>
             <td> 
                 <select name="Cleaning_Type" required>
-                    <option value="" disabled selected>Select</option>
-                    <option value="Dry Cleaning">Dry Cleaning</option>
                     <option value="Wet Cleaning">Wet Cleaning</option>
-                    <option value="Spot Cleaning">Spot Cleaning</option>
-                    <option value="Mixed">Mixed</option>
+                    <option value="Dry Cleaning">Dry Cleaning</option>
                 </select> 
             </td>
         </tr>
-        <tr>    
-            <td> Place </td>
-            <td> <input type="text" name="Place" value="Hotel" required readonly> </td>
-        </tr>
-        <tr>
+    <td> Place </td>
+    <td>
+        <?php
+        $placeValue = isset($_POST['Place']) ? htmlspecialchars($_POST['Place']) : 'Hotel';
+        ?>
+        <input type="text" name="Place" value="<?php echo $placeValue; ?>" required>
+    </td>
+</tr>
+
             <td> Priority Number </td>
             <td>
                 <select name="Priority" required>

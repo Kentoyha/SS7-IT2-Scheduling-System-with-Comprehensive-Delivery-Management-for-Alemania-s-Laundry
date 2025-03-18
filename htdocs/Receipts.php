@@ -120,7 +120,7 @@ if (!$result) {
 
 <table>
     <tr>
-        <th>Order Details</th>
+        <th>Order Number</th>
         <th>Date Ordered</th>
         <th>Date Delivered</th>
         <th>Date Picked up</th>
