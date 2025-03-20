@@ -1,6 +1,9 @@
 <?php
+// filepath: /workspaces/SS7-IT2-Scheduling-System-with-Comprehensive-Delivery-Management-for-Alemania-s-Laundry/htdocs/Assign_delivery_staff.php
+
 include 'db_connect.php';
 include 'Menu2.php';
+
 
 session_start();
 
@@ -25,7 +28,7 @@ error_reporting(E_ALL);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assign Staff</title>
+    <title>Staff Assignment Form</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
@@ -114,7 +117,13 @@ error_reporting(E_ALL);
                 $Staff = trim($_POST['Staff']);
                 $Contact = trim($_POST['Contact']);
                 $Delivery_Date = trim($_POST['Delivery_Date']);
-                $Status = "Out for Delivery";
+
+                // Determine the status based on the delivery date
+                if ($Delivery_Date == $today) {
+                    $Status = "Out for Delivery";
+                } else {
+                    $Status = "Assigned";
+                }
 
                 // Start Transaction
                 mysqli_begin_transaction($conn);
@@ -133,7 +142,7 @@ error_reporting(E_ALL);
                         throw new Exception("Error inserting into Delivery: " . mysqli_error($conn));
                     }
 
-                    // Update Order status to "Out for Delivery"
+                    // Update Order status
                     $update_sql = "UPDATE `Orders` SET Status = ? WHERE Order_ID = ?";
                     $stmt = mysqli_prepare($conn, $update_sql);
                     mysqli_stmt_bind_param($stmt, "si", $Status, $Order_id);
@@ -148,7 +157,7 @@ error_reporting(E_ALL);
                     mysqli_commit($conn);
 
                     echo "<script>
-                            alert('Staff assigned successfully, Order is now Out for Delivery');
+                            alert('Staff assigned successfully,The delivery for the Order is now $Status');
                             window.location.href='Delivery1.php';
                           </script>";
                 } catch (Exception $e) {

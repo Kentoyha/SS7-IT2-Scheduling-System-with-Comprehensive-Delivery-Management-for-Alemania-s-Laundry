@@ -4,7 +4,7 @@
         <li><a href="home.php">Home</a></li>
         <li><a href="Orders.php">Laundry Orders</a></li>
         <li><a href="Delivery.php">Deliveries</a></li>
-        <li><a href="Pickups.php">Pick Up</a></li>
+        <li><a href="Pickups.php">Pick Ups</a></li>
         <li><a href="Receipts.php">Receipt</a></li>
      </ul>
         </nav>
@@ -36,11 +36,19 @@
         }
 
         nav ul li a {
-            text-decoration: none;
-            color: #fff; /* White text color */
-            font-size: 14px;
-            font-weight: bold;
-            text-transform: uppercase;
-            transition: color 0.3s ease;
-        }
+    text-decoration: none;
+    color: #fff; /* White text color */
+    font-size: 22px;
+    font-weight: bold;
+    padding: 10px 15px; /* Add padding to make the clickable area larger */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 5px; /* Optional: adds rounded corners */
+}
+
+nav ul li a:hover {
+    background-color: #ffffff;
+    color: #0078d7; /* Your navbar color for consistency */
+    text-decoration: none;
+    border-radius: 5px;
+}
                 </style>

@@ -125,7 +125,6 @@ h1 {
             font-weight: bold;
             margin-bottom: 15px;
             color: black;
-            text-transform: uppercase;
         }
 
 
@@ -254,7 +253,6 @@ th {
     background-color: #f0f0f0;
     color: #333;
     font-weight: 600;
-    text-transform: uppercase;
     letter-spacing: 0.8px;
 }
 

@@ -59,14 +59,14 @@ if(isset($_GET['Order_ID'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assign Pickup Staff</title>
+    <title>Staff Assignment Form</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body class="bg-light">
     <div class="container mt-5">
         <div class="card shadow-lg p-4">
-            <h2 class="text-center mb-4">Assign Pickup Staff</h2>
+            <h2 class="text-center mb-4">Staff Assignment</h2>
 
             <table class="table table-bordered table-striped">
                 <tbody>
@@ -121,6 +121,12 @@ if(isset($_GET['Order_ID'])) {
                 $Contact = trim($_POST['Contact']);
                 $Pickup_Date = trim($_POST['Pickup_Date']);
                 $Status = "On the way";
+
+                if ($Pickup_Date == $today) {
+                    $Status = "On the Way";
+                } else {
+                    $Status = "Assigned";
+                }
 
                 if (!empty($Contact) && !preg_match('/^\d{11}$/', $Contact)) {
                     die("<script>alert('Invalid contact number. It must be exactly 11 digits.'); window.history.back();</script>");

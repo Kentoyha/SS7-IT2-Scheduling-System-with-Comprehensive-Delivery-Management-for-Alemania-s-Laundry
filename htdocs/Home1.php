@@ -74,7 +74,6 @@ $total_pages = ceil($total_results / $results_per_page);
             background-color: #f0f0f0; /* Slightly darker header */
             color: #333; /* Darker header text */
             font-weight: 600; /* Slightly bolder header text */
-            text-transform: uppercase;
             letter-spacing: 0.8px; /* Adjusted letter spacing */
         }
 

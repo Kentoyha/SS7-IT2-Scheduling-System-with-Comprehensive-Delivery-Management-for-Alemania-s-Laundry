@@ -107,11 +107,11 @@ $result = mysqli_query($conn, $sql);
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 50px;
+    padding: 37px;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 25px auto;
+    margin: 17px auto;
     max-width: 94%;
 }
 
@@ -192,7 +192,6 @@ th {
     background-color: #f0f0f0;
     color: #333;
     font-weight: bold;
-    text-transform: uppercase;
     letter-spacing: 0.8px;
 }
 
@@ -233,7 +232,7 @@ tr:hover {
         }
 
         .in-progress {
-            background-color: #4CAF50;
+            background-color: #5bc0de;
         }
 
         .pagination {
@@ -279,7 +278,7 @@ tr:hover {
 <div class="container">
     <div class="left-section">
         <!-- Centered Title -->
-        <h2 class="order-title">PLACE NEW ORDERS</h2>
+        <h2 class="order-title">Place New Orders</h2>
 
         <!-- Place Order Form -->
         <div class="form-container">
@@ -289,10 +288,9 @@ tr:hover {
                     <option value="" disabled selected>Click to Select</option>
                     <option value="Beddings">Beddings</option>
                     <option value="Curtains">Curtains</option>
-                    <option value="Towel">Towel</option>
-                    <option value="Topper">Topper</option>
-                    <option value="Table Cloth">Table Cloth</option>
-                    <option value="Mixed">Mixed</option>
+                    <option value="Towel">Towels</option>
+                    <option value="Topper">Toppers</option>
+                    <option value="Table Cloth">Tablecloths</option>
                 </select>
 
                 <label for="Laundry_Quantity">Laundry Quantity:</label>
@@ -325,7 +323,7 @@ tr:hover {
     </div>
 
     <div class="right-section">
-        <h2 class="order-title">CURRENT ORDERS</h2>
+        <h2 class="order-title">Current Orders</h2>
         <div class="table-container">
             <table>
                 <thead>

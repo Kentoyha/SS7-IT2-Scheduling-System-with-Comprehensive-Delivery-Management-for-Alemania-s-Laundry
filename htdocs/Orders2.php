@@ -162,7 +162,6 @@ $result = mysqli_query($conn, $sql);
             background-color: #e9ecef;
             color: #495057;
             font-weight: 600;
-            text-transform: uppercase;
         }
 
         tr:hover {
@@ -214,6 +213,8 @@ $result = mysqli_query($conn, $sql);
 
         .actedit:hover {
             background-color: #32b6e3;
+            transform: translateY(-2px); /* Slight lift on hover */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Increased shadow on hover */
         }
 
         .actbutton {
@@ -221,7 +222,9 @@ $result = mysqli_query($conn, $sql);
         }
 
         .actbutton:hover {
-            background-color: #45a049;
+            background-color: #32b6e3;
+            transform: translateY(-2px); /* Slight lift on hover */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Increased shadow on hover */
         }
 
         .actdelete {
@@ -288,10 +291,9 @@ $result = mysqli_query($conn, $sql);
                     <option value="" disabled selected>Click to Select</option>
                     <option value="Beddings">Beddings</option>
                     <option value="Curtains">Curtains</option>
-                    <option value="Towel">Towel</option>
-                    <option value="Topper">Topper</option>
-                    <option value="Table Cloth">Table Cloth</option>
-                    <option value="Mixed">Mixed</option>
+                    <option value="Towel">Towels</option>
+                    <option value="Topper">Toppers</option>
+                    <option value="Table Cloth">Tablecloths</option>
                 </select>
 
                 <label for="Laundry_Quantity">Laundry Quantity:</label>

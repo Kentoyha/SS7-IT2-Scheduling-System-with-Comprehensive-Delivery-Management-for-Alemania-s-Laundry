@@ -199,7 +199,6 @@ $result = $conn->query($sql);
             background-color: #f0f0f0;
             color: #333;
             font-weight: 600;
-            text-transform: uppercase;
         }
 
         tr:nth-child(even) {

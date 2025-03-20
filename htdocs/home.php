@@ -11,7 +11,7 @@ ini_set('display_errors', 1);
 
 session_start();
 // ✅ Check if the user is logged in and is an admin
-if (!isset($_SESSION['username']) && $_SESSION['account_level'] != 1) {
+if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 1) {
     header("Location: login.php"); // Redirect to login page if not an admin
     exit();
 }
@@ -131,7 +131,6 @@ $query = mysqli_query($conn, $sql);
             font-weight: bold;
             margin-bottom: 20px;
             color: black;
-            text-transform: uppercase;
         }
 
         table {
@@ -155,7 +154,6 @@ $query = mysqli_query($conn, $sql);
             background-color: #f0f0f0; /* Slightly darker header */
             color: #333; /* Darker header text */
             font-weight: 600; /* Slightly bolder header text */
-            text-transform: uppercase;
             letter-spacing: 0.8px; /* Adjusted letter spacing */
         }
 

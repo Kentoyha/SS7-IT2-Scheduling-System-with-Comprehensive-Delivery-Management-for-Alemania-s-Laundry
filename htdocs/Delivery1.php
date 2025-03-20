@@ -1,6 +1,8 @@
 <?php
 // filepath: /workspaces/SS7-IT2-Scheduling-System-with-Comprehensive-Delivery-Management-for-Alemania-s-Laundry/htdocs/Delivery1.php
 
+// filepath: /workspaces/SS7-IT2-Scheduling-System-with-Comprehensive-Delivery-Management-for-Alemania-s-Laundry/htdocs/Delivery1.php
+
 include 'db_connect.php';
 include 'Menu2.php';
 include 'Logout.php';
@@ -12,13 +14,25 @@ if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 2) {
     exit();
 }
 
+$today = date('Y-m-d');
+
+// Update status from "Assigned" to "Out for Delivery" if delivery date is today
+$update_sql = "UPDATE Delivery SET Status = 'Out for Delivery' WHERE Delivery_date = '$today' AND Status = 'Assigned'";
+$update_result = mysqli_query($conn, $update_sql);
+
+if ($update_result) {
+    echo "<script>console.log('Delivery statuses updated successfully.');</script>";
+} else {
+    echo "<script>console.error('Error updating delivery statuses: " . mysqli_error($conn) . "');</script>";
+}
+
 // Pagination settings
 $results_per_page = 10;
 $current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
 $start_from = ($current_page - 1) * $results_per_page;
 
 // Retrieve total number of delivery records
-$total_query = "SELECT COUNT(*) AS total FROM Delivery WHERE Status = 'Out for Delivery'";
+$total_query = "SELECT COUNT(*) AS total FROM Delivery WHERE Status IN ('Out for Delivery', 'Assigned')";
 $total_result = mysqli_query($conn, $total_query);
 $total_row = mysqli_fetch_assoc($total_result);
 $total_results = $total_row['total'];
@@ -68,7 +82,6 @@ $total_pages = ($total_results > 0) ? ceil($total_results / $results_per_page) :
             background-color: #f0f0f0;
             color: #333;
             font-weight: bold;
-            text-transform: uppercase;
             letter-spacing: 0.8px;
         }
 
@@ -126,7 +139,8 @@ $total_pages = ($total_results > 0) ? ceil($total_results / $results_per_page) :
         $sql = "SELECT Delivery.*, Orders.Order_date 
                 FROM Delivery 
                 INNER JOIN Orders ON Delivery.Order_ID = Orders.Order_ID 
-                WHERE Delivery.Status = 'Out for Delivery'
+                WHERE Delivery.Status IN ('Out for Delivery' , 'Assigned')
+                ORDER BY Delivery.Delivery_date ASC
                 LIMIT $start_from, $results_per_page";
 
         $result = mysqli_query($conn, $sql);

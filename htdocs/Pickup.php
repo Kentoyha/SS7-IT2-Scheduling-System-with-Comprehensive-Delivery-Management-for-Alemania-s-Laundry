@@ -7,7 +7,7 @@ include("Logout.php");
 session_start();
 
 // Ensure only authorized users can access this page
-if (!isset($_SESSION['username']) && $_SESSION['account_level'] != 2) {
+if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 2) {
     header("Location: login.php");
     exit();
 }
@@ -104,7 +104,6 @@ $show_unassigned = isset($_GET['show_unassigned']) && $_GET['show_unassigned'] =
             background-color: #f0f0f0;
             color: #333;
             font-weight: bold;
-            text-transform: uppercase;
             letter-spacing: 0.8px;
         }
 
@@ -156,7 +155,10 @@ $show_unassigned = isset($_GET['show_unassigned']) && $_GET['show_unassigned'] =
         }
 
         .complete-btn:hover {
-            background-color: #0056b3 ; /* Darker blue on hover */
+            background-color: #32b6e3; /* Darker blue on hover */
+            transform: translateY(-2px); /* Slight lift on hover */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Increased shadow on hover */
+            
         }
 
         .styled-button {

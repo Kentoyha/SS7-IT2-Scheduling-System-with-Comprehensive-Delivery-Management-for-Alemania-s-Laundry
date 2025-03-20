@@ -7,9 +7,20 @@ include("db_connect.php");
 include("Menu.php");
 include("Logout.php");
 
-if (!isset($_SESSION['username']) && $_SESSION['account_level'] != 1) {
+if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 1) {
     header("Location: login.php");
     exit();
+}
+
+// Update status from "Assigned" to "On the way" if pickup date is today
+$today = date('Y-m-d');
+$update_sql = "UPDATE Pickups SET Status = 'On the way' WHERE Date = '$today' AND Status = 'Assigned'";
+$update_result = mysqli_query($conn, $update_sql);
+
+if ($update_result) {
+    echo "<script>console.log('Pickup statuses updated successfully.');</script>";
+} else {
+    echo "<script>console.error('Error updating pickup statuses: " . mysqli_error($conn) . "');</script>";
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Pickup_ID']) && isset($_POST['status'])) {
@@ -42,8 +53,8 @@ $show_unassigned = isset($_GET['show_unassigned']) && $_GET['show_unassigned'] =
 
 // Construct the SQL query based on whether to show unassigned pickups or not
 $show_unassigned_condition = $show_unassigned
-    ? "Orders.Status IN ('Ready for Pick up', 'Picked up')"
-    : "Pickups.Status = 'On the way'";
+    ? "(Orders.Status = 'Ready for Pick up' OR Pickups.Status = 'Assigned')"
+    : "Pickups.Status IN ('On the way', 'Picked up')";
 
 $sql = "SELECT Orders.Order_ID, Orders.Laundry_type, Orders.Laundry_quantity, Orders.Cleaning_type, Orders.Place, Orders.Status AS OrderStatus, 
             Pickups.Pickup_ID, Pickups.Date, Pickups.Pickup_staff_name, Pickups.Status AS PickupStatus, Pickups.Contact_info
@@ -51,12 +62,12 @@ $sql = "SELECT Orders.Order_ID, Orders.Laundry_type, Orders.Laundry_quantity, Or
         LEFT JOIN Pickups ON Orders.Order_ID = Pickups.Order_ID 
         WHERE $show_unassigned_condition
         ORDER BY 
-            CASE 
-                WHEN Orders.Status = 'Picked up' THEN 1
-                WHEN Orders.Status = 'Ready for Pick up' THEN 2
-                ELSE 3
-            END, 
-            Pickups.Date ASC
+    CASE 
+        WHEN Pickups.Status = 'On the way' THEN 1
+        WHEN Pickups.Status = 'Picked up' THEN 2
+        ELSE 3
+    END,
+    Pickups.Date ASC
         LIMIT $start_from, $results_per_page;";
 
 $query = mysqli_query($conn, $sql);
@@ -94,7 +105,6 @@ $total_pages = ceil($total_results / $results_per_page);
             font-weight: bold;
             margin-bottom: 20px;
             color: black;
-            text-transform: uppercase;
         }
 
         table {
@@ -118,7 +128,6 @@ $total_pages = ceil($total_results / $results_per_page);
             background-color: #f0f0f0; /* Slightly darker header */
             color: #333; /* Darker header text */
             font-weight: bold; /* Slightly bolder header text */
-            text-transform: uppercase;
             letter-spacing: 0.8px; /* Adjusted letter spacing */
         }
 
@@ -143,7 +152,12 @@ $total_pages = ceil($total_results / $results_per_page);
         }
 
         .ready-for-pickup {
-            background-color: #5cb85c;
+            background-color: #5bc0de;
+        }
+
+        .ready-for-pickup:hover {
+            transform: translateY(-2px); /* Slight lift on hover */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Increased shadow on hover */
         }
 
         .toggle-btn {
@@ -203,7 +217,7 @@ $total_pages = ceil($total_results / $results_per_page);
     <form method="GET" style="margin-bottom: 10px; text-align: center;">
         <input type="hidden" name="show_unassigned" value="<?php echo $show_unassigned ? 'false' : 'true'; ?>">
         <button type="submit" class="toggle-btn">
-            <?php echo $show_unassigned ? 'View Active Pickups' : ' View Picked up  & Ready for Pick Up Orders '; ?>
+            <?php echo $show_unassigned ? 'Display Active Pick ups' : ' Display Assigned and Ready for Pick Up Orders '; ?>
         </button>
     </form>
 
@@ -215,7 +229,7 @@ $total_pages = ceil($total_results / $results_per_page);
                 <th>Pickup Staff Name</th>
                 <th>Contact Info</th>
                 <th>Order Status</th>
-                <?php 
+                <?php
                 $show_set_status = false;
                 if ($query && mysqli_num_rows($query) > 0) {
                     mysqli_data_seek($query, 0);
@@ -228,8 +242,8 @@ $total_pages = ceil($total_results / $results_per_page);
                     mysqli_data_seek($query, 0); // Reset pointer to fetch data again
                 }
 
-                if (!$show_unassigned && $show_set_status) { 
-                    echo '<th>Set Status</th>'; 
+                if (!$show_unassigned && $show_set_status) {
+                    echo '<th>Set Status</th>';
                 }
                 ?>
             </tr>
@@ -244,7 +258,7 @@ $total_pages = ceil($total_results / $results_per_page);
                     echo "<td>" . htmlspecialchars($row["Pickup_staff_name"] ?? 'Not Assigned') . "</td>";
                     echo "<td>" . htmlspecialchars($row["Contact_info"] ?? 'Not Assigned') . "</td>";
                     echo "<td>" . htmlspecialchars($row["OrderStatus"]) . "</td>";
-                    
+
                     if (!$show_unassigned && $show_set_status && $row['OrderStatus'] !== 'Picked up' && isset($row['Pickup_ID'])) {
                         echo "<td><form method='POST'>
                                 <input type='hidden' name='Pickup_ID' value='" . htmlspecialchars($row['Pickup_ID']) . "'>
