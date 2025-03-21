@@ -90,7 +90,7 @@ $total_pages = ceil($total_results / $results_per_page);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pickups Management</title>
+    <title>Pick ups Management</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -212,7 +212,7 @@ $total_pages = ceil($total_results / $results_per_page);
     </style>
 </head>
 <body>
-    <h1>Pickups Management</h1>
+    <h1>Pick ups Management</h1>
 
     <form method="GET" style="margin-bottom: 10px; text-align: center;">
         <input type="hidden" name="show_unassigned" value="<?php echo $show_unassigned ? 'false' : 'true'; ?>">

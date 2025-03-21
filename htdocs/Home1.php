@@ -18,7 +18,8 @@ $current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET
 $start_from = ($current_page - 1) * $results_per_page;
 
 // Retrieve total number of orders
-$total_query = "SELECT COUNT(*) AS total FROM Orders WHERE STATUS = 'In Progress'";
+// ✅ Corrected SQL query to count orders with 'In Progress' or 'Ready for Pick up' status
+$total_query = "SELECT COUNT(*) AS total FROM Orders WHERE STATUS IN ('In Progress', 'Ready for Pick up') AND PLACE != 'Hotel'";
 $total_result = mysqli_query($conn, $total_query);
 $total_row = mysqli_fetch_assoc($total_result);
 $total_results = $total_row['total'];
@@ -31,7 +32,7 @@ $total_pages = ceil($total_results / $results_per_page);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard</title>
+    <title>Laundry Progress Monitoring</title>
     <link rel="stylesheet" href="">
 </head>
 <body>
@@ -50,7 +51,6 @@ $total_pages = ceil($total_results / $results_per_page);
             font-weight: bold;
             margin-bottom: 20px;
             color: black;
-            text-transform: uppercase;
         }
 
         table {
@@ -132,7 +132,7 @@ $total_pages = ceil($total_results / $results_per_page);
     </style>
 </head>
 <body>
-    <h1>On going Orders</h1>
+    <h1>Processing Orders</h1>
     <table>
         <thead>
             <tr>
@@ -145,7 +145,8 @@ $total_pages = ceil($total_results / $results_per_page);
         </thead>
         <tbody>
             <?php
-            $sql = "SELECT * FROM Orders WHERE STATUS = 'In Progress' AND PLACE != 'Hotel'ORDER BY Priority_number DESC LIMIT $start_from, $results_per_page";
+            // ✅ Corrected SQL query to fetch orders with 'In Progress' status and not from 'Hotel'
+            $sql = "SELECT * FROM Orders WHERE STATUS IN ('In Progress','Ready for Pick up') AND PLACE != 'Hotel' ORDER BY Priority_number DESC LIMIT $start_from, $results_per_page";
             $query = mysqli_query($conn, $sql);
             if (!$query) {
                 echo "Error: " . $sql . "<br>" . mysqli_error($conn);

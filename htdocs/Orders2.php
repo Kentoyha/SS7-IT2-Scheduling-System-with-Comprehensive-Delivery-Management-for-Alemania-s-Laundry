@@ -39,7 +39,7 @@ if (isset($_POST['Order'])) {
     $query = mysqli_stmt_execute($stmt);
 
     if ($query) {
-        echo "<script>alert('Order Placed Successfully'); window.location.href='Orders2.php';</script>";
+        echo "<script>alert('Order is Placed Successfully'); window.location.href='Orders2.php';</script>";
         exit(); // Ensure script stops execution after redirect
     } else {
         echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
@@ -94,7 +94,7 @@ $result = mysqli_query($conn, $sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orders</title>
+    <title>Laundry Orders Management</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -119,7 +119,7 @@ $result = mysqli_query($conn, $sql);
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin: 20px auto;
+            margin: 30px auto;
             max-width: 93%;
         }
 
@@ -279,7 +279,6 @@ $result = mysqli_query($conn, $sql);
     </style>
 </head>
 <body>
-    <h1>ORDERS</h1>
 
     <div class="container">
         <!-- Place Order Form -->

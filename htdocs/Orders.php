@@ -50,7 +50,7 @@ if (isset($_POST['Order'])) {
     $query = mysqli_stmt_execute($stmt);
 
     if ($query) {
-        echo "<script>alert('Order Placed Successfully'); window.location.href='Orders.php';</script>";
+        echo "<script>alert('Order Placed is Successfully'); window.location.href='Orders.php';</script>";
     } else {
         echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
     }
@@ -84,7 +84,7 @@ $result = mysqli_query($conn, $sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orders</title>
+    <title>Laundry Orders Management</title>
     <style>
         body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;

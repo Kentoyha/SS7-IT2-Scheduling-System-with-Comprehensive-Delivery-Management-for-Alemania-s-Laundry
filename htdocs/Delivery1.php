@@ -43,7 +43,7 @@ $total_pages = ($total_results > 0) ? ceil($total_results / $results_per_page) :
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Delivery</title>
+    <title>Delivery Monitoring</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -58,7 +58,6 @@ $total_pages = ($total_results > 0) ? ceil($total_results / $results_per_page) :
             font-weight: bold;
             margin-bottom: 20px;
             color: black;
-            text-transform: uppercase;
         }
 
         table {
@@ -125,7 +124,7 @@ $total_pages = ($total_results > 0) ? ceil($total_results / $results_per_page) :
     </style>
 </head>
 <body>
-    <h1 align="center">Delivery</h1>
+    <h1 align="center">Deliveries</h1>
 
     <table align="center" cellspacing="0" cellpadding="10">
         <tr>

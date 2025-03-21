@@ -4,7 +4,7 @@
         <li><a href="Home1.php">Home</a></li>
         <li><a href="Orders2.php">Laundry Orders</a></li>
         <li><a href="Delivery1.php">Deliveries</a></li>
-        <li><a href="Pickup.php">Pick up</a></li>
+        <li><a href="Pickup.php">Pick ups</a></li>
         <li><a href="Receipt.php">Receipts</a></li>
       
         

@@ -1,6 +1,8 @@
 <?php
 // filepath: /workspaces/SS7-IT2-Scheduling-System-with-Comprehensive-Delivery-Management-for-Alemania-s-Laundry/htdocs/register.php
 
+// filepath: /workspaces/SS7-IT2-Scheduling-System-with-Comprehensive-Delivery-Management-for-Alemania-s-Laundry/htdocs/register.php
+
 include 'db_connect.php';
 
 // Enable error reporting for debugging
@@ -17,6 +19,22 @@ if ($admin_result) {
     $admin_exists = ($admin_count > 0);
 } else {
     echo "<script>alert('Database error checking for existing admin.');</script>";
+}
+
+// Check the total number of accounts
+$total_accounts = 0;
+$check_total_query = "SELECT COUNT(*) FROM Users";
+$total_result = mysqli_query($conn, $check_total_query);
+
+if ($total_result) {
+    $total_accounts = mysqli_fetch_array($total_result)[0];
+} else {
+    echo "<script>alert('Database error checking for total accounts.');</script>";
+}
+
+if ($total_accounts >= 2) {
+    echo "<script>alert('Maximum number of accounts reached. Registration is closed.'); window.location.href='index.php';</script>";
+    exit();
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
