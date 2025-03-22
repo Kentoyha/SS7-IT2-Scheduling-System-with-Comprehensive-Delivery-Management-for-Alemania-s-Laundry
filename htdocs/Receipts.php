@@ -4,8 +4,8 @@ include 'Menu.php';
 include 'Logout.php';
 session_start();
 
-if (!isset($_SESSION['username']) || $_SESSION['account_level'] != "1") {
-    header("Location: login.php");
+if (!isset($_SESSION['User_ID']) || $_SESSION['account_level'] != "1") {
+    echo "<script>alert('You are not authorized to access this page.'); window.location.href='index.php';</script>";
     exit();
 }
 
@@ -49,16 +49,16 @@ function displayReceiptDetails($conn, $receipt_id) {
         echo "<div class='receipt-details'>";
         echo "<h2>Order Receipt</h2>";
         echo "<p><strong>Order Number:</strong> " . htmlspecialchars($order["Order_ID"]) . "</p>";
-        echo "<p><strong>Date Ordered:</strong> " . htmlspecialchars($order["Order_date"]) . "</p>";
+        echo "<p><strong>Date Ordered:</strong> " . htmlspecialchars(date('m/d/Y', strtotime($order["Order_date"]))) . "</p>";
         echo "<p><strong>Cleaning Type:</strong> " . htmlspecialchars($order["Cleaning_type"]) . "</p>";
         echo "<p><strong>Laundry Type:</strong> " . htmlspecialchars($order["Laundry_type"]) . "</p>";
         echo "<p><strong>Quantity:</strong> " . htmlspecialchars($order["Laundry_quantity"]) . "</p>";
-        echo "<p><strong>Pickup Date:</strong> " . htmlspecialchars($order["Pickup_Date"] ?? "N/A") . "</p>";
-        echo "<p><strong>Pickup Staff:</strong> " . htmlspecialchars($order["Pickup_staff_name"] ?? "N/A") . "</p>";
-        echo "<p><strong>Delivery Date:</strong> " . htmlspecialchars($order["Delivery_date"] ?? "N/A") . "</p>";
+        echo "<p><strong>Delivery Date:</strong> " . htmlspecialchars(($order["Delivery_date"] != null) ? date('m/d/Y', strtotime($order["Delivery_date"])) : "N/A") . "</p>";
         echo "<p><strong>Delivery Staff:</strong> " . htmlspecialchars($order["Delivery_staff_name"] ?? "N/A") . "</p>";
-        echo "<p><strong>Date Completed:</strong> " . htmlspecialchars($order["Date_completed"] ?? "N/A") . "</p>";
-        echo "<p><strong>Time Completed:</strong> " . htmlspecialchars($order["Time_completed"] ?? "N/A") . "</p>";
+        echo "<p><strong>Pick up Date:</strong> " . htmlspecialchars(($order["Pickup_Date"] != null) ? date('m/d/Y', strtotime($order["Pickup_Date"])) : "N/A") . "</p>";
+        echo "<p><strong>Pick up Staff:</strong> " . htmlspecialchars($order["Pickup_staff_name"] ?? "N/A") . "</p>";
+        echo "<p><strong>Date Completed:</strong> " . htmlspecialchars(date('m/d/Y', strtotime($order["Date_completed"]))) . "</p>";
+        echo "<p><strong>Time Completed:</strong> " . htmlspecialchars(date('h:i A', strtotime($order["Time_completed"]))) . "</p>";
         echo "<p class='status'><strong>Status:</strong> " . htmlspecialchars($order["Status"]) . "</p>";
         echo "</div>";
     } else {
@@ -73,7 +73,7 @@ $condition = $filter == 'Checked' ? "AND Receipts.Status = 'Checked'" : "AND Rec
 // Get selected receipt
 $selected_receipt_id = isset($_GET['selected_receipt_id']) ? intval($_GET['selected_receipt_id']) : null;
 
-$results_per_page = 7;
+$results_per_page = 6;
 $current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
 $start_from = ($current_page - 1) * $results_per_page;
 
@@ -160,6 +160,7 @@ h1 {
             text-decoration: none;
             border: 1px solid #ddd;
             color: #333;
+            font-weight:normal ;
         }
 
         .pagination a.active {
@@ -198,13 +199,13 @@ h1 {
 
 .receipt-container h2 {
     text-align: center;
-    color: #007bff;
+    color: black;
 }
 
 .receipt-details p {
     font-size: 16px;
-    margin: 10px 0;
-    color: #444;
+    margin: 7px 0;
+    color: #333;
 }
 
 /* Mark as Checked Button */
@@ -246,7 +247,7 @@ th, td {
     padding: 14px 16px;
     text-align: center;
     border-bottom: 1px solid #ddd;
-    color: #444;
+    color: black;
 }
 
 th {
@@ -331,9 +332,9 @@ a:hover {
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>";
                         echo "<td><a href='?mark_checked_id=" . htmlspecialchars($row['Receipt_ID']) . "&filter=" . htmlspecialchars($filter) . "'>" . htmlspecialchars($row['Order_ID']) . "</a></td>";
-                        echo "<td>" . htmlspecialchars($row["Order_date"]) . "</td>";
-                        echo "<td>" . htmlspecialchars($row["Delivery_date"] ?? "N/A") . "</td>";
-                        echo "<td>" . htmlspecialchars($row["Pickup_Date"] ?? "N/A") . "</td>";
+                        echo "<td>" . htmlspecialchars(date('m/d/Y', strtotime($row["Order_date"]))) . "</td>";
+                        echo "<td>" . htmlspecialchars(($row["Delivery_date"] != null) ? date('m/d/Y', strtotime($row["Delivery_date"])) : "N/A") . "</td>";
+                        echo "<td>" . htmlspecialchars(($row["Pickup_Date"] != null) ? date('m/d/Y', strtotime($row["Pickup_Date"])) : "N/A") . "</td>";
                         echo "</tr>";
                     }
                     ?>

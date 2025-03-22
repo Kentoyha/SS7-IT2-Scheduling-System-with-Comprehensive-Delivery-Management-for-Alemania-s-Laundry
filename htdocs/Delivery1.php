@@ -9,8 +9,8 @@ include 'Logout.php';
 
 session_start();
 // ✅ Check if the user is logged in and has the correct account level
-if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 2) {
-    header("Location: login.php"); // Redirect to login page if not an admin
+if (!isset($_SESSION['User_ID']) || $_SESSION['account_level'] != 2) {
+    echo "<script>alert('You are not authorized to access this page.'); window.location.href='index.php';</script>";
     exit();
 }
 
@@ -74,12 +74,12 @@ $total_pages = ($total_results > 0) ? ceil($total_results / $results_per_page) :
             padding: 14px 16px;
             text-align: center;
             border-bottom: 1px solid #ddd;
-            color: #444;
+            color: black;
         }
 
         th {
             background-color: #f0f0f0;
-            color: #333;
+            color: black;
             font-weight: bold;
             letter-spacing: 0.8px;
         }
@@ -128,31 +128,38 @@ $total_pages = ($total_results > 0) ? ceil($total_results / $results_per_page) :
 
     <table align="center" cellspacing="0" cellpadding="10">
         <tr>
-            <th>Order Date</th>
+            <th>Laundry Details</th>
             <th>Delivery Date</th>
             <th>Delivery Staff Name</th>
             <th>Contact Info</th>
             <th>Status</th>
         </tr>
         <?php
-        $sql = "SELECT Delivery.*, Orders.Order_date 
-                FROM Delivery 
-                INNER JOIN Orders ON Delivery.Order_ID = Orders.Order_ID 
-                WHERE Delivery.Status IN ('Out for Delivery' , 'Assigned')
-                ORDER BY Delivery.Delivery_date ASC
-                LIMIT $start_from, $results_per_page";
+       $sql = "SELECT 
+       d.Delivery_date, 
+       d.Delivery_staff_name, 
+       d.Contact_info, 
+       d.Status,
+       o.Laundry_quantity,
+       o.Laundry_type,
+       o.Cleaning_type
+   FROM Delivery d
+   INNER JOIN Orders o ON d.Order_ID = o.Order_ID 
+   WHERE d.Status IN ('Out for Delivery' , 'Assigned')
+   ORDER BY d.Delivery_date ASC
+   LIMIT $start_from, $results_per_page";
 
         $result = mysqli_query($conn, $sql);
 
         if (mysqli_num_rows($result) > 0) {
             while ($row = mysqli_fetch_assoc($result)) {
                 echo "<tr>";
-                echo "<td>" . $row['Order_date'] . "</td>";
-                echo "<td>" . $row['Delivery_date'] . "</td>";
-                echo "<td>" . $row['Delivery_staff_name'] . "</td>";
-                echo "<td>" . $row['Contact_info'] . "</td>";
-                echo "<td>" . $row['Status'] . "</td>";
-                echo "</tr>";
+echo "<td> "  . htmlspecialchars($row['Laundry_quantity']) ." " . htmlspecialchars($row['Laundry_type']) . "<br>"  . htmlspecialchars($row['Cleaning_type']) . "</td>";
+echo "<td>" . date('m/d/Y', strtotime($row['Delivery_date'])) . "</td>";
+echo "<td>" . htmlspecialchars($row['Delivery_staff_name']) . "</td>";
+echo "<td>" . htmlspecialchars($row['Contact_info']) . "</td>";
+echo "<td>" . htmlspecialchars($row['Status']) . "</td>";
+echo "</tr>";
             }
         } else {
             echo "<tr><td colspan='5'>No records found.</td></tr>";

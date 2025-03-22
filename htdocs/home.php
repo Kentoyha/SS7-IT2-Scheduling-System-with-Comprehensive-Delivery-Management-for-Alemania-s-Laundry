@@ -1,6 +1,7 @@
 <?php
 // filepath: /workspaces/SS7-IT2-Scheduling-System-with-Comprehensive-Delivery-Management-for-Alemania-s-Laundry/htdocs/home.php
 
+
 // filepath: /workspaces/SS7-IT2-Scheduling-System-with-Comprehensive-Delivery-Management-for-Alemania-s-Laundry/htdocs/home.php
 include("db_connect.php");
 include("Menu.php");
@@ -11,8 +12,8 @@ ini_set('display_errors', 1);
 
 session_start();
 // ✅ Check if the user is logged in and is an admin
-if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 1) {
-    header("Location: login.php"); // Redirect to login page if not an admin
+if (!isset($_SESSION['User_ID']) || $_SESSION['account_level'] != '1') {
+    echo "<script>alert('You are not authorized to access this page.'); window.location.href='index.php';</script>";
     exit();
 }
 
@@ -147,7 +148,7 @@ $query = mysqli_query($conn, $sql);
             padding: 14px 16px; /* Adjusted padding */
             text-align: center;
             border-bottom: 1px solid #ddd;
-            color: #444; /* Slightly darker text */
+            color: black; 
         }
 
         th {
@@ -217,7 +218,6 @@ $query = mysqli_query($conn, $sql);
     <table>
         <thead>
             <tr>
-                <th>Order Date</th>
                 <th>Laundry Type</th>
                 <th>Laundry Quantity</th>
                 <th>Cleaning Type</th>
@@ -234,7 +234,6 @@ $query = mysqli_query($conn, $sql);
             } else {
                 while ($result = mysqli_fetch_assoc($query)) {
                     echo "<tr>";
-                    echo "<td>" . htmlspecialchars($result["Order_date"]) . "</td>";
                     echo "<td>" . htmlspecialchars($result["Laundry_type"]) . "</td>";
                     echo "<td>" . htmlspecialchars($result["Laundry_quantity"]) . "</td>";
                     echo "<td>" . htmlspecialchars($result["Cleaning_type"]) . "</td>";

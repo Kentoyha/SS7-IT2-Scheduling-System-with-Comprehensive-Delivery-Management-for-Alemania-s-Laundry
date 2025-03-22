@@ -5,8 +5,8 @@ include("Menu.php");
 session_start();
 
 // Check if the user is logged in and has a valid session
-if (!isset($_SESSION['username']) && $_SESSION['account_level'] != 1) {
-    header("Location: login.php");
+if (!isset($_SESSION['User_ID']) || $_SESSION['account_level'] != 1) {
+    echo "<script>alert('You are not authorized to access this page.'); window.location.href='index.php';</script>";
     exit();
 
 }

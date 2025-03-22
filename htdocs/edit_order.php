@@ -5,8 +5,8 @@ include("Menu2.php");
 session_start();
 
 // Check if user is logged in and has the correct role
-if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 2) {
-    header("Location: login.php");
+if (!isset($_SESSION['User_ID']) || $_SESSION['account_level'] != 2) {
+    echo "<script>alert('You are not authorized to access this page.'); window.location.href='index.php';</script>";
     exit();
 }
 
@@ -112,6 +112,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         button:hover {
             background-color: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
         }
         .cancel-btn {
             width: 48%;
@@ -125,6 +127,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             text-decoration: none;
             display: inline-block;
             cursor: pointer;
+        }
+        .cancel-btn:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
         }
         @media (max-width: 600px) {
             .container {

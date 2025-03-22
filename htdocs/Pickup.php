@@ -7,8 +7,8 @@ include("Logout.php");
 session_start();
 
 // Ensure only authorized users can access this page
-if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 2) {
-    header("Location: login.php");
+if (!isset($_SESSION['User_ID']) || $_SESSION['account_level'] != 2) {
+    echo "<script>alert('You are not authorized to access this page.'); window.location.href='index.php';</script>";
     exit();
 }
 
@@ -117,7 +117,7 @@ $start_from = ($current_page - 1) * $results_per_page;
             padding: 14px 16px;
             text-align: center;
             border-bottom: 1px solid #ddd;
-            color: #444;
+            color: black;
         }
 
         th {
@@ -166,31 +166,22 @@ $start_from = ($current_page - 1) * $results_per_page;
         }
 
         .complete-btn {
-            background-color: #007bff;
-            /* Blue color */
+            background-color: #1cc6ff;
             color: white;
             border: none;
             padding: 15px 15px;
             cursor: pointer;
             border-radius: 5px;
-            /* Rounded corners */
-            transition: background-color 0.3s ease;
-            /* Smooth transition for hover effect */
+            transition: background-color 0.3s ease; 
         }
 
         .complete-btn:hover {
-            background-color: #32b6e3;
-            /* Darker blue on hover */
             transform: translateY(-2px);
-            /* Slight lift on hover */
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-            /* Increased shadow on hover */
-
         }
 
         .styled-button {
             background-color: #007bff;
-            /* A different shade of blue */
             border: none;
             color: white;
             padding: 10px 20px;
@@ -211,7 +202,7 @@ $start_from = ($current_page - 1) * $results_per_page;
 </head>
 
 <body>
-    <h1>Pickups</h1>
+    <h1>Pick ups Management</h1>
 
     <!-- ✅ Add a form to toggle between showing assigned and unassigned pickups -->
     <form method="GET" style="margin-bottom: 10px; text-align: center;">
@@ -264,8 +255,8 @@ $start_from = ($current_page - 1) * $results_per_page;
     if ($result && mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
             echo "<tr>";
-            echo "<td>" . htmlspecialchars($row['Laundry_quantity']) . " x " . htmlspecialchars($row['Laundry_type']) . " - " . htmlspecialchars($row['Cleaning_type']) . "<br>" . htmlspecialchars($row['Place']) . "</td>";
-            echo "<td>" . htmlspecialchars($row['Date']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['Laundry_quantity']) . " " . htmlspecialchars($row['Laundry_type']) . " <br>" . htmlspecialchars($row['Cleaning_type']) .  "</td>";
+            echo "<td>" . date('m/d/Y', strtotime($row['Date'])) . "</td>";
             echo "<td>" . htmlspecialchars($row['Pickup_staff_name']) . "</td>";
             echo "<td>" . htmlspecialchars($row['Contact_info']) . "</td>";
             echo "<td>" . htmlspecialchars($row['Status']) . "</td>";

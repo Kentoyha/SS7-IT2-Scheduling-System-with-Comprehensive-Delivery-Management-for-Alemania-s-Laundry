@@ -7,8 +7,8 @@ include("db_connect.php");
 include("Menu.php");
 include("Logout.php");
 
-if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 1) {
-    header("Location: login.php");
+if (!isset($_SESSION['User_ID']) || $_SESSION['account_level'] != 1) {
+    echo "<script>alert('You are not authorized to access this page.'); window.location.href='index.php';</script>";
     exit();
 }
 
@@ -54,18 +54,19 @@ $show_unassigned = isset($_GET['show_unassigned']) && $_GET['show_unassigned'] =
 // Construct the SQL query based on whether to show unassigned pickups or not
 $show_unassigned_condition = $show_unassigned
     ? "(Orders.Status = 'Ready for Pick up' OR Pickups.Status = 'Assigned')"
-    : "Pickups.Status IN ('On the way', 'Picked up')";
+    : "(Pickups.Status IN ('On the way', 'Picked up') AND Orders.Status != 'Ready for Pick up' AND Orders.Status != 'Assigned')";
 
 $sql = "SELECT Orders.Order_ID, Orders.Laundry_type, Orders.Laundry_quantity, Orders.Cleaning_type, Orders.Place, Orders.Status AS OrderStatus, 
             Pickups.Pickup_ID, Pickups.Date, Pickups.Pickup_staff_name, Pickups.Status AS PickupStatus, Pickups.Contact_info
         FROM Orders 
-        LEFT JOIN Pickups ON Orders.Order_ID = Pickups.Order_ID 
+       LEFT JOIN Pickups ON Orders.Order_ID = Pickups.Order_ID
         WHERE $show_unassigned_condition
         ORDER BY 
     CASE 
         WHEN Pickups.Status = 'On the way' THEN 1
         WHEN Pickups.Status = 'Picked up' THEN 2
-        ELSE 3
+        WHEN Pickups.Status = 'Assigned' THEN 3
+        ELSE 4
     END,
     Pickups.Date ASC
         LIMIT $start_from, $results_per_page;";
@@ -121,7 +122,7 @@ $total_pages = ceil($total_results / $results_per_page);
             padding: 14px 16px; /* Adjusted padding */
             text-align: center;
             border-bottom: 1px solid #ddd;
-            color: #444; /* Slightly darker text */
+            color: black; 
         }
 
         th {
@@ -225,7 +226,9 @@ $total_pages = ceil($total_results / $results_per_page);
         <thead>
             <tr>
                 <th>Order Details</th>
+                <?php if ($show_unassigned): ?>
                 <th>Pickup Date</th>
+                <?php endif; ?>
                 <th>Pickup Staff Name</th>
                 <th>Contact Info</th>
                 <th>Order Status</th>
@@ -253,8 +256,10 @@ $total_pages = ceil($total_results / $results_per_page);
             if ($query) {
                 while ($row = mysqli_fetch_assoc($query)) {
                     echo "<tr>";
-                    echo "<td>" . htmlspecialchars($row['Laundry_quantity']) . " " . htmlspecialchars($row['Laundry_type']) . "<br>" . htmlspecialchars($row['Cleaning_type']) . "<br>" . htmlspecialchars($row['Place']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row["Date"] ?? 'Not Assigned') . "</td>";
+                    echo "<td>" . htmlspecialchars($row['Laundry_quantity']) . " " . htmlspecialchars($row['Laundry_type']) . "<br>" . htmlspecialchars($row['Cleaning_type']) .  "</td>";
+                    if ($show_unassigned){
+                        echo "<td>" . htmlspecialchars(date('m/d/Y', strtotime($row["Date"]))) . "</td>";
+                    }
                     echo "<td>" . htmlspecialchars($row["Pickup_staff_name"] ?? 'Not Assigned') . "</td>";
                     echo "<td>" . htmlspecialchars($row["Contact_info"] ?? 'Not Assigned') . "</td>";
                     echo "<td>" . htmlspecialchars($row["OrderStatus"]) . "</td>";

@@ -4,8 +4,8 @@ include 'db_connect.php';
 include 'Menu2.php';
 
 // Ensure user is logged in and authorized
-if (!isset($_SESSION['username']) || $_SESSION['account_level'] != '2') {
-    header("Location: login.php");
+if (!isset($_SESSION['User_ID']) || $_SESSION['account_level'] != '2') {
+    echo "<script>alert('You are not authorized to access this page.'); window.location.href='index.php';</script>";
     exit();
 }
 
@@ -164,7 +164,7 @@ if(isset($_GET['Order_ID'])) {
 
                     echo "<script>
                             alert('Staff assigned successfully. Status is set to $Status.');
-                            window.location.href='Pickup.php?Order_ID=$Order_id';
+                            window.location.href='Orders2.php?Order_ID=$Order_id';
                           </script>";
                 } catch (Exception $e) {
                     mysqli_rollback($conn);

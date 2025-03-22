@@ -7,20 +7,16 @@ include("Logout.php");
 
 session_start();
 
-// ✅ Check if the user is logged in and is an admin
-if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 1) {
-    header("Location: login.php");
+// Check if the user is logged in and is an admin
+if (!isset($_SESSION['User_ID']) || $_SESSION['account_level'] != 1) {
+    echo "<script>alert('You are not authorized to access this page.'); window.location.href='index.php';</script>";
     exit();
 }
 
 $today = date('Y-m-d');
 
-// ✅ Update status from "Assigned" to "Out for Delivery" if delivery date is today
-$update_sql = "UPDATE Delivery 
-               SET Status = 'Out for Delivery' 
-               WHERE Delivery_date = ? 
-               AND Status = 'Assigned'";
-
+// Update status from "Assigned" to "Out for Delivery" if delivery date is today
+$update_sql = "UPDATE Delivery SET Status = 'Out for Delivery' WHERE Delivery_date = ? AND Status = 'Assigned'";
 $update_stmt = $conn->prepare($update_sql);
 $update_stmt->bind_param("s", $today);
 $update_stmt->execute();
@@ -35,19 +31,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $delivery_id = $_POST['Delivery_ID'];
     $new_status = $_POST['status'];
 
-    // ✅ Update Delivery status
+    // Update Delivery status
     $stmt = $conn->prepare("UPDATE Delivery SET Status = ? WHERE Delivery_ID = ?");
     $stmt->bind_param("si", $new_status, $delivery_id);
 
     if ($stmt->execute()) {
-        // ✅ Also update the Orders status linked to this delivery
-        $stmt2 = $conn->prepare("
-            UPDATE Orders 
-            SET Status = ? 
-            WHERE Order_ID = (
-                SELECT Order_ID FROM Delivery WHERE Delivery_ID = ?
-            )
-        ");
+        // Also update the Orders status linked to this delivery
+        $stmt2 = $conn->prepare("UPDATE Orders SET Status = ? WHERE Order_ID = (SELECT Order_ID FROM Delivery WHERE Delivery_ID = ?)");
         $stmt2->bind_param("si", $new_status, $delivery_id);
         $stmt2->execute();
 
@@ -58,33 +48,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// ✅ Get the value of 'show_unassigned' from the GET request
+// Pagination settings
+$results_per_page = 6;
+$current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
+$start_from = ($current_page - 1) * $results_per_page;
+
+// Get the value of 'show_unassigned' from the GET request
 $show_unassigned = isset($_GET['show_unassigned']) && $_GET['show_unassigned'] === 'true';
 
-// ✅ Construct the SQL query based on the 'show_unassigned' value
+// Construct the SQL query based on the 'show_unassigned' value
 if ($show_unassigned) {
-    // ✅ Show unassigned deliveries (Orders with Status 'To be Delivered' or Deliveries with Status 'Assigned')
-    $sql = "
-        SELECT 
-            Orders.Order_ID, Orders.Order_date, Orders.Laundry_type, Orders.Laundry_quantity, 
-            Orders.Cleaning_type, Orders.Place, Orders.Status AS OrderStatus, 
-            Delivery.Delivery_ID, Delivery.Delivery_date, Delivery.Delivery_staff_name, Delivery.Contact_info, Delivery.Status AS DeliveryStatus
-        FROM Orders 
-        LEFT JOIN Delivery ON Orders.Order_ID = Delivery.Order_ID 
-        WHERE Orders.Status = 'To be Delivered' OR Delivery.Status = 'Assigned'
-    ";
+    // Show unassigned deliveries (Orders with Status 'To be Delivered' or Deliveries with Status 'Assigned')
+    $sql = "SELECT 
+                Orders.Order_ID, Orders.Order_date, Orders.Laundry_type, Orders.Laundry_quantity, 
+                Orders.Cleaning_type, Orders.Place, Orders.Status AS OrderStatus, 
+                Delivery.Delivery_ID, Delivery.Delivery_date, Delivery.Delivery_staff_name, Delivery.Contact_info, Delivery.Status AS DeliveryStatus
+            FROM Orders 
+            LEFT JOIN Delivery ON Orders.Order_ID = Delivery.Order_ID 
+            WHERE Orders.Status = 'To be Delivered' OR Delivery.Status = 'Assigned'
+            LIMIT $start_from, $results_per_page";
+
+    // Get total records for pagination
+    $total_query = "SELECT COUNT(*) AS total 
+                    FROM Orders 
+                    LEFT JOIN Delivery ON Orders.Order_ID = Delivery.Order_ID 
+                    WHERE Orders.Status = 'To be Delivered' OR Delivery.Status = 'Assigned'";
 } else {
-    // ✅ Show active deliveries (Deliveries with Status not 'Delivered' or 'Assigned')
-    $sql = "
-        SELECT Delivery.*, Delivery.Status AS DeliveryStatus, Orders.Order_ID, Orders.Order_date, Orders.Place, 
-               Orders.Laundry_type, Orders.Laundry_quantity, Orders.Cleaning_type 
-        FROM Delivery 
-        INNER JOIN Orders ON Delivery.Order_ID = Orders.Order_ID 
-        WHERE Delivery.Status != 'Delivered' AND Delivery.Status != 'Assigned'
-    ";
+    // Show active deliveries (Deliveries with Status not 'Delivered' or 'Assigned')
+    $sql = "SELECT 
+                Delivery.*, Delivery.Status AS DeliveryStatus, Orders.Order_ID, Orders.Order_date, Orders.Place, 
+                Orders.Laundry_type, Orders.Laundry_quantity, Orders.Cleaning_type
+            FROM Delivery 
+            INNER JOIN Orders ON Delivery.Order_ID = Orders.Order_ID 
+            WHERE Delivery.Status != 'Delivered' AND Delivery.Status != 'Assigned'
+            LIMIT $start_from, $results_per_page";
+
+    // Get total records for pagination
+    $total_query = "SELECT COUNT(*) AS total 
+                    FROM Delivery 
+                    INNER JOIN Orders ON Delivery.Order_ID = Orders.Order_ID 
+                    WHERE Delivery.Status != 'Delivered' AND Delivery.Status != 'Assigned'";
 }
 
 $result = mysqli_query($conn, $sql);
+$total_result = mysqli_query($conn, $total_query);
+$total_row = mysqli_fetch_assoc($total_result);
+$total_results = $total_row['total'];
+$total_pages = ceil($total_results / $results_per_page);
 ?>
 
 <!DOCTYPE html>
@@ -120,7 +130,7 @@ $result = mysqli_query($conn, $sql);
             padding: 14px 16px;
             text-align: center;
             border-bottom: 1px solid #ddd;
-            color: #444;
+            color: black;
         }
         th {
             background-color: #f0f0f0;
@@ -144,9 +154,9 @@ $result = mysqli_query($conn, $sql);
             color: white;
             transition: background-color 0.3s ease;
         }
-        .status-btn :hover {
-            transform: translateY(-2px); /* Slight lift on hover */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Increased shadow on hover */
+        .status-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
         }
         .ready-for-pickup {
             background-color: #5cb85c;
@@ -171,6 +181,29 @@ $result = mysqli_query($conn, $sql);
         .toggle-btn:hover {
             background-color: #0056b3;
         }
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            display: inline-block;
+            padding: 8px 16px;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            color: #333;
+        }
+
+        .pagination a.active {
+            background-color: #007bff;
+            color: white;
+            border: 1px solid #007bff;
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: #ddd;
+        }
+
         @media (max-width: 768px) {
             table {
                 width: 100%;
@@ -182,7 +215,7 @@ $result = mysqli_query($conn, $sql);
 
 <h1>Deliveries</h1>
 
-<!-- ✅ Toggle Button for Showing/Hiding Unassigned Deliveries -->
+<!-- Toggle Button for Showing/Hiding Unassigned Deliveries -->
 <form method="GET" style="text-align: center;">
     <input type="hidden" name="show_unassigned" value="<?php echo $show_unassigned ? 'false' : 'true'; ?>">
     <button type="submit" class="toggle-btn">
@@ -193,9 +226,10 @@ $result = mysqli_query($conn, $sql);
 <table>
     <thead>
         <tr>
-            <th>Order Date</th>
             <th>Laundry Details</th>
-            <th>Delivery Date</th>
+            <?php if ($show_unassigned): ?>
+                <th>Delivery Date</th>
+            <?php endif; ?>
             <th>Delivery Staff</th>
             <th>Contact Info</th>
             <th>Status</th>
@@ -208,27 +242,30 @@ $result = mysqli_query($conn, $sql);
         <?php if (mysqli_num_rows($result) > 0): ?>
             <?php while ($row = mysqli_fetch_assoc($result)): ?>
                 <tr>
-                    <td><?php echo htmlspecialchars($row['Order_date']); ?></td>
                     <td>
-                        <?php echo htmlspecialchars($row['Laundry_quantity']) . 'x ' . htmlspecialchars($row['Laundry_type']); ?>
+                        <?php echo htmlspecialchars($row['Laundry_quantity']) . ' ' . htmlspecialchars($row['Laundry_type']); ?>
                         <br>
                         <?php echo htmlspecialchars($row['Cleaning_type']); ?>
-                        <br>
-                        <?php echo htmlspecialchars($row['Place']); ?>
                     </td>
-                    <td><?php echo htmlspecialchars($row['Delivery_date'] ?? 'Unassigned'); ?></td>
-                    <td><?php echo htmlspecialchars($row['Delivery_staff_name'] ?? 'Unassigned'); ?></td>
-                    <td><?php echo htmlspecialchars($row['Contact_info'] ?? 'Unassigned'); ?></td>
+                    <?php if ($show_unassigned): ?>
+                        <td>
+                            <?php echo isset($row['Delivery_date']) ? htmlspecialchars(date('m/d/Y', strtotime($row['Delivery_date']))) : 'Unassigned'; ?>
+                        </td>
+                    <?php endif; ?>
                     <td>
-                        <?php
-                        if ($show_unassigned) {
-                            // ✅ Showing unassigned deliveries (show DeliveryStatus if exists or fallback to OrderStatus)
-                            echo htmlspecialchars($row['DeliveryStatus'] ?? $row['OrderStatus']);
+                        <?php echo htmlspecialchars($row['Delivery_staff_name'] ?? 'Unassigned'); ?>
+                    </td>
+                    <td>
+                        <?php 
+                        if ($show_unassigned && isset($row['OrderStatus']) && $row['OrderStatus'] == 'To be Delivered') {
+                            echo 'Unassigned';
                         } else {
-                            // ✅ Showing active deliveries (show DeliveryStatus)
-                            echo htmlspecialchars($row['DeliveryStatus']);
+                            echo htmlspecialchars($row['Contact_info'] ?? '');
                         }
                         ?>
+                    </td>
+                    <td>
+                        <?php echo htmlspecialchars($row['DeliveryStatus'] ?? $row['OrderStatus'] ?? ''); ?>
                     </td>
                     <?php if (!$show_unassigned): ?>
                         <td>
@@ -249,6 +286,24 @@ $result = mysqli_query($conn, $sql);
         <?php endif; ?>
     </tbody>
 </table>
+
+<!-- Pagination links -->
+<div class="pagination">
+    <?php
+    if ($current_page > 1) {
+        echo '<a href="Delivery.php?page=' . ($current_page - 1) . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '">&laquo; Previous</a>';
+    }
+
+    for ($i = 1; $i <= $total_pages; $i++) {
+        $active_class = ($i == $current_page) ? 'active' : '';
+        echo '<a href="Delivery.php?page=' . $i . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '" class="' . $active_class . '">' . $i . '</a>';
+    }
+
+    if ($current_page < $total_pages) {
+        echo '<a href="Delivery.php?page=' . ($current_page + 1) . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '">Next &raquo;</a>';
+    }
+    ?>
+</div>
 
 </body>
 </html>

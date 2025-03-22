@@ -9,7 +9,7 @@ session_start();
 
 // Check if the user is not logged in
 if (!isset($_SESSION['User_ID']) || $_SESSION['account_level'] != '2') {
-    header("Location: login.php");
+    echo "<script>alert('You are not authorized to access this page.'); window.location.href='index.php';</script>";
     exit();
 }
 

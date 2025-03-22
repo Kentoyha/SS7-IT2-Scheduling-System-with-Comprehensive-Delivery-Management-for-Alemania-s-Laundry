@@ -8,8 +8,8 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 session_start();
-if (!isset($_SESSION['username']) || $_SESSION['account_level'] != 2) {
-    header("Location: login.php");
+if (!isset($_SESSION['User_ID']) || $_SESSION['account_level'] != 2) {
+    echo "<script>alert('You are not authorized to access this page.'); window.location.href='index.php';</script>";
     exit();
 }
 
@@ -47,7 +47,7 @@ if (isset($_POST['Order'])) {
 }
 
 // Pagination settings
-$results_per_page = 4;
+$results_per_page = 5;
 
 // Get current page number
 if (isset($_GET['page']) && is_numeric($_GET['page'])) {
@@ -156,16 +156,16 @@ $result = mysqli_query($conn, $sql);
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid #ddd;
+            color: black;
         }
 
         th {
             background-color: #e9ecef;
-            color: #495057;
             font-weight: 600;
         }
 
         tr:hover {
-            background-color: #f5f5f5;
+            background-color:  #ebf9ff;
         }
 
         input[type="text"],
@@ -212,7 +212,6 @@ $result = mysqli_query($conn, $sql);
         }
 
         .actedit:hover {
-            background-color: #32b6e3;
             transform: translateY(-2px); /* Slight lift on hover */
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Increased shadow on hover */
         }
@@ -222,7 +221,6 @@ $result = mysqli_query($conn, $sql);
         }
 
         .actbutton:hover {
-            background-color: #32b6e3;
             transform: translateY(-2px); /* Slight lift on hover */
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Increased shadow on hover */
         }
@@ -283,7 +281,7 @@ $result = mysqli_query($conn, $sql);
     <div class="container">
         <!-- Place Order Form -->
         <div class="form-container">
-            <h2>PLACE NEW ORDER</h2>
+            <h2><strong>Place New Order</strong></h2>
             <form method="POST" action="">
                 <label for="Laundry_Type">Laundry Type:</label>
                 <select name="Laundry_Type" id="Laundry_Type" required>
@@ -358,7 +356,7 @@ $result = mysqli_query($conn, $sql);
                     if (mysqli_num_rows($result) > 0) {
                         while ($row = mysqli_fetch_assoc($result)) {
                             echo "<tr>";
-                            echo "<td>Laundry Type: " . htmlspecialchars($row['Laundry_type']) . "<br>Quantity: " . htmlspecialchars($row['Laundry_quantity']) . "<br>Cleaning: " . htmlspecialchars($row['Cleaning_type']) . "</td>";
+                            echo "<td> "  . htmlspecialchars($row['Laundry_quantity']) ." " . htmlspecialchars($row['Laundry_type']) . "<br>"  . htmlspecialchars($row['Cleaning_type']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['Status']) . "</td>";
 
                             // ✅ Show "Assign Staff" only when viewing approved orders

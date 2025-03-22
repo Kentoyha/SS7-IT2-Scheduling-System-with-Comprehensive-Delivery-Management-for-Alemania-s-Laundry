@@ -7,8 +7,8 @@ include 'Logout.php';
 session_start(); // Start the session
 
 // Check if the user is logged in and has the correct account level
-if (!isset($_SESSION['username']) ||  $_SESSION['account_level'] != "2") {
-    header("Location: index.php");
+if (!isset($_SESSION['User_ID']) ||  $_SESSION['account_level'] != "2") {
+    echo "<script>alert('You are not authorized to access this page.'); window.location.href='index.php';</script>";
     exit();
 }
 
@@ -67,7 +67,7 @@ $total_pages = ceil($total_results / $results_per_page);
             padding: 14px 16px; /* Adjusted padding */
             text-align: center;
             border-bottom: 1px solid #ddd;
-            color: #444; /* Slightly darker text */
+            color: black; /* Slightly darker text */
         }
 
         th {
@@ -136,7 +136,6 @@ $total_pages = ceil($total_results / $results_per_page);
     <table>
         <thead>
             <tr>
-                <th>Order Date</th>
                 <th>Laundry Type</th>
                 <th>Laundry Quantity</th>
                 <th>Cleaning Type</th>
@@ -153,7 +152,6 @@ $total_pages = ceil($total_results / $results_per_page);
             } else {
                 while ($result = mysqli_fetch_assoc($query)) {
                     echo "<tr>";
-                    echo "<td>" . htmlspecialchars($result["Order_date"]) . "</td>";
                     echo "<td>" . htmlspecialchars($result["Laundry_type"]) . "</td>";
                     echo "<td>" . htmlspecialchars($result["Laundry_quantity"]) . "</td>";
                     echo "<td>" . htmlspecialchars($result["Cleaning_type"]) . "</td>";

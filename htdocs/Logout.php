@@ -1,4 +1,5 @@
-<a href="index.php" class="logout-btn">Logout</a>
+
+<a href="logout.php" class="logout-btn">Logout</a>
 
 <style>
 .logout-btn {
@@ -14,6 +15,7 @@
     cursor: pointer;
     transition: background 0.3s ease-in-out, color 0.3s;
     text-decoration: none;
+    font-weight: normal;
 }
 
 .logout-btn:hover {
@@ -22,3 +24,4 @@
 }
 
 </style>
+

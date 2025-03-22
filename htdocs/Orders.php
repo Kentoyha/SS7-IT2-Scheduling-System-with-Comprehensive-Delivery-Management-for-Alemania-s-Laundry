@@ -6,8 +6,8 @@ include("Logout.php");
 session_start();
 
 // Ensure only admin users can access this page
-if (!isset($_SESSION['username']) || $_SESSION['account_level'] != '1') {
-    header("Location: login.php");
+if (!isset($_SESSION['User_ID']) || $_SESSION['account_level'] != '1') {
+    echo "<script>alert('You are not authorized to access this page.'); window.location.href='index.php';</script>";
     exit();
 }
 
@@ -57,7 +57,7 @@ if (isset($_POST['Order'])) {
 }
 
 // Pagination settings
-$results_per_page = 3;
+$results_per_page = 4;
 $current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
 $start_from = ($current_page - 1) * $results_per_page;
 
@@ -99,7 +99,7 @@ $result = mysqli_query($conn, $sql);
     text-align: center;
     font-size: 24px;
     font-weight: bold;
-    margin-bottom: 15px;
+    margin-bottom: 19px;
 }
 
 /* Main container layout */
@@ -107,12 +107,12 @@ $result = mysqli_query($conn, $sql);
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 37px;
+    padding: 50px;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 17px auto;
-    max-width: 94%;
+    margin: 25px auto;
+    max-width: 92%;
 }
 
 /* Left section (Form) */
@@ -163,7 +163,8 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    transform: translateY(-2px); /* Slight lift on hover */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Increased shadow on hover */
 }
 
 /* Table Styles */
@@ -185,7 +186,7 @@ th, td {
     padding: 14px 16px;
     text-align: center;
     border-bottom: 1px solid #ddd;
-    color: #444;
+    color: black;
 }
 
 th {
@@ -228,7 +229,7 @@ tr:hover {
         }
 
         .to-be-delivered {
-            background-color: #FF8C00; /* A slightly darker shade of orange */
+            background-color: #DAA520; /* A slightly darker shade of orange */
         }
 
         .in-progress {
@@ -278,7 +279,7 @@ tr:hover {
 <div class="container">
     <div class="left-section">
         <!-- Centered Title -->
-        <h2 class="order-title">Place New Orders</h2>
+        <h2 class="order-title">Place New Order</h2>
 
         <!-- Place Order Form -->
         <div class="form-container">
@@ -328,8 +329,8 @@ tr:hover {
             <table>
                 <thead>
                     <tr>
-                        <th>Laundry Details</th>
                         <th>Order Date</th>
+                        <th>Laundry Details</th>
                         <th>Place</th>
                         <th>Priority Number</th>
                         <th>Status</th>
@@ -343,8 +344,8 @@ tr:hover {
                     } else {
                         while ($row = mysqli_fetch_assoc($result)) {
                             echo "<tr>";
-                            echo "<td>Laundry Type: " . htmlspecialchars($row["Laundry_type"]) . "<br>Quantity: " . htmlspecialchars($row["Laundry_quantity"]) . "<br>Cleaning Type: " . htmlspecialchars($row["Cleaning_type"]) . "</td>";
-                            echo "<td>" . htmlspecialchars($row["Order_date"]) . "</td>";
+                            echo "<td>" . date('m/d/Y', strtotime($row["Order_date"])) . "</td>";
+                            echo "<td> " . htmlspecialchars($row["Laundry_quantity"]) . " " . htmlspecialchars($row["Laundry_type"]) . "<br> " . htmlspecialchars($row["Cleaning_type"]) . "</td>";
                             echo "<td>" . htmlspecialchars($row["Place"]) . "</td>";
                             echo "<td>" . htmlspecialchars($row["Priority_number"]) . "</td>";
                             echo "<td>" . htmlspecialchars($row["Status"]) . "</td>";
