@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     mysqli_stmt_bind_param($update_stmt, "sissisi", $laundry_type, $laundry_quantity, $cleaning_type, $place, $priority_number, $status, $order_id);
 
     if (mysqli_stmt_execute($update_stmt)) {
-        echo "<script>alert('Order has been updated'); window.location.href='Laundy_Order.php';</script>";
+        echo "<script>alert('Order has been updated'); window.location.href='Laundry_Order.php';</script>";
         exit();
     } else {
         echo "Error updating order: " . mysqli_error($conn);
