@@ -19,7 +19,7 @@ if (!isset($_GET['Order_ID']) || empty($_GET['Order_ID'])) {
 $order_id = intval($_GET['Order_ID']);
 
 // Fetch order details from the database
-$sql = "SELECT * FROM Orders WHERE Order_ID = ?";
+$sql = "SELECT * FROM Laundry_Orders WHERE Order_ID = ?";
 $stmt = mysqli_prepare($conn, $sql);
 mysqli_stmt_bind_param($stmt, "i", $order_id);
 mysqli_stmt_execute($stmt);
@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Force Status to "Pending" on edit
     $status = "Pending";
     
-    $update_sql = "UPDATE Orders SET Laundry_type=?, Laundry_quantity=?, Cleaning_type=?, Place=?, Priority_number=?, Status=? WHERE Order_ID=?";
+    $update_sql = "UPDATE Laundry_Orders SET Laundry_type=?, Laundry_quantity=?, Cleaning_type=?, Place=?, Priority_number=?, Status=? WHERE Order_ID=?";
     $update_stmt = mysqli_prepare($conn, $update_sql);
     mysqli_stmt_bind_param($update_stmt, "sissisi", $laundry_type, $laundry_quantity, $cleaning_type, $place, $priority_number, $status, $order_id);
 
