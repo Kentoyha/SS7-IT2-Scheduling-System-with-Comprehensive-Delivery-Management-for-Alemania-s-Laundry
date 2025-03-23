@@ -43,7 +43,7 @@ error_reporting(E_ALL);
 
                 // Retrieve order details
                 $sql = "SELECT Order_date, Laundry_type, Laundry_quantity, Cleaning_type, Place, Priority_number, Status 
-                        FROM `Orders` WHERE Order_ID = ?";
+                        FROM `Laundry_Orders` WHERE Order_ID = ?";
                 
                 // Use prepared statement
                 $stmt = mysqli_prepare($conn, $sql);
@@ -143,7 +143,7 @@ error_reporting(E_ALL);
                     }
 
                     // Update Order status
-                    $update_sql = "UPDATE `Orders` SET Status = ? WHERE Order_ID = ?";
+                    $update_sql = "UPDATE `Laundry_Orders` SET Status = ? WHERE Order_ID = ?";
                     $stmt = mysqli_prepare($conn, $update_sql);
                     mysqli_stmt_bind_param($stmt, "si", $Status, $Order_id);
                     $result2 = mysqli_stmt_execute($stmt);
@@ -158,7 +158,7 @@ error_reporting(E_ALL);
 
                     echo "<script>
                             alert('Staff assigned successfully,The delivery for the Order is now $Status');
-                            window.location.href='Delivery1.php';
+                            window.location.href='User_Delivery.php';
                           </script>";
                 } catch (Exception $e) {
                     // Rollback on failure

@@ -23,13 +23,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Order_ID']) && isset($
     $new_status = htmlspecialchars($_POST['status']); // Prevent XSS
 
     // Update Order status
-    $stmt = $conn->prepare("UPDATE Orders SET Status = ? WHERE Order_ID = ?");
+    $stmt = $conn->prepare("UPDATE Laundry_Orders SET Status = ? WHERE Order_ID = ?");
     $stmt->bind_param("si", $new_status, $Order_ID);
     $stmt->execute();
 
     if ($new_status == 'Completed') {
         // ✅ Check if order is from "The Hotel"
-        $sql = "SELECT Place FROM Orders WHERE Order_ID = ?";
+        $sql = "SELECT Place FROM Laundry_Orders WHERE Order_ID = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $Order_ID);
         $stmt->execute();
@@ -51,42 +51,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Order_ID']) && isset($
                 $Delivery_ID = $delivery['Delivery_ID'];
             }
 
-            $sql = "SELECT Pickup_ID FROM Pickups WHERE Order_ID = ?";
+            $sql = "SELECT Pick_up_ID FROM Pick_ups WHERE Order_ID = ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("i", $Order_ID);
             $stmt->execute();
             $result = $stmt->get_result();
-            $pickup = $result->fetch_assoc();
-            if ($pickup) {
-                $Pickup_ID = $pickup['Pickup_ID'];
+            $pick_up = $result->fetch_assoc();
+            if ($pick_up) {
+                $Pick_up_ID = $pick_up['Pick_up_ID'];
             }
 
             // ✅ Insert into Receipts table with NULL handling
-            $sql = "INSERT INTO Receipts (Order_ID, Delivery_ID, Pickup_ID, Date_completed, Time_completed) 
-                    VALUES (?, ?, ?, CURDATE(), CURTIME())";
+            $sql = "INSERT INTO Receipts (Order_ID, Delivery_ID, Pick_up_ID, Date_completed, Time_completed, Status) 
+                    VALUES (?, ?, ?, CURDATE(), CURTIME(), 'Unchecked')";
             $stmt = $conn->prepare($sql);
 
             // Bind parameters correctly
             if ($Delivery_ID === NULL && $Pickup_ID === NULL) {
-                $stmt->bind_param("iss", $Order_ID, $Delivery_ID, $Pickup_ID);
+                $stmt->bind_param("iss", $Order_ID, $Delivery_ID, $Pick_up_ID);
             } elseif ($Delivery_ID === NULL) {
-                $stmt->bind_param("isi", $Order_ID, $Delivery_ID, $Pickup_ID);
-            } elseif ($Pickup_ID === NULL) {
-                $stmt->bind_param("iis", $Order_ID, $Delivery_ID, $Pickup_ID);
+                $stmt->bind_param("isi", $Order_ID, $Delivery_ID, $Pick_up_ID);
+            } elseif ($Pick_up_ID === NULL) {
+                $stmt->bind_param("iis", $Order_ID, $Delivery_ID, $Pick_up_ID);
             } else {
-                $stmt->bind_param("iii", $Order_ID, $Delivery_ID, $Pickup_ID);
+                $stmt->bind_param("iii", $Order_ID, $Delivery_ID, $Pick_up_ID);
             }
 
             $stmt->execute();
 
             // ✅ Show a different message and redirect to Receipts.php
-            echo "<script>alert('Order is now completed. A receipt has been generated.'); window.location.href='home.php';</script>";
+            echo "<script>alert('Order is now completed. A receipt has been generated.'); window.location.href='Admin_Home.php';</script>";
             exit();
         }
     }
 
     // ✅ If status is not 'Completed', show a different message
-    echo "<script>alert('Status has been changed.'); window.location.href='home.php';</script>";
+    echo "<script>alert('Status has been changed.'); window.location.href='Admin_Home.php';</script>";
     exit();
 }
 
@@ -96,7 +96,7 @@ $current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET
 $start_from = ($current_page - 1) * $results_per_page;
 
 // Retrieve total number of orders
-$total_query = "SELECT COUNT(*) AS total FROM Orders WHERE Status = 'In Progress'";
+$total_query = "SELECT COUNT(*) AS total FROM Laundry_Orders WHERE Status = 'In Progress'";
 $total_result = mysqli_query($conn, $total_query);
 $total_row = mysqli_fetch_assoc($total_result);
 $total_results = $total_row['total'];
@@ -105,7 +105,7 @@ $total_pages = ceil($total_results / $results_per_page);
 
 // Fetch paginated orders
 $sql = "SELECT Order_ID, Order_date, Laundry_type, Laundry_quantity, Cleaning_type, Place, Priority_number, Status 
-        FROM Orders
+        FROM Laundry_Orders
         WHERE Status = 'In Progress'
         ORDER BY Priority_number ASC
         LIMIT $start_from, $results_per_page";

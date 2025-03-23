@@ -35,7 +35,7 @@ if(isset($_GET['Order_ID'])) {
     $Order_id = trim($_GET['Order_ID']);
 
     $sql = "SELECT Order_date, Laundry_type, Laundry_quantity, Cleaning_type, Place, Priority_number, Status 
-            FROM `Orders` WHERE Order_ID = ?";
+            FROM `Laundry_Orders` WHERE Order_ID = ?";
     $stmt = mysqli_prepare($conn, $sql);
     mysqli_stmt_bind_param($stmt, "i", $Order_id);
     mysqli_stmt_execute($stmt);
@@ -44,12 +44,12 @@ if(isset($_GET['Order_ID'])) {
     if ($result && mysqli_num_rows($result) > 0) {
         $Order = mysqli_fetch_assoc($result);
     } else {
-        echo "<script>alert('Order not found.'); window.location.href='Orders2.php';</script>";
+        echo "<script>alert('Order not found.'); window.location.href='Laundry_Order.php';</script>";
         exit();
     }
     mysqli_stmt_close($stmt);
 } else {
-    echo "<script>alert('Order ID not provided.'); window.location.href='Orders2.php';</script>";
+    echo "<script>alert('Order ID not provided.'); window.location.href='Laundry_Orders.php';</script>";
     exit();
 }
 ?>
@@ -118,30 +118,26 @@ if(isset($_GET['Order_ID'])) {
             <?php
             if(isset($_POST['Assign_staff'])) {
                 $Staff = trim($_POST['Staff']);
-                $Contact = trim($_POST['Contact']);
-                $Pickup_Date = trim($_POST['Pickup_Date']);
-                $Status = "On the way";
+                $Contact = isset($_POST['Contact']) ? trim($_POST['Contact']) : null;
+                $Pick_up_Date = trim($_POST['Pickup_Date']);
+                $Status = ($Pick_up_Date == $today) ? "On the Way" : "Assigned";
 
-                if ($Pickup_Date == $today) {
-                    $Status = "On the Way";
-                } else {
-                    $Status = "Assigned";
-                }
-
+                // Validate contact number
                 if (!empty($Contact) && !preg_match('/^\d{11}$/', $Contact)) {
                     die("<script>alert('Invalid contact number. It must be exactly 11 digits.'); window.history.back();</script>");
                 }
 
+                // Set empty contact to NULL
                 $Contact = !empty($Contact) ? $Contact : NULL;
 
                 mysqli_begin_transaction($conn);
 
                 try {
                     // Insert into Pickups table
-                    $sql = "INSERT INTO `Pickups` (Order_ID, User_ID, Date, Pickup_staff_name, Contact_info, Status) 
+                    $sql = "INSERT INTO `Pick_ups` (Order_ID, User_ID, Date, Pick_up_staff_name, Contact_info, Status) 
                             VALUES (?, ?, ?, ?, ?, ?)";
                     $stmt = mysqli_prepare($conn, $sql);
-                    mysqli_stmt_bind_param($stmt, "iissss", $Order_id, $User_ID, $Pickup_Date, $Staff, $Contact, $Status);
+                    mysqli_stmt_bind_param($stmt, "iissss", $Order_id, $User_ID, $Pick_up_Date, $Staff, $Contact, $Status);
                     $result1 = mysqli_stmt_execute($stmt);
                     mysqli_stmt_close($stmt);
 
@@ -150,7 +146,7 @@ if(isset($_GET['Order_ID'])) {
                     }
 
                     // Update order status
-                    $update_sql = "UPDATE `Orders` SET Status = ? WHERE Order_ID = ?";
+                    $update_sql = "UPDATE `Laundry_Orders` SET Status = ? WHERE Order_ID = ?";
                     $stmt = mysqli_prepare($conn, $update_sql);
                     mysqli_stmt_bind_param($stmt, "si", $Status, $Order_id);
                     $result2 = mysqli_stmt_execute($stmt);
@@ -164,7 +160,7 @@ if(isset($_GET['Order_ID'])) {
 
                     echo "<script>
                             alert('Staff assigned successfully. Status is set to $Status.');
-                            window.location.href='Orders2.php?Order_ID=$Order_id';
+                            window.location.href='Laundry_Order.php?Order_ID=$Order_id';
                           </script>";
                 } catch (Exception $e) {
                     mysqli_rollback($conn);

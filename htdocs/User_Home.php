@@ -19,7 +19,7 @@ $start_from = ($current_page - 1) * $results_per_page;
 
 // Retrieve total number of orders
 // ✅ Corrected SQL query to count orders with 'In Progress' or 'Ready for Pick up' status
-$total_query = "SELECT COUNT(*) AS total FROM Orders WHERE STATUS IN ('In Progress', 'Ready for Pick up') AND PLACE != 'Hotel'";
+$total_query = "SELECT COUNT(*) AS total FROM Laundry_Orders WHERE STATUS IN ('In Progress', 'Ready for Pick up') AND PLACE != 'Hotel'";
 $total_result = mysqli_query($conn, $total_query);
 $total_row = mysqli_fetch_assoc($total_result);
 $total_results = $total_row['total'];
@@ -145,7 +145,7 @@ $total_pages = ceil($total_results / $results_per_page);
         <tbody>
             <?php
             // ✅ Corrected SQL query to fetch orders with 'In Progress' status and not from 'Hotel'
-            $sql = "SELECT * FROM Orders WHERE STATUS IN ('In Progress','Ready for Pick up') AND PLACE != 'Hotel' ORDER BY Priority_number DESC LIMIT $start_from, $results_per_page";
+            $sql = "SELECT * FROM Laundry_Orders WHERE STATUS IN ('In Progress','Ready for Pick up') AND PLACE != 'Hotel' ORDER BY Priority_number DESC LIMIT $start_from, $results_per_page";
             $query = mysqli_query($conn, $sql);
             if (!$query) {
                 echo "Error: " . $sql . "<br>" . mysqli_error($conn);

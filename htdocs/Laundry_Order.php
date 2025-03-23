@@ -31,7 +31,7 @@ if (isset($_POST['Order'])) {
     }
 
     // Use prepared statements to prevent SQL Injection
-    $sql = "INSERT INTO Orders (Order_date, Laundry_type, Laundry_quantity, Cleaning_type, Place, Priority_number, Status, User_ID)
+    $sql = "INSERT INTO Laundry_Orders (Order_date, Laundry_type, Laundry_quantity, Cleaning_type, Place, Priority_number, Status, User_ID)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = mysqli_prepare($conn, $sql);
@@ -39,7 +39,7 @@ if (isset($_POST['Order'])) {
     $query = mysqli_stmt_execute($stmt);
 
     if ($query) {
-        echo "<script>alert('Order is Placed Successfully'); window.location.href='Orders2.php';</script>";
+        echo "<script>alert('Order is Placed Successfully'); window.location.href='Laundry_Order.php';</script>";
         exit(); // Ensure script stops execution after redirect
     } else {
         echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
@@ -63,13 +63,13 @@ $show_unassigned = isset($_GET['show_unassigned']) && $_GET['show_unassigned'] =
 if ($show_unassigned) {
     // Show only "Pending" orders excluding "Hotel"
     $sql = "SELECT Order_ID, Laundry_type, Laundry_quantity, Cleaning_type, Place, Status
-            FROM Orders
+            FROM Laundry_Orders
             WHERE Status = 'Pending'
             AND Place != 'Hotel'";
 } else {
     // Show "Approved Orders" (To be Delivered, Ready for Pickup) excluding "Hotel"
     $sql = "SELECT Order_ID, Laundry_type, Laundry_quantity, Cleaning_type, Place, Status
-            FROM Orders
+            FROM Laundry_Orders
             WHERE Status IN ('To be Delivered', 'Ready for Pick up')
             AND Place != 'Hotel'";
 }
@@ -359,13 +359,13 @@ $result = mysqli_query($conn, $sql);
                             echo "<td> "  . htmlspecialchars($row['Laundry_quantity']) ." " . htmlspecialchars($row['Laundry_type']) . "<br>"  . htmlspecialchars($row['Cleaning_type']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['Status']) . "</td>";
 
-                            // ✅ Show "Assign Staff" only when viewing approved orders
+                            
                             if (!$show_unassigned) {
                                 echo "<td>";
                                 if ($row["Status"] == "To be Delivered") {
-                                    echo "<a href='Assign_delivery_staff.php?Order_ID=" . urlencode($row["Order_ID"]) . "' class='actedit'>Delivery</a>";
+                                    echo "<a href='Delivery_Staff_Assignment.php?Order_ID=" . urlencode($row["Order_ID"]) . "' class='actedit'>Delivery</a>";
                                 } elseif ($row["Status"] == "Ready for Pick up") {
-                                    echo "<a href='Assign_pickup_staff.php?Order_ID=" . urlencode($row["Order_ID"]) . "' class='actbutton'>Pick up</a>";
+                                    echo "<a href='Pick_up_Staff_Assignment.php?Order_ID=" . urlencode($row["Order_ID"]) . "' class='actbutton'>Pick up</a>";
                                 }
                                 echo "</td>";
                             }
@@ -391,7 +391,7 @@ $result = mysqli_query($conn, $sql);
                 <?php
                 // Display previous page link
                 if ($current_page > 1) {
-                    echo '<a href="Orders2.php?page=' . ($current_page - 1) . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '">&laquo; Previous</a>';
+                    echo '<a href="Laundry_Order.php?page=' . ($current_page - 1) . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '">&laquo; Previous</a>';
                 }
 
                 // Display page links
@@ -399,13 +399,13 @@ $result = mysqli_query($conn, $sql);
                     if ($i == $current_page) {
                         echo '<a href="#" class="active">' . $i . '</a>';
                     } else {
-                        echo '<a href="Orders2.php?page=' . $i . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '">' . $i . '</a>';
+                        echo '<a href="Laundry_Order.php?page=' . $i . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '">' . $i . '</a>';
                     }
                 }
 
                 // Display next page link
                 if ($current_page < $total_pages) {
-                    echo '<a href="Orders2.php?page=' . ($current_page + 1) . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '">Next &raquo;</a>';
+                    echo '<a href="Laundry_Order.php?page=' . ($current_page + 1) . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '">Next &raquo;</a>';
                 }
                 ?>
             </div>

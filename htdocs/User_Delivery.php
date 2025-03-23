@@ -144,7 +144,7 @@ $total_pages = ($total_results > 0) ? ceil($total_results / $results_per_page) :
        o.Laundry_type,
        o.Cleaning_type
    FROM Delivery d
-   INNER JOIN Orders o ON d.Order_ID = o.Order_ID 
+   INNER JOIN Laundry_Orders o ON d.Order_ID = o.Order_ID 
    WHERE d.Status IN ('Out for Delivery' , 'Assigned')
    ORDER BY d.Delivery_date ASC
    LIMIT $start_from, $results_per_page";

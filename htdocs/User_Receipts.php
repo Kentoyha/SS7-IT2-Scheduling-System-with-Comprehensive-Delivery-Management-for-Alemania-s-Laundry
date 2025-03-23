@@ -1,6 +1,7 @@
 <?php
 // filepath: /workspaces/SS7-IT2-Scheduling-System-with-Comprehensive-Delivery-Management-for-Alemania-s-Laundry/htdocs/Receipt.php
-
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 include 'db_connect.php';
 include 'Menu2.php'; // For account_level 2 users (adjust if needed)
 include 'Logout.php';
@@ -15,15 +16,15 @@ if (!isset($_SESSION['User_ID']) || $_SESSION['account_level'] != "2") {
 
 // Function to display the details of a selected receipt
 function displayReceiptDetails($conn, $receipt_id) {
-    $sql = "SELECT Receipts.*, Orders.Order_ID, Orders.Order_date, Orders.Laundry_type, Orders.Laundry_quantity,
-                   Orders.Cleaning_type, Orders.Place, Orders.Status,
+    $sql = "SELECT Receipts.*, Laundry_Orders.Order_ID, Laundry_Orders.Order_date, Laundry_Orders.Laundry_type, Laundry_Orders.Laundry_quantity,
+                   Laundry_Orders.Cleaning_type, Laundry_Orders.Place, Laundry_Orders.Status,
                    Delivery.Delivery_date, Delivery.Delivery_staff_name,
-                   Pickups.Date AS Pickup_Date, Pickups.Pickup_staff_name,
+                   Pick_ups.Date AS Pick_up_Date, Pick_ups.Pick_up_staff_name,
                    Receipts.Date_completed, Receipts.Time_completed
             FROM Receipts
-            INNER JOIN Orders ON Receipts.Order_ID = Orders.Order_ID
+            INNER JOIN Laundry_Orders ON Receipts.Order_ID = Laundry_Orders.Order_ID
             LEFT JOIN Delivery ON Receipts.Delivery_ID = Delivery.Delivery_ID
-            LEFT JOIN Pickups ON Receipts.Pickup_ID = Pickups.Pickup_ID
+            LEFT JOIN Pick_ups ON Receipts.Pick_up_ID = Pick_ups.Pick_up_ID
             WHERE Receipts.Receipt_ID = ?";
 
     $stmt = $conn->prepare($sql);
@@ -43,8 +44,8 @@ function displayReceiptDetails($conn, $receipt_id) {
         echo "<p><strong>Quantity:</strong> " . htmlspecialchars($order["Laundry_quantity"]) . "</p>";
         echo "<p><strong>Delivery Date:</strong> " . htmlspecialchars(date('m/d/Y', strtotime($order["Delivery_date"]))) . "</p>";
         echo "<p><strong>Delivery Staff:</strong> " . htmlspecialchars($order["Delivery_staff_name"] ?? "N/A") . "</p>";
-        echo "<p><strong>Pickup Date:</strong> " . htmlspecialchars(date ('m/d/Y', strtotime($order["Pickup_Date"] ))) . "</p>";
-        echo "<p><strong>Pickup Staff:</strong> " . htmlspecialchars($order["Pickup_staff_name"] ?? "N/A") . "</p>";
+        echo "<p><strong>Pickup Date:</strong> " . htmlspecialchars(date ('m/d/Y', strtotime($order["Pick_up_Date"] ))) . "</p>";
+        echo "<p><strong>Pickup Staff:</strong> " . htmlspecialchars($order["Pick_up_staff_name"] ?? "N/A") . "</p>";
         echo "<p><strong>Date Completed:</strong> " . htmlspecialchars(date('m/d/Y', strtotime($order["Date_completed"]))) . "</p>";
         echo "<p><strong>Time Completed:</strong> " . htmlspecialchars(date('h:i A', strtotime($order["Time_completed"]))) . "</p>";
         echo "<p class='status'><strong>Status:</strong> " . htmlspecialchars($order["Status"]) . "</p>";
@@ -77,23 +78,32 @@ $current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET
 $start_from = ($current_page - 1) * $results_per_page;
 
 // Get total number of filtered receipts
-$total_query = "SELECT COUNT(*) AS total FROM Receipts INNER JOIN Orders ON Receipts.Order_ID = Orders.Order_ID WHERE Orders.Place != 'Hotel' $condition";
+$total_query = "SELECT COUNT(*) AS total 
+                FROM Receipts 
+                INNER JOIN Laundry_Orders ON Receipts.Order_ID = Laundry_Orders.Order_ID 
+                WHERE Laundry_Orders.Place != 'Hotel' 
+                AND Receipts.Delivery_ID IS NOT NULL 
+                AND Receipts.Pick_up_ID IS NOT NULL 
+                $condition";
 $total_result = $conn->query($total_query);
 $total_row = $total_result->fetch_assoc();
 $total_results = $total_row['total'];
 $total_pages = ceil($total_results / $results_per_page);
 
 // --- FETCH RECEIPTS FOR CURRENT PAGE ---
-$sql = "SELECT Receipts.*, Orders.Order_ID, Orders.Order_date, Orders.Laundry_type, Orders.Laundry_quantity,
-               Orders.Cleaning_type, Orders.Place, Orders.Status,
+$sql = "SELECT Receipts.*, Laundry_Orders.Order_ID, Laundry_Orders.Order_date, Laundry_Orders.Laundry_type, Laundry_Orders.Laundry_quantity,
+               Laundry_Orders.Cleaning_type, Laundry_Orders.Place, Laundry_Orders.Status,
                Delivery.Delivery_date, Delivery.Delivery_staff_name,
-               Pickups.Date AS Pickup_Date, Pickups.Pickup_staff_name
+               Pick_ups.Date AS Pick_up_Date, Pick_ups.Pick_up_staff_name
         FROM Receipts
-        INNER JOIN Orders ON Receipts.Order_ID = Orders.Order_ID
+        INNER JOIN Laundry_Orders ON Receipts.Order_ID = Laundry_Orders.Order_ID
         LEFT JOIN Delivery ON Receipts.Delivery_ID = Delivery.Delivery_ID
-        LEFT JOIN Pickups ON Receipts.Pickup_ID = Pickups.Pickup_ID
-        WHERE Orders.Place != 'Hotel' $condition
-        ORDER BY Orders.Order_ID DESC
+        LEFT JOIN Pick_ups ON Receipts.Pick_up_ID = Pick_ups.Pick_up_ID
+        WHERE Laundry_Orders.Place != 'Hotel' 
+        AND Receipts.Delivery_ID IS NOT NULL 
+        AND Receipts.Pick_up_ID IS NOT NULL 
+        $condition
+        ORDER BY Laundry_Orders.Order_ID DESC
         LIMIT $start_from, $results_per_page";
 
 $result = $conn->query($sql);
@@ -289,16 +299,24 @@ $result = $conn->query($sql);
                     </tr>
                 </thead>
                 <tbody>
-                    <?php while ($row = $result->fetch_assoc()) : ?>
-                        <tr>
-                            <td><a href="?selected_receipt_id=<?= htmlspecialchars($row['Receipt_ID']) ?>&filter=<?= urlencode($filter) ?>&page=<?= $current_page ?>">
-                                    <?= htmlspecialchars($row['Order_ID']) ?>
-                                </a></td>
-                            <td><?= date('m/d/Y', strtotime($row['Order_date'])) ?></td>
-                            <td><?= date('m/d/Y', strtotime($row['Delivery_date'])) ?></td>
-                            <td><?= date('m/d/Y', strtotime($row['Pickup_Date'])) ?></td>
-                        </tr>
-                    <?php endwhile; ?>
+                    <?php
+                    if ($result && $result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            ?>
+                            <tr>
+                                <td><a href="?selected_receipt_id=<?= htmlspecialchars($row['Receipt_ID']) ?>&filter=<?= urlencode($filter) ?>&page=<?= $current_page ?>">
+                                        <?= htmlspecialchars($row['Order_ID']) ?>
+                                    </a></td>
+                                <td><?= date('m/d/Y', strtotime($row['Order_date'])) ?></td>
+                                <td><?= date('m/d/Y', strtotime($row['Delivery_date'])) ?></td>
+                                <td><?= date('m/d/Y', strtotime($row['Pick_up_Date'])) ?></td>
+                            </tr>
+                            <?php
+                        }
+                    } else {
+                        echo "<tr><td colspan='4'>No receipts found.</td></tr>";
+                    }
+                    ?>
                 </tbody>
             </table>
 

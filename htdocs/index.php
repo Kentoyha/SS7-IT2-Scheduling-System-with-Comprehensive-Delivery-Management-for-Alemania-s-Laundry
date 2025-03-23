@@ -22,10 +22,10 @@ if (isset($_POST['submit'])) {
             $_SESSION['account_level'] = ($row['Usertype'] === 'Admin') ? 1 : 2;
 
             if ($row['Usertype'] === 'Admin') {
-                header("Location: home.php");
+                header("Location: Admin_Home.php");
                 exit;
             } else {
-                header("Location: Home1.php");
+                header("Location: User_Home.php");
                 exit;
             }
         }

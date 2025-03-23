@@ -37,11 +37,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($stmt->execute()) {
         // Also update the Orders status linked to this delivery
-        $stmt2 = $conn->prepare("UPDATE Orders SET Status = ? WHERE Order_ID = (SELECT Order_ID FROM Delivery WHERE Delivery_ID = ?)");
+        $stmt2 = $conn->prepare("UPDATE Laundry_Orders SET Status = ? WHERE Order_ID = (SELECT Order_ID FROM Delivery WHERE Delivery_ID = ?)");
         $stmt2->bind_param("si", $new_status, $delivery_id);
         $stmt2->execute();
 
-        echo "<script>alert('Status changed to $new_status. Order is now located at the Laundry Orders page'); window.location.href='Delivery.php';</script>";
+        echo "<script>alert('Status changed to $new_status. Order is now located at the Laundry Orders page'); window.location.href='Admin_Delivery.php';</script>";
         exit();
     } else {
         echo "Error updating record: " . $conn->error;
@@ -60,33 +60,33 @@ $show_unassigned = isset($_GET['show_unassigned']) && $_GET['show_unassigned'] =
 if ($show_unassigned) {
     // Show unassigned deliveries (Orders with Status 'To be Delivered' or Deliveries with Status 'Assigned')
     $sql = "SELECT 
-                Orders.Order_ID, Orders.Order_date, Orders.Laundry_type, Orders.Laundry_quantity, 
-                Orders.Cleaning_type, Orders.Place, Orders.Status AS OrderStatus, 
+                Laundry_Orders.Order_ID,  Laundry_Orders.Order_date,  Laundry_Orders.Laundry_type,  Laundry_Orders.Laundry_quantity, 
+                 Laundry_Orders.Cleaning_type,  Laundry_Orders.Place,  Laundry_Orders.Status AS OrderStatus, 
                 Delivery.Delivery_ID, Delivery.Delivery_date, Delivery.Delivery_staff_name, Delivery.Contact_info, Delivery.Status AS DeliveryStatus
-            FROM Orders 
-            LEFT JOIN Delivery ON Orders.Order_ID = Delivery.Order_ID 
-            WHERE Orders.Status = 'To be Delivered' OR Delivery.Status = 'Assigned'
+            FROM  Laundry_Orders 
+            LEFT JOIN Delivery ON  Laundry_Orders.Order_ID = Delivery.Order_ID 
+            WHERE  Laundry_Orders.Status = 'To be Delivered' OR Delivery.Status = 'Assigned'
             LIMIT $start_from, $results_per_page";
 
     // Get total records for pagination
     $total_query = "SELECT COUNT(*) AS total 
-                    FROM Orders 
-                    LEFT JOIN Delivery ON Orders.Order_ID = Delivery.Order_ID 
-                    WHERE Orders.Status = 'To be Delivered' OR Delivery.Status = 'Assigned'";
+                    FROM  Laundry_Orders 
+                    LEFT JOIN Delivery ON  Laundry_Orders.Order_ID = Delivery.Order_ID 
+                    WHERE  Laundry_Orders.Status = 'To be Delivered' OR Delivery.Status = 'Assigned'";
 } else {
     // Show active deliveries (Deliveries with Status not 'Delivered' or 'Assigned')
     $sql = "SELECT 
-                Delivery.*, Delivery.Status AS DeliveryStatus, Orders.Order_ID, Orders.Order_date, Orders.Place, 
-                Orders.Laundry_type, Orders.Laundry_quantity, Orders.Cleaning_type
+                Delivery.*, Delivery.Status AS DeliveryStatus,  Laundry_Orders.Order_ID,  Laundry_Orders.Order_date,  Laundry_Orders.Place, 
+                 Laundry_Orders.Laundry_type,  Laundry_Orders.Laundry_quantity,  Laundry_Orders.Cleaning_type
             FROM Delivery 
-            INNER JOIN Orders ON Delivery.Order_ID = Orders.Order_ID 
+            INNER JOIN  Laundry_Orders ON Delivery.Order_ID =  Laundry_Orders.Order_ID 
             WHERE Delivery.Status != 'Delivered' AND Delivery.Status != 'Assigned'
             LIMIT $start_from, $results_per_page";
 
     // Get total records for pagination
     $total_query = "SELECT COUNT(*) AS total 
                     FROM Delivery 
-                    INNER JOIN Orders ON Delivery.Order_ID = Orders.Order_ID 
+                    INNER JOIN  Laundry_Orders ON Delivery.Order_ID =  Laundry_Orders.Order_ID 
                     WHERE Delivery.Status != 'Delivered' AND Delivery.Status != 'Assigned'";
 }
 

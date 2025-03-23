@@ -1,11 +1,11 @@
 
 <nav>  
     <ul>
-        <li><a href="home.php">Home</a></li>
-        <li><a href="Orders.php">Laundry Orders</a></li>
-        <li><a href="Delivery.php">Deliveries</a></li>
-        <li><a href="Pickups.php">Pick ups</a></li>
-        <li><a href="Receipts.php">Receipts</a></li>
+        <li><a href="Admin_Home.php">Home</a></li>
+        <li><a href="Laundry_Orders.php">Laundry Orders</a></li>
+        <li><a href="Admin_Delivery.php">Deliveries</a></li>
+        <li><a href="Admin_Pick_ups.php">Pick ups</a></li>
+        <li><a href="Admin_Receipts.php">Receipts</a></li>
      </ul>
         </nav>
         <style>
