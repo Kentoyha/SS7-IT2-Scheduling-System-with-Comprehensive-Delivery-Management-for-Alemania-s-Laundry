@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt2->bind_param("si", $new_status, $delivery_id);
         $stmt2->execute();
 
-        echo "<script>alert('Status changed to $new_status. Order is now located at the Laundry Orders page'); window.location.href='Admin_Delivery.php';</script>";
+        echo "<script>alert('Status changed to $new_status.'); window.location.href='Admin_Delivery.php';</script>";
         exit();
     } else {
         echo "Error updating record: " . $conn->error;

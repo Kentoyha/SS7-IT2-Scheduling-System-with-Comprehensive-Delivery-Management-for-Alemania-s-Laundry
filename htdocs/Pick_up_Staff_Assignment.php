@@ -159,7 +159,7 @@ if(isset($_GET['Order_ID'])) {
                     mysqli_commit($conn);
 
                     echo "<script>
-                            alert('Staff assigned successfully. Status is set to $Status.');
+                            alert('Staff assigned successfully. Order status is now $Status.');
                             window.location.href='Laundry_Order.php?Order_ID=$Order_id';
                           </script>";
                 } catch (Exception $e) {

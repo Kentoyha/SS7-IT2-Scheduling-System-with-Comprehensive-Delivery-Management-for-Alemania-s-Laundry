@@ -157,7 +157,7 @@ error_reporting(E_ALL);
                     mysqli_commit($conn);
 
                     echo "<script>
-                            alert('Staff assigned successfully,The delivery for the Order is now $Status');
+                            alert('Staff assigned successfully,Order status is now $Status');
                             window.location.href='User_Delivery.php';
                           </script>";
                 } catch (Exception $e) {

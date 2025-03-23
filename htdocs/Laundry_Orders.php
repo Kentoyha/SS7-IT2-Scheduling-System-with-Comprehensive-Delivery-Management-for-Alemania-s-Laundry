@@ -50,7 +50,7 @@ if (isset($_POST['Order'])) {
     $query = mysqli_stmt_execute($stmt);
 
     if ($query) {
-        echo "<script>alert('Order Placed is Successfully'); window.location.href='Laundry_Orders.php';</script>";
+        echo "<script>alert('Order is Placed  Successfully'); window.location.href='Laundry_Orders.php';</script>";
     } else {
         echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
     }

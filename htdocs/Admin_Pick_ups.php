@@ -282,7 +282,7 @@ $start_from = ($current_page - 1) * $results_per_page;
             echo "<td>" . htmlspecialchars($row['Status']) . "</td>";
 
             if (!$show_unassigned) {
-                if ($row['Status'] == 'On the way') {
+                if ($row['Status'] == 'On the Way') {
                     echo "<td>
                             <form method='POST'>
                             <input type='hidden' name='Pick_up_ID' value='" . htmlspecialchars($row['Pick_up_ID']) . "'>

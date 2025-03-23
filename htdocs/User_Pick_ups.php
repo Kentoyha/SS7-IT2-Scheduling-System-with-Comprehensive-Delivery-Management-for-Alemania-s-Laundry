@@ -15,7 +15,7 @@ if (!isset($_SESSION['User_ID']) || $_SESSION['account_level'] != 2) {
 $today = date('Y-m-d');
 
 // ✅ Update status from "Assigned" to "On the way" if pickup date is today
-$update_sql = "UPDATE Pick_ups SET Status = 'On the way' WHERE Date = ? AND Status = 'Assigned'";
+$update_sql = "UPDATE Pick_ups SET Status = 'On the Way' WHERE Date = ? AND Status = 'Assigned'";
 $update_stmt = $conn->prepare($update_sql);
 $update_stmt->bind_param("s", $today);
 $update_stmt->execute();
