@@ -117,155 +117,173 @@ $result = $conn->query($sql);
     <title>Receipts</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-        }
+       /* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    color: #333;
+}
 
-        h1 {
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: black;
-        }
+h1 {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: black;
+}
 
-        .filter-buttons {
-            margin-top: -10px;
-        }
+/* Filter Buttons */
+.filter-buttons {
+    margin-top: -10px;
+}
 
-        .filter-buttons button {
-            background-color: #007bff; /* Blue */
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 5px;
-        }
+.filter-buttons button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 5px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
 
-        .filter-buttons button:hover {
-            background-color: #0056b3; /* Darker Blue */
-        }
-        
+.filter-buttons button:hover {
+    background-color: #0056b3;
+}
 
-        .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            padding: 30px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin: 20px auto;
-            max-width: 95%;
-            flex-wrap: wrap;
-        }
+/* Main Container */
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 95%;
+    flex-wrap: wrap;
+}
 
-        .receipt-container {
-            background-color: #f8f9fa;
-            padding: 20px;
-            margin-top: 20px;
-            border-radius: 8px;
-            width: 45%;
-            min-width: 320px;
-        }
+/* Receipt Container */
+.receipt-container {
+    background-color: #f8f9fa;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 8px;
+    width: 45%;
+    min-width: 320px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-        .receipt-container h2 {
-            color: black;
-        }
+.receipt-container h2 {
+    color: black;
+}
 
-        .receipt-details p {
-            font-size: 16px;
-            margin:7px 0;
-            color: #333;
-        }
+.receipt-details p {
+    font-size: 16px;
+    margin: 7px 0;
+    color: #333;
+}
 
-        .table-container {
-            width: 50%;
-            min-width: 350px;
-        }
+/* Table Container */
+.table-container {
+    width: 50%;
+    min-width: 350px;
+}
 
-        table {
-            width: 100%;
-            margin: 20px auto;
-            border-collapse: collapse;
-            background-color: #fff;
-            border-radius: 10px;
-            overflow: hidden;
-        }
+/* Table Styling */
+table {
+    width: 100%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
 
-        th, td {
-            padding: 14px 16px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-            color: black;
-        }
+th, td {
+    padding: 14px 16px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    color: black;
+}
 
-        th {
-            background-color: #f0f0f0;
-            color: #333;
-            font-weight: 600;
-        }
+th {
+    background-color: #f0f0f0;
+    color: #333;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+}
 
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
 
-        tr:hover {
-            background-color: #ebf9ff;
-        }
+tr:hover {
+    background-color: #ebf9ff;
+    transition: background-color 0.3s ease;
+}
 
-        a {
-            color: #007bff;
-            text-decoration: none;
-            font-weight: bold;
-        }
+/* Links */
+a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
 
-        a:hover {
-            color: #0056b3;
-        }
+a:hover {
+    color: #0056b3;
+}
 
-        .pagination {
-            text-align: center;
-            margin: 20px 0;
-        }
+/* Pagination */
+.pagination {
+    text-align: center;
+    margin: 20px 0;
+}
 
-        .pagination a {
-            display: inline-block;
-            padding: 8px 16px;
-            text-decoration: none;
-            border: 1px solid #ddd;
-            margin: 0 2px;
-            color: #333;
-            font-weight: normal;
-        }
+.pagination a {
+    display: inline-block;
+    padding: 10px 16px;
+    text-decoration: none;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    margin: 0 2px;
+    color: #333;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
 
-        .pagination a.active {
-            background-color: #007bff;
-            color: white;
-            border-color: #007bff;
-        }
+.pagination a.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
 
-        .pagination a:hover:not(.active) {
-            background-color: #ddd;
-        }
+.pagination a:hover:not(.active) {
+    background-color: #ddd;
+}
 
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                padding: 15px;
-            }
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        padding: 15px;
+    }
 
-            .receipt-container,
-            .table-container {
-                width: 100%;
-                margin-bottom: 20px;
-            }
-        }
+    .receipt-container,
+    .table-container {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+
     </style>
 </head>
 

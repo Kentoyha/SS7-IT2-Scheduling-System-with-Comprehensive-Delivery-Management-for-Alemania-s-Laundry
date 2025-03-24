@@ -184,30 +184,59 @@ $start_from = ($current_page - 1) * $results_per_page;
             border-radius: 5px;
             transition: background-color 0.3s ease;
         }
+/* Complete Button */
+.complete-btn {
+    background-color: #1cc6ff;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    text-transform: uppercase;
+}
 
-        .complete-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-        }
+.complete-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    background-color: #0aa6db;
+}
 
-        .styled-button {
-            background-color: #007bff;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
+/* Styled Button */
+.styled-button {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-transform: uppercase;
+}
 
-        .styled-button:hover {
-            background-color: #0056b3;
-        }
+.styled-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .complete-btn, .styled-button {
+        font-size: 14px;
+        padding: 10px 16px;
+    }
+}
+
     </style>
 </head>
 

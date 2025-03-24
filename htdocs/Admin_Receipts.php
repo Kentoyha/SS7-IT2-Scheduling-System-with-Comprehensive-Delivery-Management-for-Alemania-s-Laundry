@@ -117,195 +117,222 @@ $result = $conn->query($sql);
     <link rel="stylesheet" href="styles.css">
 </head>
 <style>
-    /* General Styles */
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f4f4f9;
-        margin: 0;
-        padding: 0;
-        text-align: center;
-    }
+   /* General Styles */
+/* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    color: #333;
+}
 
-    /* Page Title */
-    h1 {
-        text-align: center;
-        font-weight: bold;
-        margin-bottom: 15px;
-        color: black;
-    }
+/* Page Title */
+h1 {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: black;
+    font-size: 26px;
+    text-transform: uppercase;
+}
 
+/* Filter Buttons */
+.filter-buttons {
+    margin-top: -10px;
+}
 
-    /* Filter Buttons */
-    .filter-buttons {
-        margin-top: -10px;
-    }
+.filter-buttons button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    margin: 5px;
+    font-weight: bold;
+}
 
-    .filter-buttons button {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        padding: 12px 20px;
-        font-size: 16px;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: 0.3s ease-in-out;
-        margin: 5px;
-    }
+.filter-buttons button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
 
-    .filter-buttons button:hover {
-        background-color: #0056b3;
-    }
+/* Pagination */
+.pagination {
+    text-align: center;
+    margin-top: 40px;
+}
 
-    .pagination {
-        text-align: center;
-        margin-top: 20px;
+.pagination a {
+    display: inline-block;
+    padding: 10px 18px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    color: #333;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
 
-    }
+.pagination a.active {
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #007bff;
+}
 
-    .pagination a {
-        display: inline-block;
-        padding: 8px 16px;
-        text-decoration: none;
-        border: 1px solid #ddd;
-        color: #333;
-        font-weight: normal;
-    }
+.pagination a:hover:not(.active) {
+    background-color: #ddd;
+}
 
-    .pagination a.active {
-        background-color: #007bff;
-        color: white;
-        border: 1px solid #007bff;
-    }
+/* Main Container */
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 95%;
+    flex-wrap: wrap;
+}
 
-    .pagination a:hover:not(.active) {
-        background-color: #ddd;
-    }
+/* Receipt Details */
+.receipt-container {
+    background-color: #f8f9fa;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 45%;
+    min-width: 320px;
+}
 
+.receipt-container h2 {
+    text-align: center;
+    color: black;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.receipt-details p {
+    font-size: 16px;
+    margin: 7px 0;
+    color: #333;
+}
+
+/* Mark as Checked Button */
+.check-button {
+    display: block;
+    width: 100%;
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s ease-in-out;
+    margin-top: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.check-button:hover {
+    background: #218838;
+    transform: scale(1.05);
+}
+
+/* Order Table */
+.table-container {
+    width: 50%;
+    min-width: 350px;
+}
+
+table {
+    width: 100%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Table Header & Cells */
+th, td {
+    padding: 14px 16px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    color: black;
+    font-size: 16px;
+}
+
+th {
+    background-color: #e0e0e0;
+    color: #333;
+    font-weight: bold;
+    letter-spacing: 1px;
+    font-size: 18px;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #ebf9ff;
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Links */
+a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #0056b3;
+    text-decoration: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
     .container {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        padding: 30px;
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        margin: 20px auto;
-        max-width: 95%;
-        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: center;
+        padding: 15px;
     }
 
-    /* Receipt Details */
-    .receipt-container {
-        background-color: #f8f9fa;
-        padding: 20px;
-        margin-top: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        width: 45%;
-        min-width: 320px;
-    }
-
-    .receipt-container h2 {
-        text-align: center;
-        color: black;
-    }
-
-    .receipt-details p {
-        font-size: 16px;
-        margin: 7px 0;
-        color: #333;
-    }
-
-    /* Mark as Checked Button */
-    .check-button {
-        display: block;
-        width: 100%;
-        background: #28a745;
-        color: white;
-        border: none;
-        padding: 12px;
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 5px;
-        transition: 0.3s ease-in-out;
-        margin-top: 10px;
-    }
-
-    .check-button:hover {
-        background: #218838;
-    }
-
-    /* Order Table */
+    .receipt-container,
     .table-container {
-        width: 50%;
-        min-width: 350px;
+        width: 100%;
+        margin-bottom: 20px;
     }
 
     table {
-        width: 100%;
-        margin: 20px auto;
-        border-collapse: collapse;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        background-color: #fff;
-        border-radius: 10px;
-        overflow: hidden;
+        font-size: 14px;
     }
 
-    th,
-    td {
-        padding: 14px 16px;
-        text-align: center;
-        border-bottom: 1px solid #ddd;
-        color: black;
+    .filter-buttons button,
+    .check-button {
+        font-size: 14px;
+        padding: 10px;
     }
 
-    th {
-        background-color: #f0f0f0;
-        color: #333;
-        font-weight: 600;
-        letter-spacing: 0.8px;
+    .pagination a {
+        font-size: 14px;
+        padding: 8px 14px;
     }
+}
 
-    tr:nth-child(even) {
-        background-color: #f9f9f9;
-    }
-
-    tr:hover {
-        background-color: #ebf9ff;
-        transition: background-color 0.3s ease-in-out;
-    }
-
-    /* Links */
-    a {
-        color: #007bff;
-        text-decoration: none;
-        font-weight: bold;
-        transition: color 0.3s ease;
-    }
-
-    a:hover {
-        color: #0056b3;
-        text-decoration: none;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .container {
-            flex-direction: column;
-            align-items: center;
-            padding: 15px;
-        }
-
-        .receipt-container,
-        .table-container {
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        table {
-            font-size: 14px;
-        }
-    }
 </style>
 
 <body>

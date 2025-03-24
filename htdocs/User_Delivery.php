@@ -45,86 +45,98 @@ $total_pages = ($total_results > 0) ? ceil($total_results / $results_per_page) :
 <head>
     <title>Delivery Monitoring</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
+      /* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
 
-        h1 {
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: black;
-        }
+/* Page Title */
+h1 {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: black;
+    font-size: 28px; /* Increased for better readability */
+}
 
-        table {
-            width: 98%;
-            margin: 20px auto;
-            border-collapse: collapse;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-            border-radius: 10px;
-            overflow: hidden;
-        }
+/* Table Styling */
+table {
+    width: 98%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+}
 
-        th, td {
-            padding: 14px 16px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-            color: black;
-        }
+/* Table Headers & Cells */
+th, td {
+    padding: 16px 18px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    color: black;
+    font-size: 18px;
+}
 
-        th {
-            background-color: #f0f0f0;
-            color: black;
-            font-weight: bold;
-            letter-spacing: 0.8px;
-        }
+th {
+    background-color: #f0f0f0;
+    color: black;
+    font-weight: bold;
+    letter-spacing: 0.8px;
+    font-size: 20px;
+}
 
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
 
-        tr:hover {
-            background-color: #ebf9ff;
-            transition: background-color 0.3s ease;
-        }
+tr:hover {
+    background-color: #ebf9ff;
+    transition: background-color 0.3s ease;
+}
 
-        .pagination {
-            text-align: center;
-            margin-top: 20px;
-            position: fixed;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
+/* Pagination */
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
 
-        .pagination a {
-            display: inline-block;
-            padding: 8px 16px;
-            text-decoration: none;
-            border: 1px solid #ddd;
-            color: #333;
-        }
+/* Pagination Links */
+.pagination a {
+    display: inline-block;
+    padding: 10px 18px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    color: #333;
+    font-size: 18px;
+}
 
-        .pagination a.active {
-            background-color: #007bff;
-            color: white;
-            border: 1px solid #007bff;
-        }
+.pagination a.active {
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #007bff;
+}
 
-        .pagination a:hover:not(.active) {
-            background-color: #ddd;
-        }
+.pagination a:hover:not(.active) {
+    background-color: #ddd;
+}
 
-        @media (max-width: 768px) {
-            table {
-                width: 100%;
-            }
-        }
+/* Responsive Design */
+@media (max-width: 768px) {
+    table {
+        width: 100%;
+    }
+}
+
     </style>
 </head>
 <body>

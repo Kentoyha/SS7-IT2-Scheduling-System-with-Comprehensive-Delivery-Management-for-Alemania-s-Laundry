@@ -96,184 +96,200 @@ $result = mysqli_query($conn, $sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laundry Orders Management</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
+      /* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
 
-        h1 {
-            text-align: center;
-            color: black;
-            margin-bottom: 20px;
-            font-family: Arial, sans-serif;
-        }
+/* Page Title */
+h1 {
+    text-align: center;
+    color: black;
+    margin-bottom: 20px;
+    font-family: Arial, sans-serif;
+    font-size: 28px; /* Increased for better readability */
+}
 
-        .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            padding: 45px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin: 30px auto;
-            max-width: 93%;
-        }
+/* Main Container */
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 45px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 30px auto;
+    max-width: 93%;
+    flex-wrap: wrap;
+}
 
-        .form-container {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            width: 45%;
-            order: -1;
-            display: flex;
-            flex-direction: column; /* Add this line */
-            align-items: center; /* Center items horizontally */
-        }
+/* Form Section */
+.form-container {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 45%;
+    order: -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-        label {
-            text-align: center;
-            width: 100%;
-        }
+label {
+    text-align: center;
+    width: 100%;
+    font-size: 18px;
+}
 
-        .table-container {
-            width: 50%;
-        }
+/* Table Section */
+.table-container {
+    width: 50%;
+}
 
-       
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: -20px;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: -20px;
-        }
+th, td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    color: black;
+    font-size: 18px;
+}
 
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-            color: black;
-        }
+th {
+    background-color: #e9ecef;
+    font-weight: 600;
+    font-size: 20px;
+}
 
-        th {
-            background-color: #e9ecef;
-            font-weight: 600;
-        }
+tr:hover {
+    background-color: #ebf9ff;
+}
 
-        tr:hover {
-            background-color:  #ebf9ff;
-        }
+/* Form Inputs */
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 18px;
+}
 
-        input[type="text"],
-        input[type="number"],
-        select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            box-sizing: border-box;
-           
-        }
+/* Buttons */
+button, .toggle-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 14px 22px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+}
 
-        button, .toggle-btn {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-        }
+button:hover, .toggle-btn:hover {
+    background-color: #0056b3;
+}
 
-        button:hover, .toggle-btn:hover {
-            background-color: #0056b3;
-        }
+/* Action Buttons */
+.actbutton, .actdelete, .actedit {
+    padding: 10px 14px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: white;
+    display: inline-block;
+    margin: 6px;
+    transition: 0.3s ease;
+    font-size: 16px;
+}
 
-        .actbutton,
-        .actdelete,
-        .actedit {
-            padding: 8px 12px;
-            border-radius: 4px;
-            text-decoration: none;
-            color: white;
-            display: inline-block;
-            margin: 4px;
-            transition: background-color 0.3s ease;
-        }
+.actedit {
+    background-color: #1cc6ff;
+}
 
-        .actedit {
-            background-color: #1cc6ff;
-        }
+.actedit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
 
-        .actedit:hover {
-            transform: translateY(-2px); /* Slight lift on hover */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Increased shadow on hover */
-        }
+.actbutton {
+    background-color: #4CAF50;
+}
 
-        .actbutton {
-            background-color: #4CAF50;
-        }
+.actbutton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
 
-        .actbutton:hover {
-            transform: translateY(-2px); /* Slight lift on hover */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Increased shadow on hover */
-        }
+.actdelete {
+    background-color: #dc3545;
+}
 
-        .actdelete {
-            background-color: #dc3545;
-        }
+.actdelete:hover {
+    background-color: #c82333;
+}
 
-        .actdelete:hover {
-            background-color: #c82333;
-        }
+/* Toggle Button */
+.toggle-btn {
+    margin-bottom: 20px;
+    display: block;
+}
 
-        .toggle-btn {
-            margin-bottom: 20px;
-            display: block;
-        }
+/* Pagination */
+/* Pagination Styling */
+.pagination {
+    text-align: center;
+    margin-top: 40px;
+}
 
-        .pagination {
-            text-align: center;
-            margin-top: 50px;
-        }
+.pagination a {
+    display: inline-block;
+    padding: 10px 18px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    color: #333;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
 
-        .pagination a {
-            display: inline-block;
-            padding: 8px 16px;
-            text-decoration: none;
-            border: 1px solid #ddd;
-            color: #333;
-        }
+.pagination a.active {
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #007bff;
+}
 
-        .pagination a.active {
-            background-color: #007bff;
-            color: white;
-            border: 1px solid #007bff;
-        }
+.pagination a:hover:not(.active) {
+    background-color: #ddd;
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        align-items: stretch;
+    }
 
-        .pagination a:hover:not(.active) {
-            background-color: #ddd;
-        }
+    .form-container, .table-container {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .form-container,
-            .table-container {
-                width: 100%;
-                margin-bottom: 20px;
-            }
-        }
     </style>
 </head>
 <body>

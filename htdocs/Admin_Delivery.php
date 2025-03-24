@@ -104,115 +104,178 @@ $total_pages = ceil($total_results / $results_per_page);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delivery Monitoring and Management</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
-        h1 {
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: black;
-        }
-        table {
-            width: 98%;
-            margin: 20px auto;
-            border-collapse: collapse;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        th, td {
-            padding: 14px 16px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-            color: black;
-        }
-        th {
-            background-color: #f0f0f0;
-            color: #333;
-            font-weight: bold;
-            letter-spacing: 0.8px;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        tr:hover {
-            background-color: #ebf9ff;
-            transition: background-color 0.3s ease;
-        }
-        .status-btn {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            color: white;
-            transition: background-color 0.3s ease;
-        }
-        .status-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-        }
-        .ready-for-pickup {
-            background-color: #5cb85c;
-        }
-        .completed {
-            background-color: #5bc0de;
-        }
-        .toggle-btn {
-            display: block;
-            width: 250px;
-            margin: 20px auto;
-            padding: 10px;
-            font-size: 16px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            text-align: center;
-            transition: background-color 0.3s ease;
-        }
-        .toggle-btn:hover {
-            background-color: #0056b3;
-        }
-        .pagination {
-            text-align: center;
-            margin-top: 20px;
-            position: fixed;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
+       /* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
 
-        .pagination a {
-            display: inline-block;
-            padding: 8px 16px;
-            text-decoration: none;
-            border: 1px solid #ddd;
-            color: #333;
-        }
+/* Centered Page Title */
+h1 {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: black;
+    font-size: 28px;
+    text-transform: uppercase;
+}
 
-        .pagination a.active {
-            background-color: #007bff;
-            color: white;
-            border: 1px solid #007bff;
-        }
+/* Main Container */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin: 30px auto;
+    max-width: 90%;
+}
 
-        .pagination a:hover:not(.active) {
-            background-color: #ddd;
-        }
+/* Table Styles */
+.table-container {
+    width: 100%;
+}
 
-        @media (max-width: 768px) {
-            table {
-                width: 100%;
-            }
-        }
+table {
+    width: 98%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Table Headers & Cells */
+th, td {
+    padding: 16px 18px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    color: black;
+    font-size: 16px;
+}
+
+th {
+    background-color: #e0e0e0;
+    color: #333;
+    font-weight: bold;
+    letter-spacing: 1px;
+    font-size: 18px;
+}
+
+/* Row hover effect */
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #e3f2fd;
+    transition: background-color 0.3s ease;
+}
+
+/* Status Buttons */
+.status-btn {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.status-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Status Colors */
+.ready-for-pickup {
+    background-color: #5cb85c; /* Green */
+}
+
+.completed {
+    background-color: #5bc0de; /* Light Blue */
+}
+
+/* Toggle Button */
+.toggle-btn {
+    display: block;
+    width: 250px;
+    margin: 20px auto;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.toggle-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Pagination Styling */
+.pagination {
+    text-align: center;
+    margin-top: 40px;
+}
+
+/* Pagination Links */
+.pagination a {
+    display: inline-block;
+    padding: 10px 18px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    color: #333;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.pagination a.active {
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #007bff;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #ddd;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    table {
+        width: 100%;
+    }
+
+    th, td {
+        font-size: 14px;
+        padding: 12px;
+    }
+
+    .toggle-btn {
+        width: 200px;
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .pagination a {
+        font-size: 14px;
+        padding: 8px 14px;
+    }
+}
+
+
     </style>
 </head>
 <body>

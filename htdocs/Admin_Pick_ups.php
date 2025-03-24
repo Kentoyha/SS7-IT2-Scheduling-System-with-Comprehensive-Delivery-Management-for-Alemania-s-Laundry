@@ -102,121 +102,180 @@ $start_from = ($current_page - 1) * $results_per_page;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pick ups Management</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
+          /* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
 
-        h1 {
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: black;
-        }
+/* Centered Page Title */
+h1 {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: black;
+    font-size: 28px;
+    text-transform: uppercase;
+}
 
-        table {
-            width: 98%;
-            margin: 20px auto;
-            border-collapse: collapse;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-            border-radius: 10px;
-            overflow: hidden;
-        }
+/* Main Container */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin: 30px auto;
+    max-width: 90%;
+}
 
-        th,
-        td {
-            padding: 14px 16px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-            color: black;
-        }
+/* Table Styles */
+.table-container {
+    width: 100%;
+}
 
-        th {
-            background-color: #f0f0f0;
-            color: #333;
-            font-weight: bold;
-            letter-spacing: 0.8px;
-        }
+table {
+    width: 98%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+}
 
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
+/* Table Headers & Cells */
+th, td {
+    padding: 16px 18px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    color: black;
+    font-size: 16px;
+}
 
-        tr:hover {
-            background-color: #ebf9ff;
-            transition: background-color 0.3s ease;
-        }
+th {
+    background-color: #e0e0e0;
+    color: #333;
+    font-weight: bold;
+    letter-spacing: 1px;
+    font-size: 18px;
+}
 
-        .pagination {
-            text-align: center;
-            margin-top: 20px;
-            position: fixed;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
+/* Row Hover Effect */
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
 
-        .pagination a {
-            display: inline-block;
-            padding: 8px 16px;
-            text-decoration: none;
-            border: 1px solid #ddd;
-            color: #333;
-        }
+tr:hover {
+    background-color: #e3f2fd;
+    transition: background-color 0.3s ease;
+}
 
-        .pagination a.active {
-            background-color: #007bff;
-            color: white;
-            border: 1px solid #007bff;
-        }
+/* Status Buttons */
+.status-btn {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    color: white;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    text-transform: uppercase;
+}
 
-        .pagination a:hover:not(.active) {
-            background-color: #ddd;
-        }
+.status-btn:hover {
+    transform: scale(1.05);
+}
 
-        @media (max-width: 768px) {
-            table {
-                width: 100%;
-            }
-        }
+/* Status Colors */
+.ready-for-pickup {
+    background-color: #5cb85c; /* Green */
+}
 
-        .complete-btn {
-            background-color: #1cc6ff;
-            color: white;
-            border: none;
-            padding: 15px 15px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
+.completed {
+    background-color: #5bc0de; /* Light Blue */
+}
 
-        .complete-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-        }
+/* Stylish Button */
+.styled-button {
+    display: block;
+    width: 250px;
+    margin: 20px auto;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
 
-        .styled-button {
-            background-color: #007bff;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
+.styled-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
 
-        .styled-button:hover {
-            background-color: #0056b3;
-        }
+/* Pagination Styling */
+.pagination {
+    text-align: center;
+    margin-top: 40px;
+}
+
+/* Pagination Links */
+.pagination a {
+    display: inline-block;
+    padding: 10px 18px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    color: #333;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.pagination a.active {
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #007bff;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #ddd;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    table {
+        width: 100%;
+    }
+
+    th, td {
+        font-size: 14px;
+        padding: 12px;
+    }
+
+    .styled-button {
+        width: 200px;
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .pagination a {
+        font-size: 14px;
+        padding: 8px 14px;
+    }
+}
+
+
     </style>
 </head>
 

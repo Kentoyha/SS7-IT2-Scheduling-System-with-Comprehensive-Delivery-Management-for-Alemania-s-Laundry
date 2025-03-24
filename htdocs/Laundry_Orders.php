@@ -86,7 +86,8 @@ $result = mysqli_query($conn, $sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laundry Orders Management</title>
     <style>
-        body {
+    /* General Styles */
+body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f4f4f4;
     margin: 0;
@@ -97,9 +98,12 @@ $result = mysqli_query($conn, $sql);
 /* Center title properly */
 .order-title {
     text-align: center;
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
-    margin-bottom: 19px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: black;
 }
 
 /* Main container layout */
@@ -107,18 +111,19 @@ $result = mysqli_query($conn, $sql);
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 50px;
+    padding: 40px;
     background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 25px auto;
-    max-width: 92%;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin: 30px auto;
+    max-width: 90%;
+    flex-wrap: wrap;
 }
 
 /* Left section (Form) */
 .left-section {
     width: 45%;
-    text-align: center; /* Centering the form section */
+    text-align: center;
 }
 
 /* Right section (Table) */
@@ -129,10 +134,10 @@ $result = mysqli_query($conn, $sql);
 /* Form container styles */
 .form-container {
     background-color: #f8f9fa;
-    padding: 20px;
+    padding: 25px;
     margin-top: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -143,28 +148,36 @@ input[type="text"],
 input[type="number"],
 select {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     margin-bottom: 15px;
     border: 1px solid #ced4da;
-    border-radius: 4px;
+    border-radius: 6px;
     box-sizing: border-box;
+    font-size: 16px;
+    transition: 0.3s ease-in-out;
+}
+
+input:focus, select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
 }
 
 /* Buttons */
 button {
     background-color: #007bff;
     color: white;
-    padding: 12px 20px;
+    padding: 12px 22px;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 button:hover {
-    transform: translateY(-2px); /* Slight lift on hover */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Increased shadow on hover */
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* Table Styles */
@@ -176,24 +189,27 @@ table {
     width: 100%;
     margin-top: 20px;
     border-collapse: collapse;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     background-color: #fff;
-    border-radius: 10px;
+    border-radius: 12px;
     overflow: hidden;
 }
 
+/* Table Headers & Cells */
 th, td {
-    padding: 14px 16px;
+    padding: 16px 18px;
     text-align: center;
     border-bottom: 1px solid #ddd;
     color: black;
+    font-size: 16px;
 }
 
 th {
-    background-color: #f0f0f0;
+    background-color: #e0e0e0;
     color: #333;
     font-weight: bold;
-    letter-spacing: 0.8px;
+    letter-spacing: 1px;
+    font-size: 18px;
 }
 
 /* Row hover effect */
@@ -202,76 +218,91 @@ tr:nth-child(even) {
 }
 
 tr:hover {
-    background-color: #ebf9ff;
+    background-color: #e3f2fd;
     transition: background-color 0.3s ease;
+}
+
+/* Status Buttons */
+.status-btn {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.status-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Status Colors */
+.to-be-delivered {
+    background-color: #DAA520; /* GoldenRod */
+}
+
+.in-progress {
+    background-color: #5bc0de; /* Light Blue */
+}
+
+/* Pagination Styling */
+.pagination {
+    text-align: center;
+    margin-top: 40px;
+}
+
+/* Pagination Links */
+.pagination a {
+    display: inline-block;
+    padding: 10px 18px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    color: #333;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.pagination a.active {
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #007bff;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #ddd;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {
         flex-direction: column;
-        align-items: center;
+        align-items: stretch;
     }
 
-    .left-section, .right-section {
+    .left-section,
+    .right-section {
         width: 100%;
         margin-bottom: 20px;
     }
+
+    th, td {
+        font-size: 14px;
+        padding: 12px;
+    }
+
+    button {
+        font-size: 14px;
+        padding: 10px 18px;
+    }
+
+    .pagination a {
+        font-size: 14px;
+        padding: 8px 14px;
+    }
 }
 
-        .status-btn {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            color: white;
-        }
-
-        .to-be-delivered {
-            background-color: #DAA520; /* A slightly darker shade of orange */
-        }
-
-        .in-progress {
-            background-color: #5bc0de;
-        }
-
-        .pagination {
-            text-align: center;
-            margin-top: 60px;
-        }
-
-        .pagination a {
-            display: inline-block;
-            padding: 8px 16px;
-            text-decoration: none;
-            border: 1px solid #ddd;
-            color: #333;
-        }
-
-        .pagination a.active {
-            background-color: #007bff;
-            color: white;
-            border: 1px solid #007bff;
-        }
-
-        .pagination a:hover:not(.active) {
-            background-color: #ddd;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .form-container,
-            .table-container {
-                width: 100%;
-                margin-bottom: 20px;
-            }
-        }
     </style>
 </head>
 <body>

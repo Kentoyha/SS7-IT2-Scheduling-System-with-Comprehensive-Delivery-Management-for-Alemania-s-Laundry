@@ -38,101 +38,137 @@ $total_pages = ceil($total_results / $results_per_page);
 <body>
     
     <style>
-       body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
 
-        h1 {
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: black;
-        }
+     /* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
 
-        table {
-            width: 98%; /* Increased width */
-            margin: 20px auto;
-            border-collapse: collapse;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slightly stronger shadow */
-            background-color: #fff;
-            border-radius: 10px; /* More rounded corners */
-            overflow: hidden;
-        }
+/* Page Title */
+h1 {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: black;
+    font-size: 28px; /* Enhanced for readability */
+}
 
-        th, td {
-            padding: 14px 16px; /* Adjusted padding */
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-            color: black; /* Slightly darker text */
-        }
+/* Table Styling */
+table {
+    width: 98%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+}
 
-        th {
-            background-color: #f0f0f0; /* Slightly darker header */
-            color: #333; /* Darker header text */
-            font-weight: 600; /* Slightly bolder header text */
-            letter-spacing: 0.8px; /* Adjusted letter spacing */
-        }
+/* Table Headers & Cells */
+th, td {
+    padding: 16px 20px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    color: black;
+    font-size: 18px;
+}
 
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-       
-        tr:hover {
-            background-color: #ebf9ff; /* Lighter hover color */
-            transition: background-color 0.3s ease;
-        }
+th {
+    background-color: #eaeaea;
+    color: #333;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-size: 20px;
+}
 
-        .status-btn {
-            padding: 9px 14px; /* Adjusted padding */
-            border: none;
-            border-radius: 5px; /* More rounded buttons */
-            cursor: pointer;
-            font-size: 14px;
-            color: white;
-            transition: transform 0.2s ease, box-shadow 0.2s ease; /* Added transform and box-shadow transition */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Added subtle shadow */
-        }
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
 
-        .status-btn:hover {
-            transform: translateY(-2px); /* Slight lift on hover */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Increased shadow on hover */
-        }
+tr:hover {
+    background-color: #e3f5ff;
+    transition: background-color 0.3s ease-in-out;
+}
 
-        .to-be-delivered { background-color: #F4A460; } /* Sandy Brown */
-        .in-progress { background-color: #5cb85c; } /* Emerald Green */
-        .completed { background-color: #5bc0de; } /* Turquoise */
-        .ready-for-pickup { background-color: #DAA520; } /* Darker Gold */
+/* Button Styling */
+.status-btn {
+    padding: 12px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    font-weight: 600;
+    text-transform: uppercase;
+}
 
-        .pagination {
-            text-align: center;
-            margin-top: 20px;
-            position: fixed;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
+.status-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
 
-        .pagination a {
-            display: inline-block;
-            padding: 8px 16px;
-            text-decoration: none;
-            border: 1px solid #ddd;
-            color: #333;
-        }
+/* Status Colors */
+.to-be-delivered { background-color: #F4A460; } /* SandyBrown */
+.in-progress { background-color: #5cb85c; } /* Green */
+.completed { background-color: #5bc0de; } /* Light Blue */
+.ready-for-pickup { background-color: #DAA520; } /* GoldenRod */
 
-        .pagination a.active {
-            background-color: #007bff;
-            color: white;
-            border: 1px solid #007bff;
-        }
+/* Pagination Styling */
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+    position: fixed;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+}
 
-        .pagination a:hover:not(.active) {
-            background-color: #ddd;
-        }
+/* Pagination Links */
+.pagination a {
+    display: inline-block;
+    padding: 12px 20px;
+    text-decoration: none;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    color: #333;
+    font-weight: 600;
+    font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.pagination a.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #ddd;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    table {
+        width: 100%;
+    }
+
+    .status-btn {
+        font-size: 14px;
+        padding: 10px 14px;
+    }
+
+    .pagination a {
+        padding: 8px 14px;
+        font-size: 14px;
+    }
+}
+
     </style>
 </head>
 <body>
