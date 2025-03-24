@@ -314,7 +314,7 @@ $result = $conn->query($sql);
                             <?php
                         }
                     } else {
-                        echo "<tr><td colspan='4'>No receipts found.</td></tr>";
+                        echo "<tr><td colspan='4'>No records found.</td></tr>";
                     }
                     ?>
                 </tbody>

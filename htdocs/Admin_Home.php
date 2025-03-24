@@ -249,6 +249,9 @@ $query = mysqli_query($conn, $sql);
                     echo "</td>";
                     echo "</tr>";
                 }
+                if (mysqli_num_rows($query) == 0) {
+                    echo "<tr><td colspan='8'>No records found.</td></tr>";
+                }
             }
             ?>
         </tbody>

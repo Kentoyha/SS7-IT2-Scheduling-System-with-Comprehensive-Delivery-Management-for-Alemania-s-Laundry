@@ -159,7 +159,9 @@ $total_pages = ceil($total_results / $results_per_page);
                     echo "</tr>";
                 }
             }
-
+                if (mysqli_num_rows($query) == 0) {
+                    echo "<tr><td colspan='4'>No records found.</td></tr>";
+                }
            
             ?>
         </tbody>

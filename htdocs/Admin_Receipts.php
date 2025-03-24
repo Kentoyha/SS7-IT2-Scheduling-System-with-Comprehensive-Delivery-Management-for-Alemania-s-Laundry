@@ -348,6 +348,10 @@ $result = $conn->query($sql);
                         echo "<td>" . htmlspecialchars(($row["Pick_up_Date"] != null) ? date('m/d/Y', strtotime($row["Pick_up_Date"])) : "N/A") . "</td>";
                         echo "</tr>";
                     }
+
+                    if ($result->num_rows === 0) {
+                        echo "<tr><td colspan='4'>No records found.</td></tr>";
+                    }
                     ?>
                 </tbody>
             </table>

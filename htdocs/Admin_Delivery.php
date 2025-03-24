@@ -281,7 +281,7 @@ $total_pages = ceil($total_results / $results_per_page);
             <?php endwhile; ?>
         <?php else: ?>
             <tr>
-                <td colspan="<?php echo $show_unassigned ? 6 : 7; ?>">No pending deliveries.</td>
+                <td colspan="<?php echo $show_unassigned ? 6 : 7; ?>">No records found.</td>
             </tr>
         <?php endif; ?>
     </tbody>

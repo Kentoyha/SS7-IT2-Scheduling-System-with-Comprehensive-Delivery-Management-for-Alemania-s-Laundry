@@ -49,7 +49,7 @@ if(isset($_GET['Order_ID'])) {
     }
     mysqli_stmt_close($stmt);
 } else {
-    echo "<script>alert('Order ID not provided.'); window.location.href='Laundry_Orders.php';</script>";
+    echo "<script>alert('Order ID not provided.'); window.location.href='Laundry_Order.php';</script>";
     exit();
 }
 ?>
@@ -160,7 +160,7 @@ if(isset($_GET['Order_ID'])) {
 
                     echo "<script>
                             alert('Staff assigned successfully. Order status is now $Status.');
-                            window.location.href='Laundry_Order.php?Order_ID=$Order_id';
+                            window.location.href='User_Pick_ups.php?Order_ID=$Order_id';
                           </script>";
                 } catch (Exception $e) {
                     mysqli_rollback($conn);

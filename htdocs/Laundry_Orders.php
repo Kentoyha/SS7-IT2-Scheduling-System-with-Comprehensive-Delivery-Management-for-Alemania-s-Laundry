@@ -289,9 +289,9 @@ tr:hover {
                     <option value="" disabled selected>Click to Select</option>
                     <option value="Beddings">Beddings</option>
                     <option value="Curtains">Curtains</option>
-                    <option value="Towel">Towels</option>
-                    <option value="Topper">Toppers</option>
-                    <option value="Table Cloth">Tablecloths</option>
+                    <option value="Towels">Towels</option>
+                    <option value="Toppers">Toppers</option>
+                    <option value="Tablecloths">Tablecloths</option>
                 </select>
 
                 <label for="Laundry_Quantity">Laundry Quantity:</label>
@@ -359,6 +359,9 @@ tr:hover {
                             }
                             echo "</td>";
                             echo "</tr>";
+                        }
+                        if ($result->num_rows === 0) {
+                            echo "<tr><td colspan='6'>No records found.</td></tr>";
                         }
                     }
                     ?>

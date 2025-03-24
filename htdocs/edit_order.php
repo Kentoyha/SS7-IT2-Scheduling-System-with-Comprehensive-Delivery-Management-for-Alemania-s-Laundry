@@ -155,9 +155,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <select name="Laundry_Type" required>
             <option value="Beddings" <?php if ($order['Laundry_type'] == "Beddings") echo "selected"; ?>>Beddings</option>
             <option value="Curtains" <?php if ($order['Laundry_type'] == "Curtains") echo "selected"; ?>>Curtains</option>
-            <option value="Towel" <?php if ($order['Laundry_type'] == "Towel") echo "selected"; ?>>Towels</option>
-            <option value="Topper" <?php if ($order['Laundry_type'] == "Topper") echo "selected"; ?>>Toppers</option>
-            <option value="Table Cloth" <?php if ($order['Laundry_type'] == "Table Cloth") echo "selected"; ?>>Tablecloths</option>
+            <option value="Towels" <?php if ($order['Laundry_type'] == "Towels") echo "selected"; ?>>Towels</option>
+            <option value="Toppers" <?php if ($order['Laundry_type'] == "Toppers") echo "selected"; ?>>Toppers</option>
+            <option value="Tablecloths" <?php if ($order['Laundry_type'] == "Tablecloths") echo "selected"; ?>>Tablecloths</option>
 
         <label for="Laundry_Quantity">Laundry Quantity:</label>
         <input type="number" name="Laundry_Quantity" value="<?php echo htmlspecialchars($order['Laundry_quantity']); ?>" required min="1">

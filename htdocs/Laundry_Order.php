@@ -380,7 +380,7 @@ $result = mysqli_query($conn, $sql);
                             echo "</tr>";
                         }
                     } else {
-                        echo "<tr><td colspan='" . ($show_unassigned ? 6 : 5) . "'>No orders found.</td></tr>";
+                        echo "<tr><td colspan='" . ($show_unassigned ? 6 : 5) . "'>No records found.</td></tr>";
                     }
                     ?>
                 </tbody>
