@@ -80,7 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Pick_up_ID'])) {
 $show_unassigned = isset($_GET['show_unassigned']) && $_GET['show_unassigned'] === 'true';
 
 // ✅ Pagination settings
-$results_per_page = 6;
+$results_per_page = 7;
 $current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
 $start_from = ($current_page - 1) * $results_per_page;
 ?>
@@ -145,6 +145,10 @@ $start_from = ($current_page - 1) * $results_per_page;
         .pagination {
             text-align: center;
             margin-top: 20px;
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .pagination a {

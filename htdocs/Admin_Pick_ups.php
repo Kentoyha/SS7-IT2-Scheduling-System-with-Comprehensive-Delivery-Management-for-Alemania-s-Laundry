@@ -154,6 +154,10 @@ $start_from = ($current_page - 1) * $results_per_page;
         .pagination {
             text-align: center;
             margin-top: 20px;
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .pagination a {

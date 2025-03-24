@@ -240,7 +240,7 @@ $result = mysqli_query($conn, $sql);
 
         .pagination {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 50px;
         }
 
         .pagination a {

@@ -238,7 +238,7 @@ tr:hover {
 
         .pagination {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 60px;
         }
 
         .pagination a {

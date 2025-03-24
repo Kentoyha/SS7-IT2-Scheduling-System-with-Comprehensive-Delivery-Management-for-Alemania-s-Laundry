@@ -91,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Order_ID']) && isset($
 }
 
 // Pagination settings
-$results_per_page = 6;
+$results_per_page = 8;
 $current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
 $start_from = ($current_page - 1) * $results_per_page;
 
@@ -191,6 +191,10 @@ $query = mysqli_query($conn, $sql);
         .pagination {
             text-align: center;
             margin-top: 20px;
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .pagination a {

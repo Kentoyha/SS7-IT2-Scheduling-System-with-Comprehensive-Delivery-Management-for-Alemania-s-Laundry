@@ -13,7 +13,7 @@ if (!isset($_SESSION['User_ID']) ||  $_SESSION['account_level'] != "2") {
 }
 
 // Pagination settings
-$results_per_page = 10;
+$results_per_page = 12;
 $current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
 $start_from = ($current_page - 1) * $results_per_page;
 
@@ -110,6 +110,10 @@ $total_pages = ceil($total_results / $results_per_page);
         .pagination {
             text-align: center;
             margin-top: 20px;
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .pagination a {
