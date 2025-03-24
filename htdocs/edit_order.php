@@ -182,7 +182,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <div class="btn-group">
             <button type="submit">Update Order</button>
-            <a href="Orders2.php" class="cancel-btn">Cancel</a>
+            <a href="Laundry_Order.php" class="cancel-btn">Cancel</a>
         </div>
     </form>
 </div>

@@ -291,16 +291,16 @@ $total_pages = ceil($total_results / $results_per_page);
 <div class="pagination">
     <?php
     if ($current_page > 1) {
-        echo '<a href="Delivery.php?page=' . ($current_page - 1) . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '">&laquo; Previous</a>';
+        echo '<a href="Admin_Delivery.php?page=' . ($current_page - 1) . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '">&laquo; Previous</a>';
     }
 
     for ($i = 1; $i <= $total_pages; $i++) {
         $active_class = ($i == $current_page) ? 'active' : '';
-        echo '<a href="Delivery.php?page=' . $i . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '" class="' . $active_class . '">' . $i . '</a>';
+        echo '<a href="Admin_Delivery.php?page=' . $i . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '" class="' . $active_class . '">' . $i . '</a>';
     }
 
     if ($current_page < $total_pages) {
-        echo '<a href="Delivery.php?page=' . ($current_page + 1) . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '">Next &raquo;</a>';
+        echo '<a href="Admin_Delivery.php?page=' . ($current_page + 1) . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '">Next &raquo;</a>';
     }
     ?>
 </div>

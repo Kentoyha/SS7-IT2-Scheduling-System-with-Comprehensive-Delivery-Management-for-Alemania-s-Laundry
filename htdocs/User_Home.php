@@ -171,15 +171,15 @@ $total_pages = ceil($total_results / $results_per_page);
     <div class="pagination">
         <?php
         if ($current_page > 1) {
-            echo "<a href='Home1.php?page=" . ($current_page - 1) . "'>&laquo; Prev</a>";
+            echo "<a href='User_Home.php?page=" . ($current_page - 1) . "'>&laquo; Prev</a>";
         }
 
         for ($page = 1; $page <= $total_pages; $page++) {
-            echo "<a href='Home1.php?page=$page' class='" . ($page == $current_page ? "active" : "") . "'>$page</a>";
+            echo "<a href='User_Home.php?page=$page' class='" . ($page == $current_page ? "active" : "") . "'>$page</a>";
         }
 
         if ($current_page < $total_pages) {
-            echo "<a href='Home1.php?page=" . ($current_page + 1) . "'>Next &raquo;</a>";
+            echo "<a href='User_Home.php?page=" . ($current_page + 1) . "'>Next &raquo;</a>";
         }
         ?>
     </div>

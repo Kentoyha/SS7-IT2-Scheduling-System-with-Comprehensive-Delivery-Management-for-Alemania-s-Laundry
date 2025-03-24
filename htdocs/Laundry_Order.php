@@ -288,9 +288,9 @@ $result = mysqli_query($conn, $sql);
                     <option value="" disabled selected>Click to Select</option>
                     <option value="Beddings">Beddings</option>
                     <option value="Curtains">Curtains</option>
-                    <option value="Towel">Towels</option>
-                    <option value="Topper">Toppers</option>
-                    <option value="Table Cloth">Tablecloths</option>
+                    <option value="Towels">Towels</option>
+                    <option value="Toppers">Toppers</option>
+                    <option value="Tablecloths">Tablecloths</option>
                 </select>
 
                 <label for="Laundry_Quantity">Laundry Quantity:</label>
@@ -397,7 +397,7 @@ $result = mysqli_query($conn, $sql);
                 // Display page links
                 for ($i = 1; $i <= $total_pages; $i++) {
                     if ($i == $current_page) {
-                        echo '<a href="#" class="active">' . $i . '</a>';
+                        echo '<a href="Laundry_Order.php" class="active">' . $i . '</a>';
                     } else {
                         echo '<a href="Laundry_Order.php?page=' . $i . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '">' . $i . '</a>';
                     }
