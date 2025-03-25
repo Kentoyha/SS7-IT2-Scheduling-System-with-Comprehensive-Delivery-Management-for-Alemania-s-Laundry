@@ -13,7 +13,7 @@ if (!isset($_SESSION['User_ID']) ||  $_SESSION['account_level'] != "2") {
 }
 
 // Pagination settings
-$results_per_page = 12;
+$results_per_page = 8;
 $current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
 $start_from = ($current_page - 1) * $results_per_page;
 

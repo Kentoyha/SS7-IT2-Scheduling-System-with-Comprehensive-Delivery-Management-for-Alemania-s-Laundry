@@ -89,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $show_unassigned = isset($_GET['show_unassigned']) && $_GET['show_unassigned'] === 'true';
 
 // Pagination settings
-$results_per_page = 6;
+$results_per_page = 5;
 $current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
 $start_from = ($current_page - 1) * $results_per_page;
 ?>

@@ -27,7 +27,7 @@ if ($update_result) {
 }
 
 // Pagination settings
-$results_per_page = 9;
+$results_per_page = 6;
 $current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
 $start_from = ($current_page - 1) * $results_per_page;
 

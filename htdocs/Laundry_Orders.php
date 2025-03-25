@@ -57,7 +57,7 @@ if (isset($_POST['Order'])) {
 }
 
 // Pagination settings
-$results_per_page = 4;
+$results_per_page = 3;
 $current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
 $start_from = ($current_page - 1) * $results_per_page;
 
@@ -255,7 +255,7 @@ tr:hover {
 .pagination {
     text-align: center;
     margin-top: 20px;
-    min-height: 85px;
+    min-height: 150px;
     display: flex;
     justify-content: center;
     align-items: center;

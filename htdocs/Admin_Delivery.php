@@ -117,9 +117,10 @@ body {
 h1 {
     text-align: center;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: -22px;
     color: black;
     font-size: 35px;
+    margin-top: -5px;
 }
 
 /* Main Container */
