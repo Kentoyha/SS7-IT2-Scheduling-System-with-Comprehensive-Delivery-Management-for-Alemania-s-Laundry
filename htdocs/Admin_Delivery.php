@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Pagination settings
-$results_per_page = 7;
+$results_per_page = 5;
 $current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
 $start_from = ($current_page - 1) * $results_per_page;
 
@@ -119,8 +119,7 @@ h1 {
     font-weight: bold;
     margin-bottom: 20px;
     color: black;
-    font-size: 28px;
-    text-transform: uppercase;
+    font-size: 35px;
 }
 
 /* Main Container */
@@ -142,10 +141,10 @@ h1 {
 }
 
 table {
-    width: 98%;
+    width: 88%;
     margin: 20px auto;
     border-collapse: collapse;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     background-color: #fff;
     border-radius: 12px;
     overflow: hidden;
@@ -157,15 +156,15 @@ th, td {
     text-align: center;
     border-bottom: 1px solid #ddd;
     color: black;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 th {
     background-color: #e0e0e0;
     color: #333;
-    font-weight: bold;
+    font-weight: 700;
     letter-spacing: 1px;
-    font-size: 18px;
+    font-size: 20px;
 }
 
 /* Row hover effect */
@@ -180,13 +179,16 @@ tr:hover {
 
 /* Status Buttons */
 .status-btn {
-    padding: 10px 14px;
+    padding: 12px 18px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
     color: white;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    font-weight: 600;
+    
 }
 
 .status-btn:hover {
@@ -199,7 +201,7 @@ tr:hover {
 }
 
 .completed {
-    background-color: #5bc0de; /* Light Blue */
+    background-color: #B8860B   ; /* Light Blue */
 }
 
 /* Toggle Button */
@@ -227,9 +229,16 @@ tr:hover {
 /* Pagination Styling */
 .pagination {
     text-align: center;
-    margin-top: 40px;
+    margin-top: 20px;
+    min-height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
 }
-
 /* Pagination Links */
 .pagination a {
     display: inline-block;

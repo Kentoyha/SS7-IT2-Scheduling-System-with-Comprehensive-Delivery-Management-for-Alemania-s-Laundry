@@ -36,7 +36,7 @@ function displayReceiptDetails($conn, $receipt_id) {
 
     if ($order) {
         echo "<div class='receipt-details'>";
-        echo "<h2>Order Receipt</h2>";
+        echo "<h2 style='margin-bottom: -1px;'>Order Receipt</h2>";
         echo "<p><strong>Order Number:</strong> " . htmlspecialchars($order["Order_ID"]) . "</p>";
         echo "<p><strong>Date Ordered:</strong> " . htmlspecialchars(date('m/d/Y', strtotime($order["Order_date"]))) . "</p>";
         echo "<p><strong>Cleaning Type:</strong> " . htmlspecialchars($order["Cleaning_type"]) . "</p>";
@@ -73,7 +73,7 @@ if (isset($_GET['selected_receipt_id'])) {
 }
 
 // --- PAGINATION SETTINGS ---
-$results_per_page = 6;
+$results_per_page = 7;
 $current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
 $start_from = ($current_page - 1) * $results_per_page;
 
@@ -154,6 +154,7 @@ h1 {
 
 .filter-buttons button:hover {
     background-color: #0056b3;
+    transform: translateY(-2px);
 }
 
 /* Main Container */
@@ -161,12 +162,13 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 30px;
+    padding: 40px; /* Fixed padding */
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: 20px auto;
-    max-width: 95%;
+    max-width: 88%;
+    min-height: 450px; /* Add a minimum height */
     flex-wrap: wrap;
 }
 
@@ -246,17 +248,23 @@ a:hover {
 .pagination {
     text-align: center;
     margin: 20px 0;
+    position: fixed; /* Add this line */
+    bottom: 20px;    /* Adjust as needed */
+    left: 74%; /* Adjust to align with the right section */
+    transform: translateX(-50%);
+    width: 50%; 
+    min-height: 25px;
 }
 
 .pagination a {
-    display: inline-block;
-    padding: 10px 16px;
+     display: inline-block;
+    padding: 10px 18px;
     text-decoration: none;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    margin: 0 2px;
     color: #333;
-    font-weight: 600;
+    font-size: 16px; /* Consistent font size */
+    border: 1px solid #ddd; /* Added border */
+    margin: 0 4px; /* Added spacing */
+    border-radius: 5px; /* Added rounded corners */
     transition: background-color 0.3s ease;
 }
 
@@ -335,10 +343,10 @@ a:hover {
                         echo "<tr><td colspan='4'>No records found.</td></tr>";
                     }
                     ?>
-                </tbody>
-            </table>
-
-            <div class="pagination">
+                 <div class="pagination">   
+                
+           
+             
                 <?php if ($current_page > 1) : ?>
                     <a href="?page=<?= $current_page - 1 ?>&filter=<?= urlencode($filter) ?>">&laquo; Prev</a>
                 <?php endif; ?>
@@ -352,8 +360,12 @@ a:hover {
                     <a href="?page=<?= $current_page + 1 ?>&filter=<?= urlencode($filter) ?>">Next &raquo;</a>
                 <?php endif; ?>
             </div>
+            </tbody>
+            </table>    
         </div>
+
     </div>
+
 </body>
 
 </html>

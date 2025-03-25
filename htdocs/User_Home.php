@@ -59,7 +59,7 @@ h1 {
 
 /* Table Styling */
 table {
-    width: 98%;
+    width: 88%;
     margin: 20px auto;
     border-collapse: collapse;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -124,7 +124,7 @@ tr:hover {
     text-align: center;
     margin-top: 20px;
     position: fixed;
-    bottom: 15px;
+    bottom: 8px;
     left: 50%;
     transform: translateX(-50%);
 }
@@ -132,13 +132,13 @@ tr:hover {
 /* Pagination Links */
 .pagination a {
     display: inline-block;
-    padding: 12px 20px;
+    padding: 10px 18px;
     text-decoration: none;
-    border-radius: 6px;
-    border: 1px solid #ddd;
     color: #333;
-    font-weight: 600;
-    font-size: 16px;
+    font-size: 16px; /* Consistent font size */
+    border: 1px solid #ddd; /* Added border */
+    margin: 0 4px; /* Added spacing */
+    border-radius: 5px; /* Added rounded corners */
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 

@@ -132,10 +132,11 @@ body {
 h1 {
     text-align: center;
     font-weight: bold;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     color: black;
-    font-size: 26px;
-    text-transform: uppercase;
+    font-size: 35px;
+    margin-bottom: 10px;
+    margin-top: -1px;
 }
 
 /* Filter Buttons */
@@ -164,9 +165,16 @@ h1 {
 /* Pagination */
 .pagination {
     text-align: center;
-    margin-top: 40px;
+    margin-top: 20px;
+    min-height: 130;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    left: 73%;
+    transform: translateX(-50%);
 }
-
 .pagination a {
     display: inline-block;
     padding: 10px 18px;
@@ -193,13 +201,15 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 30px;
+    padding: 40px;
     background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 20px auto;
-    max-width: 95%;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin: 30px auto;
+    max-width: 90%;
     flex-wrap: wrap;
+    min-height: 475px;
+    margin-top: 10px;
 }
 
 /* Receipt Details */
@@ -255,22 +265,22 @@ h1 {
 }
 
 table {
-    width: 100%;
+    width: 88%;
     margin: 20px auto;
     border-collapse: collapse;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     background-color: #fff;
-    border-radius: 10px;
+    border-radius: 12px;
     overflow: hidden;
 }
 
 /* Table Header & Cells */
 th, td {
-    padding: 14px 16px;
+    padding: 16px 18px;
     text-align: center;
     border-bottom: 1px solid #ddd;
     color: black;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 th {
@@ -278,7 +288,7 @@ th {
     color: #333;
     font-weight: bold;
     letter-spacing: 1px;
-    font-size: 18px;
+    font-size: 20px;
 }
 
 tr:nth-child(even) {

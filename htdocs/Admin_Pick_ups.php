@@ -117,8 +117,7 @@ h1 {
     font-weight: bold;
     margin-bottom: 20px;
     color: black;
-    font-size: 28px;
-    text-transform: uppercase;
+    font-size: 35px;
 }
 
 /* Main Container */
@@ -140,10 +139,10 @@ h1 {
 }
 
 table {
-    width: 98%;
+    width: 88%;
     margin: 20px auto;
     border-collapse: collapse;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     background-color: #fff;
     border-radius: 12px;
     overflow: hidden;
@@ -155,15 +154,15 @@ th, td {
     text-align: center;
     border-bottom: 1px solid #ddd;
     color: black;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 th {
     background-color: #e0e0e0;
     color: #333;
-    font-weight: bold;
+    font-weight: 700;
     letter-spacing: 1px;
-    font-size: 18px;
+    font-size: 20px;
 }
 
 /* Row Hover Effect */
@@ -201,6 +200,22 @@ tr:hover {
 .completed {
     background-color: #5bc0de; /* Light Blue */
 }
+/* Picked up Button */
+.complete-btn {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+    background-color: #D97706; /* Green */
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.complete-btn:hover {
+    transform: scale(1.05);
+}
 
 /* Stylish Button */
 .styled-button {
@@ -227,7 +242,11 @@ tr:hover {
 /* Pagination Styling */
 .pagination {
     text-align: center;
-    margin-top: 40px;
+    margin-top: 20px;
+    position: fixed;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 /* Pagination Links */
@@ -235,11 +254,12 @@ tr:hover {
     display: inline-block;
     padding: 10px 18px;
     text-decoration: none;
-    border: 1px solid #ddd;
     color: #333;
-    font-size: 16px;
-    border-radius: 5px;
-    transition: all 0.3s ease;
+    font-size: 16px; /* Consistent font size */
+    border: 1px solid #ddd; /* Added border */
+    margin: 0 4px; /* Added spacing */
+    border-radius: 5px; /* Added rounded corners */
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .pagination a.active {
@@ -345,7 +365,7 @@ tr:hover {
             echo "<td>" . htmlspecialchars($row['Status']) . "</td>";
 
             if (!$show_unassigned) {
-                if ($row['Status'] == 'On the Way') {
+                if ($row['Status'] == 'On the way') {
                     echo "<td>
                             <form method='POST'>
                             <input type='hidden' name='Pick_up_ID' value='" . htmlspecialchars($row['Pick_up_ID']) . "'>
@@ -367,23 +387,24 @@ tr:hover {
 
     <!-- Pagination links -->
     <div class="pagination">
-        <?php
-        $page_url = "Admin_Pick_ups.php";
-        if ($current_page > 1) {
-            echo "<a href='" . $page_url . "?page=" . ($current_page - 1) . "&show_unassigned=" . ($show_unassigned ? 'true' : 'false') . "'>&laquo; Previous</a>";
+    <?php
+    $page_url = "Admin_Pick_ups.php";
+    if ($current_page > 1) {
+        echo "<a href='" . $page_url . "?page=" . ($current_page - 1) . "&show_unassigned=" . ($show_unassigned ? 'true' : 'false') . "'>&laquo; Previous</a>";
+    }
+    for ($i = 1; $i <= $total_pages; $i++) {
+        if ($i == $current_page) {
+            echo "<a class='active' href='#' onclick='location.reload(); return false;'>" . $i . "</a>";
+        } else {
+            echo "<a href='" . $page_url . "?page=" . $i . "&show_unassigned=" . ($show_unassigned ? 'true' : 'false') . "'>" . $i . "</a>";
         }
-        for ($i = 1; $i <= $total_pages; $i++) {
-            if ($i == $current_page) {
-                echo "<a class='active'>" . $i . "</a>";
-            } else {
-                echo "<a href='" . $page_url . "?page=" . $i . "&show_unassigned=" . ($show_unassigned ? 'true' : 'false') . "'>" . $i . "</a>";
-            }
-        }
-        if ($current_page < $total_pages) {
-            echo "<a href='" . $page_url . "?page=" . ($current_page + 1) . "&show_unassigned=" . ($show_unassigned ? 'true' : 'false') . "'>Next &raquo;</a>";
-        }
-        ?>
-    </div>
+    }
+    if ($current_page < $total_pages) {
+        echo "<a href='" . $page_url . "?page=" . ($current_page + 1) . "&show_unassigned=" . ($show_unassigned ? 'true' : 'false') . "'>Next &raquo;</a>";
+    }
+    ?>
+</div>
+
 </body>
 
 </html>

@@ -1,5 +1,4 @@
 <?php
-// filepath: /workspaces/SS7-IT2-Scheduling-System-with-Comprehensive-Delivery-Management-for-Alemania-s-Laundry/htdocs/Orders2.php
 include("db_connect.php");
 include("Menu2.php");
 include("Logout.php");
@@ -47,7 +46,7 @@ if (isset($_POST['Order'])) {
 }
 
 // Pagination settings
-$results_per_page = 5;
+$results_per_page = 4;
 
 // Get current page number
 if (isset($_GET['page']) && is_numeric($_GET['page'])) {
@@ -111,7 +110,7 @@ h1 {
     color: black;
     margin-bottom: 20px;
     font-family: Arial, sans-serif;
-    font-size: 28px; /* Increased for better readability */
+    font-size: 28px;
 }
 
 /* Main Container */
@@ -119,44 +118,54 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 45px;
+    padding: 37px;
     background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 30px auto;
-    max-width: 93%;
-    flex-wrap: wrap;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin: 27px auto;
+    max-width: 90%;
+    flex-wrap: nowrap;
+    gap: 40px;
 }
 
 /* Form Section */
 .form-container {
-    background-color: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 45%;
-    order: -1;
+    background-color: #f8f9fa;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-label {
-    text-align: center;
-    width: 100%;
-    font-size: 18px;
+    margin-bottom: 0;
 }
 
 /* Table Section */
 .table-container {
     width: 50%;
+    background-color: #fff;
+    padding: 25px; /* Fixed padding */
+    border-radius: 10px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    min-height: 520px; /* Add a minimum height */
+}
+
+label {
+    text-align: center;
+    width: 100%;
+    font-size: 16px;
 }
 
 /* Table Styling */
 table {
     width: 100%;
+    margin-top: 20px;
     border-collapse: collapse;
-    margin-top: -20px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
 th, td {
@@ -182,12 +191,12 @@ input[type="text"],
 input[type="number"],
 select {
     width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
+    padding: 11px;
+    margin-bottom: 13px;
     border: 1px solid #ced4da;
     border-radius: 4px;
     box-sizing: border-box;
-    font-size: 18px;
+    font-size: 15px;
 }
 
 /* Buttons */
@@ -200,10 +209,11 @@ button, .toggle-btn {
     cursor: pointer;
     font-size: 18px;
     transition: background-color 0.3s ease;
+    font-weight: 600;
 }
 
 button:hover, .toggle-btn:hover {
-    background-color: #0056b3;
+    transform: translateY(-2px);
 }
 
 /* Action Buttons */
@@ -215,11 +225,13 @@ button:hover, .toggle-btn:hover {
     display: inline-block;
     margin: 6px;
     transition: 0.3s ease;
-    font-size: 16px;
+    font-size: 18px;
+    font-weight: 600;
 }
 
 .actedit {
-    background-color: #1cc6ff;
+    background-color:#17A2B8;
+    
 }
 
 .actedit:hover {
@@ -228,7 +240,7 @@ button:hover, .toggle-btn:hover {
 }
 
 .actbutton {
-    background-color: #4CAF50;
+    background-color: #D97706;
 }
 
 .actbutton:hover {
@@ -244,17 +256,28 @@ button:hover, .toggle-btn:hover {
     background-color: #c82333;
 }
 
-/* Toggle Button */
-.toggle-btn {
+
+.tubali {
     margin-bottom: 20px;
     display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+    margin-top: 1px;
+    font-weight: 600;
 }
 
-/* Pagination */
 /* Pagination Styling */
 .pagination {
     text-align: center;
-    margin-top: 40px;
+    margin: 20px 0;
+    position: fixed; /* Add this line */
+    bottom: 20px;    /* Adjust as needed */
+    left: 73%; /* Adjust to align with the right section */
+    transform: translateX(-50%);
+    width: 25%; 
+    min-height: 80px;
+
 }
 
 .pagination a {
@@ -277,6 +300,7 @@ button:hover, .toggle-btn:hover {
 .pagination a:hover:not(.active) {
     background-color: #ddd;
 }
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {
@@ -289,11 +313,9 @@ button:hover, .toggle-btn:hover {
         margin-bottom: 20px;
     }
 }
-
     </style>
 </head>
 <body>
-
     <div class="container">
         <!-- Place Order Form -->
         <div class="form-container">
@@ -319,10 +341,7 @@ button:hover, .toggle-btn:hover {
                 </select>
 
                 <label for="Place">Place:</label>
-                <?php
-                $placeValue = isset($_POST['Place']) ? htmlspecialchars($_POST['Place']) : 'Beat Naawan';
-                ?>
-                <input type="text" name="Place" id="Place" value="<?php echo $placeValue; ?>" required>
+                <input type="text" name="Beat Nawaan" id="Place" value="Beat Naawan" readonly>
 
                 <label for="Priority">Priority Number:</label>
                 <select name="Priority" id="Priority" required>
@@ -343,28 +362,17 @@ button:hover, .toggle-btn:hover {
         <!-- Display Orders Table -->
         <div class="table-container">
             <!-- Toggle Button -->
-            <div style="display: flex; justify-content: center;">
-                <form method="GET">
-                    <input type="hidden" name="show_unassigned" value="<?php echo $show_unassigned ? 'false' : 'true'; ?>">
-                    <button type="submit" class="toggle-btn">
-                        <?php echo $show_unassigned ? 'Display Approved Orders' : 'Display Pending Orders'; ?>
-                    </button>
-                </form>
-            </div>
+            <button class="tubali" onclick="window.location.href='Laundry_Order.php?show_unassigned=<?php echo $show_unassigned ? 'false' : 'true'; ?>'">
+                <?php echo $show_unassigned ? 'Display Approved Orders' : 'Display Pending Orders'; ?>
+            </button>
 
             <table>
                 <thead>
                     <tr>
                         <th>Laundry Details</th>
                         <th>Status</th>
-                        <!-- ✅ Show "Assign Staff" only for Approved Orders -->
-                        <?php if (!$show_unassigned) {
-                            echo "<th>Assign Staff</th>";
-                        } ?>
-                        <!-- ✅ Show "Edit" only for Pending Orders -->
-                        <?php if ($show_unassigned) {
-                            echo "<th>Edit</th>";
-                        } ?>
+                        <?php if (!$show_unassigned) { echo "<th>Assign Staff</th>"; } ?>
+                        <?php if ($show_unassigned) { echo "<th>Edit</th>"; } ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -372,10 +380,9 @@ button:hover, .toggle-btn:hover {
                     if (mysqli_num_rows($result) > 0) {
                         while ($row = mysqli_fetch_assoc($result)) {
                             echo "<tr>";
-                            echo "<td> "  . htmlspecialchars($row['Laundry_quantity']) ." " . htmlspecialchars($row['Laundry_type']) . "<br>"  . htmlspecialchars($row['Cleaning_type']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['Laundry_quantity']) . " " . htmlspecialchars($row['Laundry_type']) . "<br>" . htmlspecialchars($row['Cleaning_type']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['Status']) . "</td>";
 
-                            
                             if (!$show_unassigned) {
                                 echo "<td>";
                                 if ($row["Status"] == "To be Delivered") {
@@ -386,7 +393,6 @@ button:hover, .toggle-btn:hover {
                                 echo "</td>";
                             }
 
-                            // ✅ Show "Edit" only when viewing pending orders
                             if ($show_unassigned) {
                                 echo "<td>";
                                 echo "<a href='edit_order.php?Order_ID=" . urlencode($row['Order_ID']) . "' class='actedit'>Edit</a>";
@@ -396,30 +402,27 @@ button:hover, .toggle-btn:hover {
                             echo "</tr>";
                         }
                     } else {
-                        echo "<tr><td colspan='" . ($show_unassigned ? 6 : 5) . "'>No records found.</td></tr>";
+                        echo "<tr><td colspan='" . ($show_unassigned ? 4 : 3) . "'>No records found.</td></tr>";
                     }
                     ?>
                 </tbody>
             </table>
 
             <!-- Pagination Links -->
-            <div class="pagination" style="text-align: center;">
+            <div class="pagination">
                 <?php
-                // Display previous page link
                 if ($current_page > 1) {
                     echo '<a href="Laundry_Order.php?page=' . ($current_page - 1) . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '">&laquo; Previous</a>';
                 }
 
-                // Display page links
                 for ($i = 1; $i <= $total_pages; $i++) {
                     if ($i == $current_page) {
-                        echo '<a href="Laundry_Order.php" class="active">' . $i . '</a>';
+                        echo '<a href="Laundry_Order.php?page=' . $i . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '" class="active">' . $i . '</a>';
                     } else {
                         echo '<a href="Laundry_Order.php?page=' . $i . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '">' . $i . '</a>';
                     }
                 }
 
-                // Display next page link
                 if ($current_page < $total_pages) {
                     echo '<a href="Laundry_Order.php?page=' . ($current_page + 1) . '&show_unassigned=' . ($show_unassigned ? 'true' : 'false') . '">Next &raquo;</a>';
                 }

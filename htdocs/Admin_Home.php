@@ -91,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Order_ID']) && isset($
 }
 
 // Pagination settings
-$results_per_page = 8;
+$results_per_page = 5;
 $current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
 $start_from = ($current_page - 1) * $results_per_page;
 
@@ -135,12 +135,12 @@ h1 {
     font-weight: bold;
     margin-bottom: 20px;
     color: black;
-    font-size: 28px; /* Enhanced for readability */
+    font-size: 35px; /* Enhanced for readability */
 }
 
 /* Table Styling */
 table {
-    width: 98%;
+    width: 88%;
     margin: 20px auto;
     border-collapse: collapse;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -186,7 +186,7 @@ tr:hover {
     transition: all 0.3s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
     font-weight: 600;
-    text-transform: uppercase;
+    
 }
 
 .status-btn:hover {
@@ -197,15 +197,15 @@ tr:hover {
 /* Status Colors */
 .to-be-delivered { background-color: #F4A460; } /* SandyBrown */
 .in-progress { background-color: #5cb85c; } /* Green */
-.completed { background-color: #5bc0de; } /* Light Blue */
-.ready-for-pickup { background-color: #DAA520; } /* GoldenRod */
+.completed { background-color: #28a745; } /* Light Blue */
+.ready-for-pickup { background-color: #D97706   ; } /* GoldenRod */
 
 /* Pagination Styling */
 .pagination {
     text-align: center;
     margin-top: 20px;
     position: fixed;
-    bottom: 15px;
+    bottom: 8px;
     left: 50%;
     transform: translateX(-50%);
 }
@@ -213,13 +213,13 @@ tr:hover {
 /* Pagination Links */
 .pagination a {
     display: inline-block;
-    padding: 12px 20px;
+    padding: 10px 18px;
     text-decoration: none;
-    border-radius: 6px;
-    border: 1px solid #ddd;
     color: #333;
-    font-weight: 600;
-    font-size: 16px;
+    font-size: 16px; /* Consistent font size */
+    border: 1px solid #ddd; /* Added border */
+    margin: 0 4px; /* Added spacing */
+    border-radius: 5px; /* Added rounded corners */
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 

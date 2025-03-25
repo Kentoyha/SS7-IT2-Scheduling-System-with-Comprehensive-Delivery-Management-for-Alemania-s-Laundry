@@ -65,7 +65,7 @@ h1 {
 
 /* Table Styling */
 table {
-    width: 98%;
+    width: 88%;
     margin: 20px auto;
     border-collapse: collapse;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -105,7 +105,7 @@ tr:hover {
     text-align: center;
     margin-top: 20px;
     position: fixed;
-    bottom: 10px;
+    bottom: 8px;
     left: 50%;
     transform: translateX(-50%);
 }
@@ -115,15 +115,17 @@ tr:hover {
     display: inline-block;
     padding: 10px 18px;
     text-decoration: none;
-    border: 1px solid #ddd;
     color: #333;
-    font-size: 18px;
+    font-size: 16px; /* Consistent font size */
+    border: 1px solid #ddd; /* Added border */
+    margin: 0 4px; /* Added spacing */
+    border-radius: 5px; /* Added rounded corners */
 }
 
 .pagination a.active {
     background-color: #007bff;
     color: white;
-    border: 1px solid #007bff;
+    border-color: #007bff;
 }
 
 .pagination a:hover:not(.active) {

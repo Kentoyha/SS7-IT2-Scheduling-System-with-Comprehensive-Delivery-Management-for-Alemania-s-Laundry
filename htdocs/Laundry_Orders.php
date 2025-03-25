@@ -111,11 +111,11 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 40px;
+    padding: 37px;
     background-color: #fff;
     border-radius: 12px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    margin: 30px auto;
+    margin: 15px auto;
     max-width: 90%;
     flex-wrap: wrap;
 }
@@ -173,10 +173,11 @@ button {
     cursor: pointer;
     font-size: 16px;
     transition: all 0.3s ease;
+    font-weight: 600;
 }
 
 button:hover {
-    transform: translateY(-3px);
+    transform: scale(1.05);
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
@@ -187,9 +188,9 @@ button:hover {
 
 table {
     width: 100%;
-    margin-top: 20px;
+    margin-top: 20px auto;
     border-collapse: collapse;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     background-color: #fff;
     border-radius: 12px;
     overflow: hidden;
@@ -224,13 +225,17 @@ tr:hover {
 
 /* Status Buttons */
 .status-btn {
-    padding: 10px 14px;
+    padding: 9px 15px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
     color: white;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    font-weight: 600;
+    
+
 }
 
 .status-btn:hover {
@@ -239,17 +244,25 @@ tr:hover {
 
 /* Status Colors */
 .to-be-delivered {
-    background-color: #DAA520; /* GoldenRod */
+    background-color: #B8860B ; /* GoldenRod */
 }
 
 .in-progress {
-    background-color: #5bc0de; /* Light Blue */
+    background-color: #5bc0de  ; /* Light Blue */
 }
 
 /* Pagination Styling */
 .pagination {
     text-align: center;
-    margin-top: 40px;
+    margin-top: 20px;
+    min-height: 85px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    left: 73%;
+    transform: translateX(-50%);
 }
 
 /* Pagination Links */
@@ -259,6 +272,7 @@ tr:hover {
     text-decoration: none;
     border: 1px solid #ddd;
     color: #333;
+    font-weight: 600px;
     font-size: 16px;
     border-radius: 5px;
     transition: all 0.3s ease;

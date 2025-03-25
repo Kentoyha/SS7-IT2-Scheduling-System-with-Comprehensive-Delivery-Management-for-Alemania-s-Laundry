@@ -106,10 +106,11 @@ $start_from = ($current_page - 1) * $results_per_page;
             font-weight: bold;
             margin-bottom: 20px;
             color: black;
+            font-size: 28px;
         }
 
         table {
-            width: 98%;
+            width: 88%;
             margin: 20px auto;
             border-collapse: collapse;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -124,6 +125,7 @@ $start_from = ($current_page - 1) * $results_per_page;
             text-align: center;
             border-bottom: 1px solid #ddd;
             color: black;
+            font-size: 18px;
         }
 
         th {
@@ -131,6 +133,7 @@ $start_from = ($current_page - 1) * $results_per_page;
             color: #333;
             font-weight: bold;
             letter-spacing: 0.8px;
+            font-size: 20px;
         }
 
         tr:nth-child(even) {
@@ -146,23 +149,26 @@ $start_from = ($current_page - 1) * $results_per_page;
             text-align: center;
             margin-top: 20px;
             position: fixed;
-            bottom: 10px;
+            bottom: 8px;
             left: 50%;
             transform: translateX(-50%);
         }
 
         .pagination a {
             display: inline-block;
-            padding: 8px 16px;
+            padding: 10px 18px;
             text-decoration: none;
-            border: 1px solid #ddd;
             color: #333;
+            border: 1px solid #ddd;
+            margin: 0 4px;
+            border-radius: 5px;
+            font-size: 16px;
         }
 
         .pagination a.active {
             background-color: #007bff;
             color: white;
-            border: 1px solid #007bff;
+            border-color: #007bff;
         }
 
         .pagination a:hover:not(.active) {
@@ -176,67 +182,51 @@ $start_from = ($current_page - 1) * $results_per_page;
         }
 
         .complete-btn {
-            background-color: #1cc6ff;
+            background-color: #28a745;
             color: white;
             border: none;
-            padding: 15px 15px;
+            padding: 12px 18px;
             cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
         }
-/* Complete Button */
-.complete-btn {
-    background-color: #1cc6ff;
-    color: white;
-    border: none;
-    padding: 12px 18px;
-    cursor: pointer;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-    text-transform: uppercase;
-}
 
-.complete-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-    background-color: #0aa6db;
-}
+        .complete-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+        }
 
-/* Styled Button */
-.styled-button {
-    background-color: #007bff;
-    border: none;
-    color: white;
-    padding: 12px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    font-weight: 600;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    text-transform: uppercase;
-}
+        .styled-button {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
 
-.styled-button:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
-    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
-}
+        .styled-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+        }
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .complete-btn, .styled-button {
-        font-size: 14px;
-        padding: 10px 16px;
-    }
-}
-
+        @media (max-width: 768px) {
+            .complete-btn, .styled-button {
+                font-size: 14px;
+                padding: 10px 16px;
+            }
+        }
     </style>
 </head>
 
@@ -263,7 +253,13 @@ $start_from = ($current_page - 1) * $results_per_page;
         $sql .= " WHERE Pick_ups.Status IN ('Picked up', 'On the way')"; // Show picked up pickups
     }
 
-    $sql .= " ORDER BY Pick_ups.Date ASC LIMIT $start_from, $results_per_page";
+    $sql .= " ORDER BY 
+                CASE
+                    WHEN Pick_ups.Status = 'Picked up' THEN 1
+                    WHEN Pick_ups.Status = 'On the way' THEN 2
+                    ELSE 3
+                END,
+                Pick_ups.Date ASC LIMIT $start_from, $results_per_page";
 
     $result = mysqli_query($conn, $sql);
 
@@ -329,7 +325,7 @@ $start_from = ($current_page - 1) * $results_per_page;
         }
         for ($i = 1; $i <= $total_pages; $i++) {
             if ($i == $current_page) {
-                echo "<a class='active'>" . $i . "</a>";
+                echo "<a href='" . $page_url . "?page=" . $i . "&show_unassigned=" . ($show_unassigned ? 'true' : 'false') . "' class='active'>" . $i . "</a>";
             } else {
                 echo "<a href='" . $page_url . "?page=" . $i . "&show_unassigned=" . ($show_unassigned ? 'true' : 'false') . "'>" . $i . "</a>";
             }
